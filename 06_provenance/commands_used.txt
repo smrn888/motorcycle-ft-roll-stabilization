@@ -1,0 +1,1010 @@
+python -m venv myenv
+python --version`
+python --version
+python -m venv myenv
+pip install numpy pandas matplotlib seaborn scikit-learn tensorflow torch torchvision torchaudio keras xgboost lightgbm nltk opencv-python scipy mlflow pytest black`
+python --version`
+python --version
+ python --version
+ python --version 
+pip install numpy pandas matplotlib seaborn scikit-learn tensorflow torch torchvision torchaudio keras xgboost lightgbm nltk opencv-python scipy mlflow pytest black
+python --version`
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe "c:/Users/Moein/Desktop/CNN - face recognition.py"
+pip install opencv-python`
+python --version
+python -m ipykernel install --user --name python310 --display-name "Python 3.10"`
+python -m pip install --upgrade pip
+conda create -n myenv python=3.x
+python -m venv myenv
+python --version
+python -m venv .venv`
+source .venv/bin/activate`
+python -m pip install --upgrade pip setuptools wheel
+pip install llama-cpp-python --no-cache-dir --force-reinstall --upgrade
+conda create -n tf-gpu python=3.12.7`
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+& C:/Users/Moein/anaconda3/python.exe "c:/Users/Moein/Desktop/Machin learning codes/CNN - Face Recognition/test_gpu.py"
+python "c:/Users/Moein/Desktop/Machin learning codes/CNN - Face Recognition/test_gpu.py"& C:/Users/Moein/anaconda3/python.exe "c:/Users/Moein/Desktop/Machin learning codes/CNN - Face Recognition/test_gpu.py"
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+& C:/Users/Moein/anaconda3/envs/tf-gpu/python.exe "c:/Users/Moein/Desktop/Machin learning codes/CNN - Face Recognition/test_gpu.py"
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+pip install opencv-python`
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+pip show opencv-python`
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+python -m pip list
+pip uninstall opencv-python`
+pip install opencv-python`
+python`
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+python --version
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+pip install tensorflow opencv-python matplotlib numpy pandas scikit-learn pillow seaborn scikit-image jupyterlab`
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+pip install tensorflow numpy pandas matplotlib opencv-python scikit-learn pillow`
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.2.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.4.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.4.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.4.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.4.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.4.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.4.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+python job_model.py`
+python job_model.py
+python fixed_scraper.py
+python test_jobvision.py
+python fixed_scraper.py
+python test_jobvision.py
+python fixed_scraper.py
+python test_jobvision.py
+python fixed_scraper.py
+python fixed_scraper.py
+python debug_page_structure.py
+python fixed_scraper.py
+python Enhanced Job Scraper with Anti-Detection
+python Enhanced Job Scraper with Anti-Detection.py
+python Enhanced_Job_Scraper_with_AntiDetection.py
+python Enhanced_Job_Scraper_with_AntiDetection.py
+python fixed_scraper.py
+python fixed_scraper.py
+python fixed_scraper.py
+python fixed_scraper.py
+python fixed_scraper.py
+python fixed_scraper.py
+python fixed_scraper.py
+python find_gap_position.py
+python fixed_scraper.py
+python find_slider_elements.py
+python fixed_scraper.py
+python fixed_scraper.py
+python memory_saver.py
+python fixed_scraper.py
+python final_scraper.py
+python final_scraper_moein.py
+python debug_page_structure.py
+python final_scraper_moein.py
+python debug_page_structure.py
+python final_scraper_moein.py
+python Jobinja_scraper.py
+python Jobinja_scaraper.py
+python Jobinja_scraper.py
+python environment.py
+python environment.py
+python environment.py
+python.exe -m pip install --upgrade pip setuptools wheel
+python environment.py
+python --version`
+python tweeter_scraping.py
+python tweeter_scraping.py
+python -m pip install --upgrade certifi
+python tweeter_scraping.py
+python vpn.py
+python vpn.py
+python test_proxy.py
+python vpn.py
+python vpn.py
+python tweeter_scraping.py
+python tweeter_scraping.py
+python tweeter_scraping.py
+python twitter_trend_analyzer_llm.py
+python twitter_trend_analyzer_llm.py
+& C:/Users/Moein/AppData/Local/Programs/Python/Python310/python.exe c:\Users\Moein\.vscode\extensions\ms-python.python-2025.16.0-win32-x64\python_files\printEnvVariablesToFile.py c:\Users\Moein\.vscode\extensions\ms-python.python-2025.16.0-win32-x64\python_files\deactivate\powershell\envVars.txt
+python sorting_ml_service.py
+python sorting_ml_service.py
+python sorting_ml_service.py
+python sorting_ml_service.py
+python sorting_ml_service.py
+python sorting_ml_service.py
+python sorting_ml_service.py
+python test_sorting_hat.py
+python sorting_ml_service.py
+python test_sorting_hat.py
+python test_sorting_hat.py
+python sorting_ml_service.py
+python test_sorting_hat.py
+python sorting_ml_service.py
+python test_sorting_hat_api.py
+python test_sorting_ml.py
+python sorting_ml_service.py
+python test_sorting_ml.py
+python sorting_ml_service.py
+python test_sorting_ml.py
+python sorting_ml_service.py
+python test_sorting_ml.py
+python python sorting_ml_service_improved.py
+python sorting_ml_service_improved.py
+python test_sorting_ml.py
+python sorting_ml_service_improved.py
+python test_sorting_ml.py
+python sorting_ml_service_improved.py
+python magical_theme.py
+python magical_theme.py
+python magical_theme.py
+python magical_theme.py
+python magical_theme.py
+python magical_theme.py
+python magical_theme.py
+python magical_theme.py
+python magical_theme.py
+python AbolfazlTest1.py
+python AbolfazlTest1.py
+python AbolfazlTest1.py
+python magical_theme.py
+python magical_theme.py
+python sorting_ml_service.py
+python sorting_ml_service_improved.py
+python FTCL1Simulation1.py
+python FigureGenerator.py
+python generate_all_figures.py --all
+python FigureGenerator.py --all
+python quadrotor_fault_detection.py
+python smc_figure3.py
+python MotorcycleEnv.py
+python train_td3_ftsmc.py
+python train_td3_ftsmc.py
+python train_td3_ftsmc.py
+ & 'c:\Users\Moein\anaconda3\envs\tf-gpu\python.exe' 'c:\Users\Moein\.vscode\extensions\ms-python.debugpy-2025.18.0-win32-x64\bundled\libs\debugpy\launcher' '13835' '--' 'C:\Users\Moein\Desktop\AI\Rerinforcement Learning\Practice1-ValueFunction.py' 
+& C:/Users/Moein/anaconda3/envs/tf-gpu/python.exe "c:/Users/Moein/Desktop/AI/Rerinforcement Learning/Practice1-ValueFunction.py"
+& C:/Users/Moein/anaconda3/envs/tf-gpu/python.exe "c:/Users/Moein/Desktop/AI/Rerinforcement Learning/PracticeValueFunction.py"
+& C:/Users/Moein/anaconda3/envs/tf-gpu/python.exe "c:/Users/Moein/Desktop/AI/Rerinforcement Learning/PracticeValueFunction.py"
+& C:/Users/Moein/anaconda3/envs/tf-gpu/python.exe
+& C:/Users/Moein/anaconda3/envs/tf-gpu/python.exe "c:/Users/Moein/Desktop/AI/Rerinforcement Learning/PracticeValueFunction.py"
+python EtherCAT_Robot Integration.py
+python EtherCAT_Robot Integration.py
+python EtherCAT_Robot_Integration.py
+PS C:\Users\Moein\Desktop\Apply\Short-Term Projects> python EtherCAT_Robot_Integration.py
+  File "C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\opcua\client\client.py", line 279, in connect
+  File "C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\opcua\client\client.py", line 464, in activate_session
+  File "C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\opcua\client\ua_client.py", line 299, in activate_session
+  File "C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\opcua\client\ua_client.py", line 84, in send_request
+  File "C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\opcua\client\ua_client.py", line 93, in check_answer
+  File "C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\opcua\ua\uatypes.py", line 218, in check
+python EtherCAT_Robot_Integration.py
+python EtherCAT_Robot_Integration.py
+python EtherCAT_Robot_Integration.py
+python latency_analyzer.py
+python latency_analyzer.py
+python simple_latency_test.py
+python latency_analyzer.py
+python discover_nodes.py
+& C:/Users/Moein/anaconda3/envs/tf-gpu/python.exe "c:/Users/Moein/Desktop/Apply/Short-Term Projects/PLC-EtherCat/controller_v2.py"
+python check_attributes.py
+python browse_codesys.py
+python latency_analyzer.py
+python browse_all.py
+python full_dump.py
+python drill_resources.py
+python full_dump.py
+python latency_analyzer.py
+python test_pybullet.py
+python robot_arm.py
+python integrated_system.py
+python vision_test.py
+python integrated_system.py
+python integrated_system.py
+python test_env.py
+python train_sac.py`
+python train_sac.py`
+python test_env.py
+python train_sac.py`
+python test_env.py
+python train_sac.py`
+python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0))"`
+PS C:\Users\Moein\Desktop\Paper\Adaptive Deep Reinforcement Learning for Motorcycle Stabilization A Hierarchical TD3-FTSMC Approach\MY WORK\Implementation\rl_mpc_motorcycle> python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0))"`
+  File "C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\cuda\__init__.py", line 414, in get_device_name`
+  File "C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\cuda\__init__.py", line 444, in get_device_properties`
+  File "C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\cuda\__init__.py", line 284, in _lazy_init`
+python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0))"
+python train_sac.py`
+python train_sac.py
+python train_sac.py
+python test_env.py
+python train_sac.py
+python benchmark.py --model rl_mpc_motorcycle_sac.zip
+python benchmark.py --model rl_mpc_motorcycle_sac.zip
+python test_env.py`
+python test_env_mpc.py
+python test_env_mpc.py
+# Ç˜ ˜ÑÏä ˜Ô Python — ãåã!`
+python test_env_mpc.py
+python -c "import motorcycle_env_mpc; import inspect; print(inspect.getfile(motorcycle_env_mpc))"
+python check_dpp.py`
+python -c "import motorcycle_env_mpc"`
+python test_env_mpc.py
+python -c "import motorcycle_env_mpc"
+python -c "`
+python -c "`
+python -c "`
+python -c "`
+python test_env_mpc.py
+python -c "`
+python -c "import stable_baselines3; print(stable_baselines3.__version__)"
+python train_rl_mpc.py --steps 500000 --envs 4 --device cuda
+python train_rl_mpc.py --steps 500000 --envs 4 --device cuda
+python train_rl_mpc.py --steps 500000 --envs 4 --device cuda
+python train_rl_mpc.py --steps 2000000
+python train_rl_mpc.py --steps 2000000
+python train_rl_mpc.py --steps 2000000
+python train_rl_mpc.py --steps 2000000
+python train_rl_mpc9.py --steps 2000000
+python train_rl_mpc10.py --steps 2000000
+python train_rl_mpc10.py --steps 3000000
+python train_rl_mpc11.py --steps 2000000 --envs 4 --device cpu
+python train_rl_mpc11.py --steps 2000000 --envs 4 --device cpu
+python train_rl_mpc11.py --steps 2000000 --envs 4 --device cpu
+python train_rl_mpc12.py --steps 2000000 --envs 4 --device cpu
+python train_rl_mpc12.py --steps 3000000 --envs 4 --device cpu --load_model rl_mpc_cvxpy_v12_motorcycle_sac --load_vecnorm vec_normalize_v12.pkl
+python train_rl_mpc12.py --steps 100000 --envs 4 --device cpu --load_model rl_mpc_cvxpy_v12_motorcycle_sac --load_vecnorm vec_normalize_v12.pkl 2>&1 | tee test_log.txt`
+python baseline_pid.py --tune --episodes 50
+python baseline_lqr.py --tune --episodes 50`
+python baseline_lqr.py --episodes 200`
+python baseline_pure_mpc.py --episodes 200
+python baseline_pure_mpc.py --tune --episodes 50`
+python baseline_lqr.py --tune --episodes 50
+python baseline_lqr.py --episodes 200`
+python baseline_lqr.py --sweep                  # sweep 5°?30°`
+python baseline_lqr.py --sweep --max-angle 25   # sweep 5°?25°`
+python baseline_lqr.py --max-angle 30           # single run at ±30°`
+python baseline_lqr.py --tune                   # grid search (ÈÏæä ÊÛííÑ)
+python baseline_lqr.py --diagnose`
+python baseline_lqr.py --max-angle 30 --episodes 10 --debug-episodes 5`
+python train_rl_mpc14.py --envs 4 --steps 3000000 --seed 0
+python train_rl_mpc14.py --envs 4 --steps 3000000 --seed 0
+python train_rl_mpc14.py --envs 4 --steps 3000000 --seed 0
+python train_rl_mpc15.py --envs 4 --steps 3000000 --seed 0
+python train_rl_mpc16.py --envs 4 --steps 3000000 --seed 0
+python train_rl_mpc16.py --envs 4 --steps 3000000 --seed 0
+python log.py
+python log.py
+python log.py
+python -c "import numpy; print(numpy.__version__)"
+python log.py
+python log.py
+python log.py
+pip install "numpy>=2.0" --trusted-host pypi.org --trusted-host files.pythonhosted.org`
+python -m pip install requests
+python -m pip install numpy --trusted-host pypi.org --trusted-host files.pythonhosted.org -v
+python -m http.server 8000
+python train_rl_mpc17.py --envs 4 --steps 3000000 --seed 0
+python train_rl_mpc17.py \`
+python train_rl_mpc17.py \ --steps 3000000 \ --envs 4 \ --device cuda \ --seed 0
+python train_rl_mpc17.py --steps 3000000 --envs 4 --device cuda --seed 0
+python evaluate_ftc.py  --model rl_mpc_v16_seed0_sac.zip  --n_episodes 30 --curriculum 8  --verbose
+python evaluate_ftc.py  --model rl_mpc_v15_seed0_sac.zip  --n_episodes 30 --curriculum 8  --verbose
+python evaluate_ftc.py --model rl_mpc_v15_seed0_sac.zip --env_type pure_rl --n_episodes 30 --curriculum 8 --verbose
+python evaluate_model_at_angle.py
+python evaluate_model_at_angle.py 
+python evaluate_model_at_angle.py 
+python train_pure_rl_v17.py --envs 4 --steps 3000000 --seed 0 
+python train_PureRL_v17 --envs 4 --steps 3000000 --seed 0 
+python train_pure_rl_v17.py --envs 4 --steps 3000000 --seed 0
+python train_PureRL_v17 --envs 4 --steps 3000000 --seed 0 
+python train_PureRL_v17.py --envs 4 --steps 3000000 --seed 0
+python train_PureRL_v17 --envs 4 --steps 3000000 
+python train_PureRL_v17.py --envs 4 --steps 3000000 
+python train_PureRL_v17.py --envs 4 --steps 3000000 
+python run_all_baselines.py --curriculum 8 --episodes 200  # near-limit
+python evaluate_rlmpc.py  --model rl_mpc_v16_seed0_sac  --curriculum 8  --episodes 200  --seed 42
+python baseline4_sac_cbf_train.py \
+python baseline4_sac_cbf_train.py \
+python baseline4_sac_cbf_train.py  --mode train  --model sac_plain  --steps 100000  --device cuda
+python baseline4_sac_cbf_train.py  --mode train  --model sac_plain  --steps 100000  --device cpu
+python baseline4_sac_cbf_train.py  --mode train  --model sac_plain  --steps 3000000  --device cpu
+python baseline4_sac_cbf_train.py \`
+python baseline4_sac_cbf_train.py   --mode eval   --model sac_plain   --episodes 200  --curriculum 8   --plain_model sac_plain_motorcycle
+python eval_multiseed_analysis.py \
+python eval_multiseed_analysis.py  --curriculum 8  --episodes 200  --seeds 0 1 2 3 4  --rlmpc_json results_rlmpc_eval.json  --plain_model sac_plain_motorcycle
+python eval_multiseed_analysis.py  --curriculum 8  --episodes 200  --seeds 0 1 2 3 4  --run_rlmpc  --rlmpc_model rl_mpc_v16_seed0_sac  --plain_model sac_plain_motorcycle
+python eval_multiseed_analysis.py --skip_b1 --curriculum 8 --episodes 200 --run_rlmpc --rlmpc_model rl_mpc_v16_seed0_sac`
+python baseline4_sac_cbf_train.py  --mode train  --model sac_cbf  --steps 3000000  --device cpu
+python baseline4_sac_cbf_train.py  --mode train  --model sac_cbf  --steps 3000000  --device cpu
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8
+$env:PYTHONIOENCODING = "utf-8"`
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8 > output.log 2>&1`
+python -c "import eval_ftc_all_methods_v2" 2>&1 | Out-File test.log; notepad test.log
+python -W all eval_ftc_all_methods_v2.py 2>&1 | Out-File test.log; notepad test.log
+python -c "`
+python -c "import numpy, pandas, matplotlib" 2>&1 | Out-File pkg.log; notepad pkg.log
+python eval_multiseed_analysis.py --skip_b1 --skip_b2 --skip_b3 --sac_cbf --plain_model sac_plain_motorcycle --cbf_model sac_cbf_motorcycle --curriculum 8 --episodes 200
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8 --plain_model sac_plain_motorcycle --cbf_model sac_cbf_motorcycle --rlmpc_model rl_mpc_v16_seed0_sac --rlmpc_vecnorm vec_normalize_v16_seed0.pkl
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8 --plain_model sac_plain_motorcycle --cbf_model sac_cbf_motorcycle --rlmpc_model rl_mpc_v16_seed0_sac --rlmpc_vecnorm vec_normalize_v16_seed0.pkl
+python -c "import baseline1_fixed_mpc"
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8 --plain_model sac_plain_motorcycle --cbf_model sac_cbf_motorcycle --rlmpc_model rl_mpc_v16_seed0_sac --rlmpc_vecnorm vec_normalize_v16_seed0.pkl
+python -u -c "`
+print('Python:', sys.version, flush=True)`
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8 --plain_model sac_plain_motorcycle.zip --cbf_model sac_cbf_motorcycle.zip --rlmpc_model rl_mpc_v16_seed0_sac.zip --rlmpc_vecnorm vec_normalize_v16_seed0.pkl
+python -u eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8 --plain_model sac_plain_motorcycle.zip --cbf_model sac_cbf_motorcycle.zip --rlmpc_model rl_mpc_v16_seed0_sac.zip --rlmpc_vecnorm vec_normalize_v16_seed0.pkl
+python -u eval_ftc_all_methods_v2.py --episodes 5 --curriculum 8 --skip_sac
+python -u eval_ftc_all_methods_v2.py --episodes 5 --curriculum 8 --skip_sac --skip_rlmpc
+python -u -c "import eval_ftc_all_methods_v2; print('IMPORT OK')"
+python -X faulthandler eval_ftc_all_methods_v2.py
+python
+python
+    python baseline1_fixed_mpc.py --episodes 200 --curriculum 4`
+    python baseline1_fixed_mpc.py --episodes 200 --curriculum 8  # near-limit`
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8 --skip_sac --skip_rlmpc
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8
+& "C:\Users\Moein\AppData\Local\Programs\Python\Python310\python.exe" eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8
+& "C:\Users\Moein\AppData\Local\Programs\Python\Python310\python.exe" -c "print('Interpreter is Alive!')"
+& "C:\Users\Moein\AppData\Local\Programs\Python\Python310\python.exe" -m trace --trace eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8
+python -c "import sys, numpy; print(sys.executable); print(numpy.__version__)"??????
+python -c "import cvxpy; print(cvxpy.__version__)"??????
+python -c "from stable_baselines3 import SAC; print('SB3 OK')"
+python -c "import torch; print('Torch Version:', torch.__version__); print('Is CPU available?:', torch.cuda.is_available() == False)"
+python -c "from stable_baselines3 import SAC; print('SB3 OK')"
+python -c "from stable_baselines3 import SAC; print('SB3 OK')"
+python eval_ftc_all_methods_v2.py --episodes 2 --curriculum 8 --skip_sac --skip_rlmpc
+python eval_ftc_all_methods_v2.py --episodes 2 --curriculum 8 --skip_b1
+python -c "`
+python eval_ftc_all_methods_v2.py --episodes 2 --curriculum 8 --skip_b1 --skip_b2 --skip_b3
+python eval_ftc_all_methods_v2.py --episodes 2 --curriculum 8 --skip_b1 --skip_b2 --skip_b3 --skip_sac --rlmpc_model rl_mpc_v16_seed0_sac
+python eval_ftc_all_methods_v2.py --episodes 30 --curriculum 8 --rlmpc_model rl_mpc_v16_seed0_sac
+python train_rl_mpc17.py --seed 99 --steps 30000 --envs 2 --tag smoke --out_dir ./runs_smoke
+python -c "from stable_baselines3 import SAC; import cvxpy; print('ok')"
+python train_rl_mpc17.py --seed 99 --steps 30000 --envs 2 --tag smoke --out_dir ./runs_smoke
+python test_solver_switch.py
+python run_seeds.py --seeds 0 1 2 3 4 --parallel P --steps 3000000 --envs 4
+python run_seeds.py --seeds 0 1 2 3 4 --parallel 2 --steps 3000000 --envs 4
+python run_seeds.py --seeds 0 1 2 3 4 --parallel 1 --steps 3000000 --envs 4
+py -3.10 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python --version
+python -m pip install --upgrade pip
+Remove-Item -Recurse -Force sil\.venv
+py -3.10 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python --version
+python -m pip install --default-timeout=120 --retries 10 --upgrade pip
+py -3.10 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python --version
+python -m pip install --default-timeout=120 --retries 10 --upgrade pip
+nslookup files.pythonhosted.org
+nslookup files.pythonhosted.org 1.1.1.1
+nslookup files.pythonhosted.org 8.8.8.8
+nslookup files.pythonhosted.org 185.51.200.2
+nslookup files.pythonhosted.org 178.22.122.100
+nslookup files.pythonhosted.org
+nslookup files.pythonhosted.org 178.22.122.100
+curl.exe -I https://files.pythonhosted.org
+python -c "import socket; print(socket.gethostbyname('files.pythonhosted.org'))"
+python -m pip config list
+python -m pip install --upgrade pip --default-timeout=120 --retries 3
+python -m pip install --default-timeout=120 --retries 10 -r requirements_pinned.txt
+python -c "import numpy, torch, stable_baselines3, cvxpy; print(numpy.__version__, torch.__version__, torch.cuda.is_available())"
+python sil/test_sac_stub.py
+python train_sac_baselines.py --method hocbf --seed 99 --steps 30000 --envs 8 --tag smoke_hocbf --out_dir ./runs_smoke --ckpt_freq 10000 --eval_freq 20000 --eval_episodes 2
+findstr PYTHONUTF8 run_seeds.py
+findstr PYTHONUTF8 train_sac_baselines.py
+python sil/regress_sac_vs_env.py --method hocbf --model runs_smoke/smoke_hocbf_seed99/checkpoints/ckpt_smoke_hocbf_seed99_30000_steps.zip --episodes 10
+findstr PYTHONUTF8 run_seeds.py
+findstr PYTHONUTF8 train_sac_baselines.py
+python sil/regress_sac_vs_env.py --method hocbf --model runs_smoke/smoke_hocbf_seed99/checkpoints/ckpt_smoke_hocbf_seed99_30000_steps.zip --episodes 10
+findstr PYTHONUTF8 run_seeds.py
+python train_sac_baselines.py --method plain --seed 99 --steps 30000 --envs 8 --tag smoke_plain --out_dir ./runs_smoke --ckpt_freq 10000 --eval_freq 20000 --eval_episodes 2
+python sil/regress_sac_vs_env.py --method plain --model runs_smoke/smoke_plain_seed99/checkpoints/ckpt_smoke_plain_seed99_30000_steps.zip --episodes 10
+python -c "import os; print(os.cpu_count())"
+python run_seeds.py --script train_sac_baselines.py --tag sachocbf --extra "--method hocbf" --seeds 0 1 2 3 4 --parallel 3 --steps 3000000 --envs 8 --device cpu
+python run_seeds.py --script train_sac_baselines.py --tag sachocbf --extra "--method hocbf" --seeds 0 1 2 3 4 --parallel 1 --steps 3000000 --envs 8 --device cpu
+python collect_logs.py --run_dir runs --tags sachocbf`
+python collect_logs.py --run_dir runs --tags sacplain
+python sil/regress_vs_env.py --model runs/v17_seed0/rl_mpc_v17_seed0_sac.zip --episodes 3
+python sil/regress_sac_vs_env.py --method plain --model runs/sacplain_seed0/final_sacplain_seed0.zip --vecnorm runs/sacplain_seed0/vecnorm_final_sacplain_seed0.pkl
+python sil/regress_sac_vs_env.py --method hocbf --model runs/sachocbf_seed0/final_sachocbf_seed0.zip --vecnorm runs/sachocbf_seed0/vecnorm_final_sachocbf_seed0.pkl
+python -m venv venv_sil
+python -m pip install --upgrade pip
+python sil/regress_vs_env.py --model runs/v17_seed0/rl_mpc_v17_seed0_sac.zip --episodes 3
+python sil/regress_sac_vs_env.py --method plain --model runs/sacplain_seed0/final_sacplain_seed0.zip --vecnorm runs/sacplain_seed0/vecnorm_final_sacplain_seed0.pkl
+python sil/regress_sac_vs_env.py --method hocbf --model runs/sachocbf_seed0/final_sachocbf_seed0.zip --vecnorm runs/sachocbf_seed0/vecnorm_final_sachocbf_seed0.pkl
+python sil/compare_sil.py --episodes 3 --workers 2 --seeds 0 --scenarios nominal
+ python sil/compare_sil.py --episodes 20 --workers 1 --scenarios nominal
+python sil/compare_sil.py --episodes 30 --workers 6 --scenarios noise sensor_delay2 act_delay2 mismatch --out sil_main
+python sil/crash_log.py --seed 0 --scenario mismatch --episodes 30
+python sil/crash_log.py --seed 0 --scenario mismatch --episodes 30 --ref sil_compare_episodes.csv
+python sil/crash_log.py --seed 0 --scenario mismatch --episodes 30 --ref sil_out/rltvl_0_mismatch.csv
+python sil/compare_sil.py --episodes 30 --workers 2 --seeds 0 --ctrls rltvl --scenarios mismatch noise --out sil_B_iter
+Get-Command python                      # ÈÇíÏ ãÓíÑ ÏÇÎá venv_sil\Scripts ÈÇÔÏ
+python -c "import cvxpy, stable_baselines3; print('ok')"
+python sil/compare_sil.py --episodes 30 --workers 2 --seeds 0 --ctrls rltvl --scenarios mismatch noise --out sil_B_iter
+python sil/compare_sil.py --episodes 30 --workers 2 --seeds 0 --ctrls rltvl --scenarios mismatch noise --out sil_C_iter20k
+python sil/compare_sil.py --episodes 30 --workers 2 --seeds 0 --ctrls rltvl --scenarios mismatch noise --out sil_C_iter20k
+python sil/compare_sil.py --episodes 30 --workers 2 --seeds 0 --ctrls rltvl --scenarios mismatch noise --out sil_C_iter20k
+python sil/compare_sil.py --episodes 30 --workers 2 --seeds 0 --ctrls rltvl --scenarios mismatch noise --out sil_E_soft
+python sil/compare_sil.py --episodes 30 --workers 2 --seeds 0 --ctrls rltvl --scenarios mismatch noise --out sil_F_off
+python -c "import pandas as pd; d=pd.read_csv('summary_F.csv'); print(d[['scenario','solver_inaccurate_frac','solver_other_frac']])"
+python -c "import pandas as pd; d=pd.read_csv('summary_C.csv'); print(d[['scenario','survival','solver_inaccurate_frac','solver_other_frac']])"
+python sil/ablate_fixed.py --episodes 30 --workers 3 --scenarios nominal mismatch noise
+python reward_check.py --episodes 30 --model runs/v17_seed0/rl_mpc_v17_seed0_sac.zip
+python reward_check.py --episodes 30 --model runs/v17_seed0/rl_mpc_v17_seed0_sac.zip
+python reward_check.py --episodes 30 --model runs/v17_seed0/rl_mpc_v17_seed0_sac.zip
+python train_rl_mpc17.py --seed 0 --steps 300000 --tag v17res --beta 0.7 --device cuda --eval_freq 50000
+python reward_check.py --episodes 30 --model runs/v17res_seed0/rl_mpc_v17res_seed0_sac.zip
+python -c "from motorcycle_dynamics import MotorcycleDynamics, TAU_MAX, DELTA_MAX, MAX_DELTA_DOT; print('ok')"
+python train_rl_mpc17.py --seed 0 --steps 300000 --tag v17res2 --beta 0.7 --device cuda --eval_freq 50000
+python reward_check.py --episodes 30 --model runs/v17res2_seed0/rl_mpc_v17res2_seed0_sac.zip
+python train_rl_mpc18.py --seed 0 --steps 60000 --tag v18 --device cuda --eval_freq 10000
+python reward_check_v18.py --episodes 30 --model runs/v18_seed0/rl_mpc_v18_seed0_sac.zip
+python reward_check_v18.py --no_rl --no_mid17 --no_mid18 --episodes 30 --hiq 150 300 500 --ref reward_check_v18_episodes.csv --out rc18_hiq.csv
+python reward_unit_v19.py --episodes 30 --rl18 runs/v18_seed0/rl_mpc_v18_seed0_sac.zip
+python train_rl_mpc19.py --seed 0 --steps 25000 --tag v19 \
+python train_rl_mpc19.py --seed 0 --steps 25000 --tag v19 --w_u 415 --w_du 838 --w_n 0.2 --promote_every 2000 --eval_freq 5000 --device cuda
+python adaptation_check_v19.py --model runs/v19_seed0/rl_mpc_v19_seed0_sac.zip --w_u 415 --w_du 838 --w_n 0.2 --episodes 30
+python fault_sweep_mpc.py --episodes 20 --out fault_sweep_mpc.csv
+python fault_sweep_iw.py --episodes 30
+python generate_mpc_dataset.py --episodes 5 --out mpc_sanity.npz
+python generate_mpc_dataset.py --episodes 30 --out mpc_sanity30.npz
+python generate_mpc_dataset.py --episodes 30 --out mpc_sanity30b.npz
+python generate_mpc_dataset.py --episodes 1500 --seed0 10000 --out mpc_train.npz
+python generate_mpc_dataset.py --episodes 200 --seed0 90000 --out mpc_val.npz
+python train_neural_mpc.py --train mpc_train.npz --val mpc_val.npz --out neural_mpc.pt
+python closed_loop_validation.py --ckpt neural_mpc.pt --episodes 5 --conds nominal --out cl_test
+python closed_loop_validation.py --ckpt neural_mpc.pt --episodes 30 --conds nominal hard --out cl_val30
+python closed_loop_validation.py --ckpt neural_mpc.pt --episodes 100 --seed0 71000 --conds nominal hard --out cl_final100
+python closed_loop_validation.py --ckpt neural_mpc.pt --episodes 50 --seed0 73000 --conds nominal --iw 0.7 0.6 0.5 0.4 --out cl_fault
+python test_residual_env.py --ckpt neural_mpc.pt --scan --n 10
+python test_residual_env.py --ckpt neural_mpc.pt --ref cl_final100_traj.npz --seed0 71000 --n 10
+python closed_loop_validation.py --ckpt neural_mpc.pt --episodes 50 --seed0 73000 --conds nominal --iw 0.7 0.6 0.5 0.4 --out cl_fault
+python fault_sweep_nmpc.py --ckpt neural_mpc.pt --episodes 100 --out fault_sweep_nmpc
+python closed_loop_validation.py --ckpt neural_mpc.pt --episodes 50 --seed0 73000 --conds nominal --iw 0.5 0.4 --hold --out cl_fault_hold
+python train_residual_sac.py --ckpt neural_mpc.pt --steps 100000 --res_scale 5 --iw 1.0 0.5 0.45 0.42 0.4 --eval_iw 1.0 0.5 0.45 0.42 0.4 --eval_freq 10000 --eval_eps 20 --out res_pilot5
+python train_residual_sac.py --ckpt neural_mpc.pt --steps 1000000 --res_scale 5 --iw 1.0 0.5 0.45 0.42 0.4 --eval_iw 1.0 0.5 0.45 0.42 0.4 --eval_freq 25000 --eval_eps 20 --seed 0 --out res_main1m
+python final_benchmark.py --ckpt neural_mpc.pt --sac res_pilot5_best res_main1m_best res_main1m_final --ablate --out fb_nominal
+python final_fault_benchmark.py --ckpt neural_mpc.pt --sac res_main1m_best res_pilot5_best --episodes 5 --out ff_smoke
+python final_fault_benchmark.py --ckpt neural_mpc.pt --selftest
+python final_fault_benchmark.py --ckpt neural_mpc.pt --sac res_main1m_best res_pilot5_best --episodes 100 --seed0 77000 --out ff_final
+python unified_fault_benchmark.py --ckpt neural_mpc.pt --res res_main1m_best --sac_root runs --preflight_only
+python unified_fault_benchmark.py --ckpt neural_mpc.pt --res res_main1m_best --sac_root runs --smoke --out ub_smoke
+python unified_fault_benchmark.py --ckpt neural_mpc.pt --res res_main1m_best --sac_root runs --smoke --out ub_smoke_diag
+python unified_fault_benchmark.py --ckpt neural_mpc.pt --res res_main1m_best --sac_root runs --episodes 100 --iw 1.0 --out ub_scn
+python unified_fault_benchmark.py --ckpt neural_mpc.pt --res res_main1m_best --sac_root runs --episodes 100 --iw 1.0 0.6 0.5 0.45 0.42 0.4 0.35 0.3 --only healthy --out ub_iw
+python unified_fault_benchmark.py --ckpt neural_mpc.pt --sac_root runs --methods hocbf --hocbf_state true --episodes 100 --iw 1.0 --seed0 77000 --only healthy noise_imu_7deg dropout_imu_p0.5 act_delay_3 act_sat_30pct --out ub_oracle
+Get-CimInstance Win32_Process -Filter "name = 'python.exe'" |`
+Get-CimInstance Win32_Process -Filter "name = 'python.exe'" |Select-Object ProcessId, CommandLine
+$env:PYTHONFAULTHANDLER="1"
+python -X faulthandler -u .\unified_fault_benchmark.py --ckpt ".\multiseed_runs\pair_02_seed22\neural_mpc.pt" --res ".\multiseed_runs\pair_02_seed22\residual_sac_best@5" --methods --episodes 1 --seed0 77000 --boot 10 --only healthy --iw 1.0 --out ".\multiseed_runs\pair_02_seed22\diagnostic_eval"
+python -m pip show osqp cvxpy numpy scipy
+python -X faulthandler -c "import osqp; print('OSQP IMPORT OK', flush=True); import cvxpy as cp; print('CVXPY IMPORT OK', cp.installed_solvers(), flush=True)"
+python -X faulthandler -u -c "import osqp; import cvxpy; import runpy; import sys; sys.argv=['unified_fault_benchmark.py','--ckpt','multiseed_runs/pair_02_seed22/neural_mpc.pt','--res','multiseed_runs/pair_02_seed22/residual_sac_best@5','--methods','--episodes','1','--seed0','77000','--boot','10','--only','healthy','--iw','1.0','--out','multiseed_runs/pair_02_seed22/diagnostic_preload']; runpy.run_path('unified_fault_benchmark.py',run_name='__main__')"
+python -X faulthandler -u -c "import osqp; import cvxpy; import runpy; import sys; sys.argv=['unified_fault_benchmark.py','--ckpt','multiseed_runs/pair_02_seed22/neural_mpc.pt','--res','multiseed_runs/pair_02_seed22/residual_sac_best@5','--methods','--episodes','10','--seed0','77000','--boot','50','--only','healthy','act_delay_3','dropout_imu_p0.5','act_sat_30pct','--iw','1.0','--out','multiseed_runs/pair_02_seed22/diagnostic_preload_10']; runpy.run_path('unified_fault_benchmark.py',run_name='__main__')"
+python -u .\run_multiseed.py --eval-all-faults
+python -c "from stable_baselines3 import SAC; p=r'.\multiseed_runs\pair_01_seed11\residual_sac_best.zip'; m=SAC.load(p,device='cpu'); print('SAC LOAD OK')"
+python -c "import numpy, scipy, stable_baselines3, cloudpickle; print('NumPy:',numpy.__version__); print('SciPy:',scipy.__version__); print('SB3:',stable_baselines3.__version__); print('Cloudpickle:',cloudpickle.__version__)"
+'@ | python -
+'@ | python -
+'@ | python -
+'@ | python -
+python -u .\benchmark_preload.py ``
+'@ | python -
+'@ | python -
+'@ | python -
+'@ | python -
+'@ | python -
+python -u .\benchmark_preload.py ``
+python -u .\run_multiseed.py --eval-all-faults
+'@ | python -
+python -u .\train_standalone_sac.py ``
+python -u .\train_standalone_sac.py ``
+    python -u .\train_standalone_sac_progress.py ``
+    python -u .\train_standalone_sac.py ``
+    python -u .\train_standalone_sac.py ``
+python -u .\unified_fault_benchmark.py ``
+python -u .\unified_fault_benchmark.py ``
+python -X faulthandler -c "import osqp; print('OSQP OK', osqp.__version__)"
+python -X faulthandler -c "import cvxpy as cp; print('CVXPY OK', cp.__version__); print('Solvers:', cp.installed_solvers())"
+python -X faulthandler -u -c "import cvxpy; import osqp; import runpy; import sys; sys.argv = ['unified_fault_benchmark.py', '--ckpt', 'neural_mpc.pt', '--sac_root', './standalone_runs', '--methods', 'plain', '--seeds_sac', '11', '22', '33', '44', '55', '--prefer', 'best', '--sac_steps', '1000000', '--smoke', '--out', 'sacplain_smoke']; runpy.run_path('unified_fault_benchmark.py', run_name='__main__')"
+python -X faulthandler -u -c "import cvxpy; import osqp; import runpy; import sys; sys.argv = ['unified_fault_benchmark.py', '--ckpt', 'neural_mpc.pt', '--sac_root', './standalone_runs', '--methods', 'plain', '--seeds_sac', '11', '22', '33', '44', '55', '--prefer', 'best', '--sac_steps', '1000000', '--episodes', '100', '--iw', '1.0', '--out', 'sacplain_full']; runpy.run_path('unified_fault_benchmark.py', run_name='__main__')"
+python -X faulthandler -u -c "import cvxpy; import osqp; import runpy; import sys; sys.argv = ['unified_fault_benchmark.py', '--ckpt', 'neural_mpc.pt', '--res', './residual_eval/residual_seed11_best', './residual_eval/residual_seed22_best', './residual_eval/residual_seed33_best', './residual_eval/residual_seed44_best', './residual_eval/residual_seed55_best', '--methods', '--smoke', '--out', 'residual_smoke']; runpy.run_path('unified_fault_benchmark.py', run_name='__main__')"
+python -X faulthandler -u -c "import cvxpy; import osqp; import runpy; import sys; sys.argv = ['unified_fault_benchmark.py', '--ckpt', 'neural_mpc.pt', '--res', './residual_eval/residual_seed11_best', './residual_eval/residual_seed22_best', './residual_eval/residual_seed33_best', './residual_eval/residual_seed44_best', './residual_eval/residual_seed55_best', '--methods', '--preflight_only']; runpy.run_path('unified_fault_benchmark.py', run_name='__main__')"
+python -c "import numpy, stable_baselines3; print('NumPy:', numpy.__version__); print('SB3:', stable_baselines3.__version__)"
+python -X faulthandler -u -c "import cvxpy; import osqp; import numpy.core as nc; import numpy.core.numeric as nn; import sys; sys.modules['numpy._core'] = nc; sys.modules['numpy._core.numeric'] = nn; import runpy; sys.argv = ['unified_fault_benchmark.py', '--ckpt', 'neural_mpc.pt', '--res', './residual_eval/residual_seed11_best', './residual_eval/residual_seed22_best', './residual_eval/residual_seed33_best', './residual_eval/residual_seed44_best', './residual_eval/residual_seed55_best', '--methods', '--preflight_only']; runpy.run_path('unified_fault_benchmark.py', run_name='__main__')"
+python -m venv .venv_residual_eval`
+.\.venv_residual_eval\Scripts\python.exe -m pip install --upgrade pip
+.\.venv_residual_eval\Scripts\python.exe -m pip install ``
+python -X faulthandler -u -c "import cvxpy; import osqp; import numpy.core as nc; import numpy.core.numeric as nn; import sys; sys.modules['numpy._core'] = nc; sys.modules['numpy._core.numeric'] = nn; import runpy; sys.argv = ['unified_fault_benchmark.py', '--ckpt', 'neural_mpc.pt', '--res', './residual_eval/residual_seed11_best', './residual_eval/residual_seed22_best', './residual_eval/residual_seed33_best', './residual_eval/residual_seed44_best', './residual_eval/residual_seed55_best', '--methods', '--preflight_only']; runpy.run_path('unified_fault_benchmark.py', run_name='__main__')"
+.\.venv_residual_eval\Scripts\python.exe -c "import numpy; from stable_baselines3 import SAC; m=SAC.load('./residual_eval/residual_seed11_best.zip', device='cpu'); print('NumPy:',numpy.__version__); print('Model loaded successfully'); print('Observation:',m.observation_space.shape); print('Training steps:',m.num_timesteps)"
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+.\.venv_residual_eval\Scripts\python.exe -X faulthandler -u -c "import cvxpy; import osqp; import runpy; import sys; sys.argv = ['unified_fault_benchmark.py', '--ckpt', 'neural_mpc.pt', '--res', './residual_eval/residual_seed11_best', './residual_eval/residual_seed22_best', './residual_eval/residual_seed33_best', './residual_eval/residual_seed44_best', './residual_eval/residual_seed55_best', '--methods', '--smoke', '--out', 'residual_best_smoke']; runpy.run_path('unified_fault_benchmark.py', run_name='__main__')"
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+.\.venv_residual_eval\Scripts\python.exe -X faulthandler -u -c "import cvxpy; import osqp; import runpy; import sys; sys.argv = ['unified_fault_benchmark.py', '--ckpt', 'neural_mpc.pt', '--res', './residual_eval/residual_seed11_best', './residual_eval/residual_seed22_best', './residual_eval/residual_seed33_best', './residual_eval/residual_seed44_best', './residual_eval/residual_seed55_best', '--sac_root', './standalone_runs', '--methods', 'plain', '--seeds_sac', '11', '22', '33', '44', '55', '--prefer', 'best', '--episodes', '100', '--seed0', '77000', '--iw', '1.0', '--smoke', '--out', 'three_models_fair_smoke']; runpy.run_path('unified_fault_benchmark.py', run_name='__main__')"
+        $_.FullName -notmatch '\\(\.venv|venv|site-packages)\\'`
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+'@ | .\.venv_residual_eval\Scripts\python.exe -
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+& .\.venv_residual_eval\Scripts\python.exe ``
+$python = ".\.venv_residual_eval\Scripts\python.exe"
+    & $python $script ``
+python -m pip install numpy scipy cvxpy osqp gymnasium torch stable-baselines3
+python benchmark_classical.py --controllers lqr pd --only healthy dropout_imu_p0.5 act_delay_3 --episodes 5 --out classical_smoke.csv
+python -c "import pandas as pd; d=pd.read_csv('classical_smoke.csv'); print('Columns:',d.columns.tolist()); print(d.to_string(index=False))"
+python tune_pd.py --kp 5 --kd 2.5 --ks 0.7 3 10 20 --max-rate 15 --episodes 5 --out pd_tuning_smoke.csv
+python tune_pd.py --kp 5 --kd 2.5 --ks 0.7 3 10 20 --max-rate 15 --episodes 5 --out pd_tuning_smoke.csv
+python -c "import pandas as pd; d=pd.read_csv('pd_tuning_smoke.csv'); print(d.to_string(index=False))"
+python tune_pd_angle.py --ks 1 3 5 --ka 0 0.5 2 5 --episodes 5 --out pd_angle_validation.csv
+python -c "import pandas as pd; d=pd.read_csv('pd_angle_validation.csv'); print(d.to_string(index=False))"
+python tune_gravity_pd.py --kp 4 8 --kd 3 5 --kr 4 8 --episodes 5 --out gravity_pd_validation.csv
+python -c "import pandas as pd; d=pd.read_csv('gravity_pd_validation.csv'); print(d.to_string(index=False))"
+python diagnose_gravity_pd.py --scenario healthy --seed 89000 --kp 8 --kd 5 --kr 8 --out gravity_pd_trace.csv
+python compare_reference_pd.py --only healthy dropout_imu_p0.5 act_delay_3 --episodes 5 --seed0 89000 --out reference_pd_comparison.csv
+python -c "import pandas as pd; d=pd.read_csv('reference_pd_comparison.csv'); print(d.groupby(['scenario','variant']).agg(survival=('crashed',lambda s:1-s.mean()),rmse_all=('rmse','mean'),u_rms=('u_rms','mean'),sat=('sat','mean')).to_string())"
+python diagnose_reference_pd.py --scenario healthy --seed 89000 --out reference_pd_trace.csv
+python diagnose_reference_pd.py --scenario act_delay_3 --seed 89000 --out reference_pd_delay_trace.csv
+python compare_inner_pd.py --only healthy dropout_imu_p0.5 act_delay_3 --episodes 5 --seed0 89000 --out inner_pd_validation.csv
+python -c "import pandas as pd; d=pd.read_csv('inner_pd_validation.csv'); print(d.groupby(['scenario','variant']).agg(survival=('crashed',lambda s:1-s.mean()),rmse_all=('rmse','mean'),u_rms=('u_rms','mean'),sat=('sat','mean'),mean_steps=('steps','mean')).to_string())"
+python benchmark_classical.py --controllers mpc --only healthy dropout_imu_p0.5 act_delay_3 --episodes 5 --seed0 89000 --out online_mpc_smoke.csv
+python benchmark_classical.py --controllers lqr mpc --only healthy dropout_imu_p0.5 act_delay_3 --episodes 20 --seed0 90000 --out lqr_mpc_validation.csv
+python benchmark_extended.py --controllers lqr gs_lqr mpc adaptive_mpc --only healthy dropout_imu_p0.5 act_delay_3 --episodes 5 --seed0 91000 --out extended_smoke.csv
+python ablation_lqr_mpc.py --audit-only --gain-out lqr_gain_audit.csv
+python ablation_lqr_mpc.py --controllers lqr gs_lqr mpc15 mpc20 mpc40 adaptive_mpc --only healthy dropout_imu_p0.5 act_delay_3 --episodes 5 --seed0 92000 --out lqr_mpc_ablation.csv
+python compare_adaptive_fixed.py --controllers mpc15 mpc20 mpc40 adaptive_original adaptive_no15 adaptive_no15_hyst --only healthy dropout_imu_p0.5 act_delay_3 --episodes 5 --seed0 93000 --out adaptive_horizon_comparison.csv
+python -c "import pandas as pd; d=pd.read_csv('adaptive_horizon_comparison.csv'); print(d.groupby(['scenario','variant']).agg(n=('crashed','size'),survival=('crashed',lambda s:1-s.mean()),rmse=('rmse','mean'),u_rms=('u_rms','mean'),sat=('sat','mean'),switches=('horizon_switches','sum'),fails=('solver_fail_steps','sum'),ms=('ms','median')).to_string())"
+python compare_adaptive_fixed.py --controllers mpc20 mpc40 adaptive_original adaptive_no15 adaptive_no15_hyst --only act_delay_3 --episodes 2 --seed0 93000 --out adaptive_delay_summary.csv --trace-out adaptive_delay_trace.csv
+python horizon_sensitivity_sweep.py --horizons 10 20 40 --episodes 2 --buckets 0 2 --scenarios healthy iw_0.5 --out horizon_pilot
+python horizon_sensitivity_sweep.py --horizons 10 15 20 30 40 --episodes 10 --buckets 0 1 2 --scenarios healthy iw_0.5 eff_0.7 rate_10 --out horizon_sweep_10
+python diagnose_horizon15.py --horizons 10 15 20 --episodes 5 --seed0 61000 --out horizon15_diagnostic
+python diagnose_horizon15.py --horizons 10 15 20 --episodes 5 --seed0 61000 --out horizon15_strict
+python generate_multihorizon_dataset.py --episodes 5 --out multi_sanity.npz
+python train_multihorizon_neural_mpc.py ``
+python generate_multihorizon_dataset.py --episodes 5 --out multi_sanity.npz
+python generate_multihorizon_dataset_13.py --episodes 5 --out multi_sanity_13.npz
+python generate_multihorizon_dataset_13.py --episodes 375 --seed0 10000 --out multi_train_13.npz
+python generate_multihorizon_dataset_13.py --episodes 50 --seed0 90000 --out multi_val_13.npz
+python train_multihorizon_neural_mpc_13.py ``
+python evaluate_closed_loop_multi13.py --ckpt neural_mpc_multi13.pt --seeds 5 --iw 1.0 --out pilot_multi13
+python evaluate_closed_loop_multi13.py ``
+python train_residual_sac_multi13.py ``
+python evaluate_residual_independent_multi13.py ``
+python train_residual_sac_multi13_resume.py ``
+python evaluate_best_final_independent_multi13.py ``
+python run_sac_3seeds_multi13.py ``
+$env:PYTHONIOENCODING = "utf-8"
+python run_sac_3seeds_multi13.py ``
+$env:PYTHONIOENCODING = "utf-8"
+python evaluate_three_seeds_independent_multi13.py ``
+$env:PYTHONIOENCODING = "utf-8"
+python evaluate_three_seeds_independent_multi13.py ``
+python .\evaluate_standalone_5seeds_heldout.py --gate_only
+python .\evaluate_standalone_5seeds_heldout.py --seeds 50 --seed0 400000
+python .\evaluate_legacy_residual_5seeds_heldout.py --gate_only
+python -u .\evaluate_legacy_residual_5seeds_heldout.py --seeds 50 --seed0 400000
+python -u .\legacy_residual_eval_fixed_v2.py --seeds 50 --seed0 400000
+python -u .\train_residual_sac_multi13_resume.py ``
+python -u .\compare_34faults_pure_vs_adaptive_1m.py --preflight_only
+python -u .\compare_34faults_pure_vs_adaptive_1m.py ``
+python -u .\compare_34faults_pure_vs_adaptive_1m.py ``
+    python -u .\train_residual_sac_multi13_resume.py ``
+        python -u .\evaluate_res_scale_sac_only.py ``
+python -m py_compile ".\compare_34faults_res_scale.py"
+        & python @argsList`
+        & python @argsList`
+python .\make_pure_only.py
+python -m py_compile .\compare_34faults_pure_only.py
+python .\make_pure_only.py
+python -m py_compile .\compare_34faults_pure_only.py
+    throw "Python syntax check failed"`
+        python -u .\compare_34faults_pure_only.py ``
+python .\analyze_fault34_multiseed.py ``
+        python -u .\compare_34faults_res_scale.py ``
+python .\analyze_fault34_multiseed.py ``
+        python -u .\compare_34faults_res_scale.py ``
+python -c "import sys, numpy, torch, stable_baselines3, cloudpickle; print('Python:',sys.version); print('NumPy:',numpy.__version__); print('PyTorch:',torch.__version__); print('SB3:',stable_baselines3.__version__); print('Cloudpickle:',cloudpickle.__version__)"
+python -u .\compare_34faults_numpy_compat.py ``
+'@ | python -
+python -u .\compare_34faults_loadfix.py ``
+python -u .\test_load_404.py
+# Check available Python versions
+py -3.10 -m venv .venv_eval_numpy2
+.\.venv_eval_numpy2\Scripts\python.exe -m pip install --upgrade pip
+.\.venv_eval_numpy2\Scripts\python.exe -m pip install ``
+.\.venv_eval_numpy2\Scripts\python.exe -c "import numpy, stable_baselines3, torch; print('NumPy:',numpy.__version__); print('SB3:',stable_baselines3.__version__); print('Torch:',torch.__version__)"
+.\.venv_eval_numpy2\Scripts\python.exe -u .\test_load_404.py
+'@ | .\.venv_eval_numpy2\Scripts\python.exe -
+.\.venv_eval_numpy2\Scripts\python.exe -u .\compare_34faults_numpy2_eval.py ``
+.\.venv_eval_numpy2\Scripts\python.exe -m pip install "scipy>=1.13,<1.16"
+.\.venv_eval_numpy2\Scripts\python.exe -u .\compare_34faults_numpy2_eval.py ``
+$python = ".\.venv_eval_numpy2\Scripts\python.exe"
+$cvxVersion = python -c "import cvxpy; print(cvxpy.__version__)"
+& $python -m pip install "cvxpy==$cvxVersion"
+& $python -c "import cvxpy as cp; print('CVXPY:',cp.__version__); print('Solvers:',cp.installed_solvers())"
+& $python -u .\compare_34faults_numpy2_eval.py ``
+$python = ".\.venv_eval_numpy2\Scripts\python.exe"
+& $python -m pip install --upgrade --force-reinstall ``
+& $python -c "import numpy, cvxpy; print('NumPy:',numpy.__version__); print('CVXPY:',cvxpy.__version__); print('Solvers:',cvxpy.installed_solvers())"
+python -c "import numpy, cvxpy, torch, stable_baselines3; print('NumPy:',numpy.__version__); print('CVXPY:',cvxpy.__version__); print('Torch:',torch.__version__); print('SB3:',stable_baselines3.__version__)"
+.\.venv_eval_numpy2\Scripts\python.exe -u .\convert_404_test.py
+python -c "from stable_baselines3 import SAC; m=SAC.load('sac_seed404_fromscratch_1m_best_compat.zip',device='cpu',custom_objects={'lr_schedule':lambda _:0.0}); print('LOAD OK'); print('Observation:',m.observation_space); print('Action:',m.action_space)"
+python -u .\repair_404_numpy1.py
+python -c "from stable_baselines3 import SAC; m=SAC.load('sac_seed404_fromscratch_1m_best_numpy1.zip',device='cpu',custom_objects={'lr_schedule':lambda _:0.0}); print('LOAD OK'); print('Observation:',m.observation_space); print('Action:',m.action_space)"
+python -u .\test_404_numpy1_spaces.py
+'@ | python -
+python -u .\test_404_numpy1_spaces.py
+.\.venv_eval_numpy2\Scripts\python.exe -u .\verify_404_actor.py original
+python -u .\verify_404_actor.py converted
+python -c "import numpy as np; a=np.load('actions_404_original.npy'); b=np.load('actions_404_converted.npy'); print('MAX ABS DIFFERENCE:',np.max(np.abs(a-b))); print('MEAN ABS DIFFERENCE:',np.mean(np.abs(a-b))); print('ALLCLOSE:',np.allclose(a,b,rtol=1e-6,atol=1e-6))"
+print("Python:", sys.version.split()[0])`
+.\.venv_eval_numpy2\Scripts\python.exe -u .\test_404_vecnorm.py
+python -u .\test_404_vecnorm.py
+.\.venv_eval_numpy2\Scripts\python.exe -u .\export_404_vecnorm.py
+python -c "import numpy as np; p='sac_seed404_fromscratch_1m_best_vecnorm_stats.npz'; d=np.load(p,allow_pickle=False); print('NUMPY 1 READ OK'); print('Obs shape:',d['obs_mean'].shape); print('Obs count:',d['obs_count']); print('Finite stats:',np.isfinite(d['obs_mean']).all() and np.isfinite(d['obs_var']).all()); print('Variance nonnegative:',(d['obs_var']>=0).all())"
+python -u .\rebuild_404_vecnorm.py
+python -c "import pickle; p='sac_seed404_fromscratch_1m_best_vecnorm_numpy1.pkl'; v=pickle.load(open(p,'rb')); print('LOAD OK'); print('obs count:',v.obs_rms.count); print('obs shape:',v.obs_rms.mean.shape); print('training:',v.training)"
+.\.venv_eval_numpy2\Scripts\python.exe -u .\verify_404_vecnorm.py original
+python -u .\verify_404_vecnorm.py converted
+python -c "import numpy as np; a=np.load('normalized_404_original.npy'); b=np.load('normalized_404_converted.npy'); print('MAX ABS DIFFERENCE:',np.max(np.abs(a-b))); print('MEAN ABS DIFFERENCE:',np.mean(np.abs(a-b))); print('ALLCLOSE:',np.allclose(a,b,rtol=1e-6,atol=1e-6))"
+python -u .\save_404_eval.py
+python -u .\compare_34faults_res_scale.py ``
+python -u .\evaluate_four_residual_models.py
+python -u .\find_online_mpc_code.py
+python -u .\extract_benchmark_code.py
+python -u .\extract_online_mpc.py
+python -u .\compare_online_mpc_vs_neural_vs_residual.py ``
+python -u .\compare_online_mpc_vs_neural_vs_residual.py ``
+python -u .\compare_online_mpc_vs_neural_vs_residual.py ``
+python -u .\compare_online_mpc_vs_neural_vs_residual.py ``
+python -u .\diagnose_mpc_failure.py ``
+python -u .\diagnose_mpc_failure.py ``
+python -u .\evaluate_online_mpc_100seeds.py ``
+python -u .\evaluate_neural_residual_fixedN20_100seeds.py ``
+python -u .\evaluate_neural_residual_fixedN20_100seeds.py ``
+python -u .\evaluate_neural_residual_fixedN20_100seeds.py ``
+python -u .\evaluate_neural_residual_fixedN20_100seeds.py ``
+python .\evaluate_legacy_residual_5seeds_heldout.py --help
+python .\evaluate_legacy_residual_5seeds_heldout.py ``
+python .\benchmark_preload.py --help
+python .\benchmark_preload.py ``
+    python .\benchmark_preload.py ``
+python .\check_initial_parity.py
+python .\check_sensor_parity.py
+python .\check_multistep_parity.py
+python .\audit_online_csv.py
+    python .\benchmark_preload.py ``
+    python .\benchmark_preload.py ``
+    python .\benchmark_preload.py ``
+        python .\benchmark_preload.py ``
+python -m pip install mujoco numpy
+python .\simulate.py --seconds 3 --speed 3 --viewer
+python -m pip install mujoco numpy
+python .\simulate.py --seconds 3 --speed 3 --viewer
+python -c "import mujoco; print('MuJoCo OK:', mujoco.__version__)"
+python .\simulate.py --seconds 3 --speed 3 --viewer
+python -m py_compile .\simulate.py
+python .\simulate.py --seconds 3 --speed 3 --viewer
+python .\test_mujoco.py
+python -c "import mujoco; m=mujoco.MjModel.from_xml_path('motorcycle.xml'); print('MODEL LOAD PASS',m.nbody,m.ngeom,m.nv)"
+python .\simulate.py --seconds 3 --speed 3
+python .\simulate.py --seconds 10 --speed 3 --viewer
+python -c "import mujoco; m=mujoco.MjModel.from_xml_path('motorcycle.xml'); print('MODEL LOAD PASS')"
+python .\simulate.py --seconds 60 --speed 3 --viewer
+python .\fix_motorcycle.py
+python -m py_compile .\simulate.py
+python -c "import mujoco; m=mujoco.MjModel.from_xml_path('motorcycle.xml'); print('MODEL LOAD PASS')"
+python .\simulate.py --seconds 30 --speed 3 --viewer
+python .\fix_side_cmg_camera.py
+python -m py_compile .\simulate.py
+python -c "import mujoco; m=mujoco.MjModel.from_xml_path('motorcycle.xml'); print('MODEL LOAD PASS')"
+python .\simulate.py --seconds 20 --speed 3 --viewer
+python .\add_fall_detection.py
+python -m py_compile .\simulate.py
+python .\simulate.py --seconds 60 --speed 3 --viewer
+python .\fix_fall_termination.py
+python -m py_compile .\simulate.py
+python .\simulate.py --seconds 60 --speed 3 --viewer
+python .\stop_after_fall.py
+python -m py_compile .\simulate.py
+python .\simulate.py --seconds 60 --speed 3 --viewer
+python -m pip install imageio imageio-ffmpeg
+python .\add_recording.py
+python -m py_compile .\simulate.py
+python .\simulate.py --seconds 60 --speed 3 --viewer --record
+python .\add_road_visuals.py
+python .\enable_full_hd.py
+python -c "import mujoco; m=mujoco.MjModel.from_xml_path('motorcycle.xml'); print('MODEL PASS',m.ngeom)"
+python .\simulate.py --seconds 60 --speed 3 --viewer --record
+python .\fix_fullhd_framebuffer.py
+python -c "import mujoco; m=mujoco.MjModel.from_xml_path('motorcycle.xml'); print('MODEL PASS',m.vis.global_.offwidth,m.vis.global_.offheight)"
+python .\simulate.py --seconds 60 --speed 3 --viewer --record
+python -c "import imageio.v2 as iio; r=iio.get_reader('motorcycle_simulation.mp4'); f=r.get_data(30); print('FRAME:',f.shape,'MIN:',f.min(),'MAX:',f.max(),'MEAN:',f.mean()); iio.imwrite('video_test_frame.png',f); r.close()"
+python -c "import imageio.v2 as iio; r=iio.get_reader('motorcycle_simulation.mp4'); print(r.get_meta_data()); r.close()"
+python .\simulate.py --seconds 60 --speed 3 --viewer --record
+python -c "import csv; r=list(csv.DictReader(open('open_loop.csv'))); print('TIME(s) | Y(m) | VY(m/s) | ROLL(deg)'); [print('%6.2f | %7.3f | %8.3f | %8.2f'%(float(a['time_s']),float(a['y_m']),float(a['v_forward_mps']),float(a['roll_deg']))) for a in r[::100]]"
+python -c "import mujoco; m=mujoco.MjModel.from_xml_path('motorcycle.xml'); j=m.joint('rear_spin'); a=m.actuator('rear_drive'); print('REAR AXIS:',m.jnt_axis[j.id]); print('DRIVE GEAR:',m.actuator_gear[a.id]); print('DRIVE TYPE:',m.actuator_dyntype[a.id]); print('GAIN:',m.actuator_gainprm[a.id]); print('BIAS:',m.actuator_biasprm[a.id])"
+python .\check_wheel_axes.py
+python .\test_wheel_direction.py
+python .\fix_wheel_direction.py
+python -m py_compile .\simulate.py
+python .\simulate.py --seconds 10 --speed 3
+python -c "import csv; r=list(csv.DictReader(open('open_loop.csv'))); print('TIME | Y | VY'); [print('%5.2f | %8.3f | %8.3f'%(float(a['time_s']),float(a['y_m']),float(a['v_forward_mps']))) for a in r[::100]]"
+python .\simulate.py --seconds 60 --speed 3 --viewer --record
+python .\fix_floor_size.py
+python .\simulate.py --seconds 60 --speed 3 --viewer --record
+python .\simulate.py --seconds 3 --speed 3 --viewer
+python .\build_research_track.py
+python .\simulate.py --seconds 5 --speed 3 --viewer --record
+python compare_34faults_res_scale.py --pure_seed 22 --seed0 77000 --episodes 100 \
+python compare_34faults_res_scale.py --pure_seed 22 --seed0 77000 --episodes 100 \
+python compare_34faults_res_scale.py --pure_seed 22 --seed0 77000 --episodes 100 --buckets 0 1 2 --out pure_sac_77000 --only healthy dropout_imu_p0.3 dropout_imu_p0.5 intermittent_imu_burst20 stuck_phi_15deg
+python .\evaluate_neural_residual_fixedN20_100seeds.py --help
+python .\evaluate_neural_residual_fixedN20_100seeds.py ``
+  python compare_34faults_res_scale.py --pure_seed $s --seed0 77000 --episodes 100 --buckets 0 1 2 --out "pure_sac_77000_seed$s" --only healthy dropout_imu_p0.3 dropout_imu_p0.5 intermittent_imu_burst20 stuck_phi_15deg`
+python .\evaluate_neural_residual_adaptive_100seeds_patched.py --adaptive --preflight_only --ckpt ".\neural_mpc_multi13.pt" --res_stems ".\sac_seed101_continued_1m_best" ".\sac_seed202_continued_1m_best" ".\sac_seed303_continued_1m_best" ".\sac_seed404_fromscratch_1m_best_eval" ".\sac_seed505_fromscratch_1m_best_eval" --out ".\tmp_pre"
+python compare_34faults_res_scale.py --res_stem sac_seed202_continued_1m_best --skip_pure --only healthy dropout_imu_p0.3 --seed0 77000 --episodes 5 --buckets 0 --out ref_check
+python .\evaluate_neural_residual_adaptive_100seeds_patched.py --adaptive --ckpt ".\neural_mpc_multi13.pt" --res_stems ".\sac_seed101_continued_1m_best" ".\sac_seed202_continued_1m_best" ".\sac_seed303_continued_1m_best" ".\sac_seed404_fromscratch_1m_best_eval" ".\sac_seed505_fromscratch_1m_best_eval" --seed0 77000 --episodes 5 --buckets 0 --only healthy dropout_imu_p0.3 --out ".\patch_check"
+python .\check_patch.py
+python .\evaluate_neural_residual_adaptive_100seeds_patched.py --adaptive --ckpt ".\neural_mpc_multi13.pt" --res_stems ".\sac_seed101_continued_1m_best" ".\sac_seed202_continued_1m_best" ".\sac_seed303_continued_1m_best" ".\sac_seed404_fromscratch_1m_best_eval" ".\sac_seed505_fromscratch_1m_best_eval" --training_seeds 101 202 303 404 505 --seed0 77000 --episodes 100 --buckets 0 1 2 --only healthy dropout_imu_p0.3 dropout_imu_p0.5 intermittent_imu_burst20 stuck_phi_15deg --horizon 20 --iw 1.0 --res_scale 5.0 --out ".\neural_residual_adaptive_77000_100seeds"
+Where-Object { $_.FullName -notmatch '\\(venv|\.venv|site-packages|__pycache__)\\' } |`
+python .\evaluate_online_mpc_ekf_100seeds.py ``
+python .\evaluate_online_mpc_ekf_100seeds.py ``
+python .\diagnose_online_mpc_ekf_trace.py ``
+python .\evaluate_online_mpc_ekf_ablation.py ``
+python .\evaluate_online_mpc_ekf_ablation.py ``
+python .\ekf_parity_gate.py ``
+python .\ekf_benchmark_plan.py ``
+python .\evaluate_online_mpc_ekf_100seeds.py ``
+python .\evaluate_online_mpc_ekf_ablation.py ``
+python .\evaluate_online_mpc_ekf_ablation.py ``
+python .\audit_mpc_solver_determinism.py ``
+python .\audit_mpc_solver_fresh_process.py ``
+python .\audit_osqp_abc_pilot.py ``
+python .\pilot_strict_osqp_ekf.py ``
+python .\run_ekf_confirmatory.py ``
+python .\run_ekf_confirmatory.py ``
+python .\run_ekf_confirmatory.py ``
+python .\summarize.py .\ekf_confirm_78000_episodes.csv > out.txt
+python .\summarize.py .\ekf_confirm_78000_N10_episodes.csv > out_N10.txt
+python .\evaluate_neural_residual_adaptive_100seeds_patched.py ``
+python .\compare_34faults_res_scale.py ``
+python .\evaluate_pure_sac_78000_standalone.py ``
+python .\evaluate_pure_sac_78000_standalone.py ``
+python .\run_ekf_confirmatory.py ``
+python .\audit_mujoco_interface.py
+python .\test_cmg_response.py
+python .\test_cmg_response.py
+python .\simulate.py --seconds 3 --speed 3 --roll-deg 5
+python .\test_cmg_response.py
+python .\diagnose_cmg_response.py
+python .\test_cmg_step_response.py
+python .\audit_mujoco_physics.py
+python .\create_geometry_v2.py
+python .\compare_geometry.py
+python .\compare_cmg_geometry_response.py
+python .\audit_mujoco_physics.py
+python .\compare_reference_dynamics.py
+python .\test_initial_gimbal_acceleration.py
+python .\audit_gimbal_effective_inertia.py
+python .\audit_gimbal_effective_inertia.py
+python .\audit_gimbal_effective_inertia.py
+python .\audit_gimbal_effective_inertia.py
+python .\compare_control_models.py
+python .\compare_control_models.py
+python .\audit_controller_interfaces.py |`
+$env:PYTHONIOENCODING = "utf-8"`
+python .\audit_controller_interfaces.py 2>&1 |`
+$env:PYTHONIOENCODING = "utf-8"
+python .\audit_controller_interfaces.py 2>&1 |`
+python .\build_interface_details.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\extract_mujoco_actuators.py 2>&1 |`
+$env:PYTHONIOENCODING = "utf-8"
+python .\build_control_candidate.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\audit_control_candidate.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\repair_control_candidate.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\repair_control_candidate.py
+python .\audit_gimbal_effective_inertia.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\compare_gimbal_inertia_v2.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\build_control_v2.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\test_control_v2_gimbal.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\log_gimbal_time_response.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\compare_gimbal_reference.py
+$env:PYTHONIOENCODING = "utf-8"
+$env:PYTHONIOENCODING = "utf-8"
+python .\compare_true_reference_v2.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\audit_ekf_duplicate_rows.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\audit_and_clean_ekf_n40.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\inspect_n40_run_structure.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\compare_n40_duplicate_versions.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\summarize_ekf_horizons.py
+$env:PYTHONIOENCODING = "utf-8"
+python .\analyze_ekf_horizon_scenarios.py
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Phase2\mj_full_physics_audit.py" --out mj_full_physics_audit.json
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\mj_full_physics_audit.py" --out mj_full_physics_audit.json
+python "MuJoCo_Phase2_followup\mj_openloop_diagnostic.py" --out mj_openloop_comparison
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\mj_openloop_diagnostic.py" --out mj_openloop_comparison
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\mj_passive_baseline_sweep.py" --seconds 5 --out mj_passive_baseline
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\test_servo.py"
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" --mj_mode full compare_34faults_res_scale.py --only healthy dropout_imu_p0.3 --episodes 5 --out mj_full_raw_smoke
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" --mj_mode full --mj_servo compare_34faults_res_scale.py --only healthy dropout_imu_p0.3 --episodes 5 --out mj_full_servo_smoke
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" --mj_mode full compare_34faults_res_scale.py --only healthy dropout_imu_p0.3 --episodes 5 --out mj_full_raw_smoke
+$env:PYTHONPATH = "C:\Users\Moein\Desktop\Paper\RL-MPC\Three Models;$env:PYTHONPATH"
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" --mj_mode full compare_34faults_res_scale.py --only healthy dropout_imu_p0.3 --episodes 5 --out mj_full_raw_smoke
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" --mj_mode full compare_34faults_res_scale.py --only healthy dropout_imu_p0.3 --episodes 5 --out mj_full_raw_smoke
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" --mj_mode full --mj_servo compare_34faults_res_scale.py --only healthy dropout_imu_p0.3 --episodes 5 --out mj_full_servo_smoke
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" --mj_mode full compare_34faults_res_scale.py --only healthy dropout_imu_p0.3 --episodes 5 --out mj_full_raw_verified01
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" --mj_mode full --mj_servo compare_34faults_res_scale.py --only healthy dropout_imu_p0.3 --episodes 5 --out mj_full_servo_verified01
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" ``
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\run_in_mujoco.py" ``
+python -m pip install imageio imageio-ffmpeg pillow
+python .\capture.py ``
+python -c "import sys,inspect; sys.path.insert(0,r'$MJ'); from mj_observed_env import make_env_class; print('SIGNATURE:',inspect.signature(make_env_class)); print(inspect.getsource(make_env_class))"
+python .\capture.py ``
+python .\capture.py ``
+python .\render.py ``
+python .\capture.py ``
+python .\render.py ``
+python .\capture.py ``
+python .\capture.py ``
+python .\capture.py ``
+python -c "from pathlib import Path; import imageio.v2 as i; p=next(Path('video_evidence').rglob('act_sat_50pct__A_B__pure_residual__s500000_b0.mp4')); r=i.get_reader(str(p)); out=p.with_name('mujoco_act_sat_frame30.png'); i.imwrite(str(out),r.get_data(30)); r.close(); print('Image saved:',out.resolve())"
+  Where-Object { $_.FullName -notmatch '\\__pycache__\\|\\\.venv\\|\\mj_traces' } |`
+python audit_ekf_mpc_parity.py
+python evaluate_online_mpc_ekf_ablation.py ``
+python compare_ekf_confirmatory_subset.py
+python evaluate_online_mpc_ekf_ablation.py ``
+python check_noindex.py Table.csv
+python -m pip freeze |`
+python -VV |`
+    Out-File "$dir\python_version.txt" -Encoding utf8
+python -m pip --version |`
+python run_ekf_confirmatory.py ``
+python run_ekf_confirmatory.py ``
+python -c "import sys,numpy,scipy,cvxpy,osqp; print('Python:',sys.version); print('Path:',sys.executable); print('NumPy:',numpy.__version__); print('SciPy:',scipy.__version__); print('CVXPY:',cvxpy.__version__); print('OSQP:',osqp.__version__)"
+python -c "import stable_baselines3; print('Stable-Baselines3:', stable_baselines3.__version__)"
+python .\run_ekf_confirmatory.py --help
+python .\run_ekf_confirmatory.py ``
+python .\run_ekf_confirmatory.py ``
+python .\run_ekf_confirmatory.py ``
+python .\compare_online_mpc_vs_neural_vs_residual.py --help
+python .\compare_online_mpc_vs_neural_vs_residual.py --help
+Write-Host "`n========== 1. PYTHON ENVIRONMENT ==========" -ForegroundColor Cyan
+python -c "import sys; print('Python:',sys.version); print('Executable:',sys.executable)"
+python -c "import importlib; mods=['numpy','scipy','cvxpy','osqp','stable_baselines3','torch','gymnasium','pandas']; [(lambda m: print(m, importlib.import_module(m).__version__))(m) for m in mods]"
+python -m pip check
+python $Main --help
+python -c "import ast,pathlib; fs=['evaluate_online_mpc_ekf_100seeds.py','evaluate_online_mpc_ekf_ablation.py','evaluate_online_mpc_100seeds.py','compare_online_mpc_vs_neural_vs_residual.py']; [(print('\n'+'='*80+'\nFILE: '+f),print('\n'.join(f'{i}: {line}' for i,line in enumerate(pathlib.Path(f).read_text(encoding='utf-8').splitlines(),1) if any(k in line.lower() for k in ['ekf','_obs10','_nn_u','observation','state_est','predict(','rollout','def main','argparse','checkpoint','ckpt','vecnormalize','vecnorm'])))) for f in fs if pathlib.Path(f).is_file()]"
+python "$ReportDir\run_audit.py"
+print("Python:", sys.version)`
+python $scriptPath
+python .\evaluate_ekf_controller_ablation.py ``
+python .\evaluate_ekf_controller_ablation.py ``
+# Activate the same Python environment used for the pilot
+if (Test-Path ".\.venv_py3100\Scripts\Activate.ps1") {`
+    .\.venv_py3100\Scripts\Activate.ps1`
+python .\evaluate_ekf_controller_ablation.py ``
+python .\evaluate_ekf_controller_ablation.py ``
+# Activate the same Python environment used for the pilot
+if (Test-Path ".\.venv_py3100\Scripts\Activate.ps1") {`
+    .\.venv_py3100\Scripts\Activate.ps1`
+python .\evaluate_ekf_controller_ablation.py ``
+python .\evaluate_ekf_controller_ablation.py ``
+python test.py
+        $_.FullName -notmatch '\\(\.venv[^\\]*|__pycache__)\\' -and`
+python -c "import sys,numpy,scipy,cvxpy,osqp,torch;print(sys.version,numpy.__version__,scipy.__version__,cvxpy.__version__,osqp.__version__,torch.__version__)"
+        $_.FullName -notmatch '\\(\.venv[^\\]*|__pycache__|node_modules)\\'`
+python -c "import torch; ck=torch.load('neural_mpc.pt', weights_only=False); print(ck['args'], ck['epoch'])"
+python ckpt_steps.py
+python -c "import sys,platform;print(sys.version);print(platform.platform())"
+python test_residual_env.py --ckpt neural_mpc.pt --ref cl_final100_traj.npz --seed0 71000 --n 10
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\mj_validate.py"
+python "C:\Users\Moein\Desktop\Paper\RL-MPC\MuJoCo\MuJoCo_Motorcycle_Physics_V1\mj_validate.py"
+python test.py
+$skip = '\\(\.venv|venv|site-packages|node_modules|AppData|\.git)\\'`
+python open_items.py --task lambda --seeds 5 --out pilot_lambda
+python open_items.py --task lambda --out ablate_lambda_horizon
+python open_items.py --task gimbal --out gimbal_reduced
+python open_items.py --task ekf --kinds neural   --modes raw combined --out ekf_all_neural
+python open_items.py --task ekf --kinds residual --modes raw combined --out ekf_all_residual
+python open_items.py --task ekf --kinds pure     --modes raw combined --out ekf_all_pure
+python open_items.py --task ekf --kinds residual pure --modes baseline --out ekf_all_gate
+$Python = ".\.venv_py3100\Scripts\python.exe"
+if (!(Test-Path $Python)) {`
+    throw "Python virtual environment not found."`
+python .\evaluate_online_mpc_ekf_100seeds.py --help
+# Find Python
+$VenvPython = Join-Path $Root ".venv_py3100\Scripts\python.exe"
+if (Test-Path $VenvPython) {`
+    $Python = $VenvPython`
+elseif (Get-Command python -ErrorAction SilentlyContinue) {`
+    $Python = (Get-Command python).Source`
+    $Python = (Get-Command py).Source`
+    throw "Python executable not found."`
+Write-Host "`n===== PYTHON VERSION =====" -ForegroundColor Cyan
+& $Python @PyArgs --version
+# Python dependency validation
+& $Python @PyArgs -c "import numpy, scipy, pandas, gymnasium, casadi, stable_baselines3"
+    throw "Python dependency validation failed."`
+& $Python @PyArgs ".\evaluate_online_mpc_ekf_100seeds.py" --help
+& $Python @PyArgs ".\evaluate_online_mpc_ekf_100seeds.py" ``
+Write-Host "Checking Python..." -ForegroundColor Cyan
+python --version
+    throw "Python is unavailable."`
+python -c "import numpy, scipy, pandas, gymnasium, casadi, stable_baselines3"
+python .\evaluate_online_mpc_ekf_100seeds.py ``
+python .\run_noise_model_mismatch_experiment.py --preflight_only
+python -u .\run_noise_model_mismatch_experiment.py --preflight_only 2>&1 |`
+Write-Host "`nPython exit code: $ExitCode"
+# Prevent PowerShell from treating Python stderr warnings as terminating errors
+python -u -X faulthandler .\run_noise_model_mismatch_experiment.py --preflight_only *> $Log
+Write-Host "`n===== PYTHON EXIT CODE: $Code ====="
+    throw "Python script failed. Inspect the diagnostic log."`
+Write-Host "`n===== PYTHON LOCATION =====" -ForegroundColor Cyan
+where.exe python
+Write-Host "`n===== PYTHON VERSION =====" -ForegroundColor Cyan
+python --version
+python -m pip show osqp cvxpy numpy scipy
+python -X faulthandler -c "import osqp; print('OSQP IMPORT PASS', osqp.__version__)"
+python -X faulthandler -c "import cvxpy; print('CVXPY IMPORT PASS', cvxpy.__version__)"
+python -X faulthandler -c "import cvxpy as cp; print(cp.installed_solvers())"
+    python -X faulthandler -c $Test`
+python -u .\run_paired_noise_iw_mismatch_project_native.py --preflight_only
+python -u .\run_paired_noise_iw_mismatch_project_native.py --preflight_only *> .\preflight_error.log
+Write-Host "`nPython Exit Code: $Code" -ForegroundColor Yellow
+$Python = (Get-Command python).Source
+Write-Host "`n===== 1. PYTHON =====" -ForegroundColor Cyan
+Write-Host $Python
+& $Python --version
+Write-Host "`n===== 3. PYTHON BASIC TEST =====" -ForegroundColor Cyan
+& $Python -c "import sys; print(sys.executable); print('PYTHON BASIC PASS')"
+    throw "Python basic test failed."`
+& $Python -m py_compile $Script
+    throw "Python compilation failed."`
+    -FilePath $Python ``
+$Python = (Get-Command python).Source
+Write-Host "Python: $Python"
+& $Python -u -X faulthandler $Script --preflight_only 1> $StdOut 2> $StdErr
+cmd /c "python -u -X faulthandler run_paired_noise_iw_mismatch_project_native.py --preflight_only > log.txt 2>&1"
+python -X faulthandler -c "import numpy, pandas; import osqp; print('PANDAS FIRST OK')"
+python -X faulthandler -c "import osqp; import numpy, pandas; print('OSQP FIRST OK')"
+python -u .\run_paired_noise_iw_mismatch_osqp_first.py --preflight_only
+python -u .\run_paired_noise_iw_mismatch_osqp_first.py ``
+python -u .\run_paired_noise_iw_mismatch_osqp_first_schemafix.py ``
+$skip = '\\(\.venv[^\\]*|venv[^\\]*|site-packages|__pycache__|\.git|tb_logs|runs|multiseed_runs[^\\]*|sac_inventory[^\\]*|BACKUPS)\\'
+  robocopy $src.FullName $dst /E /XF *_replay.pkl /NFL /NDL /NJH /NJS | Out-Null`
+if (Test-Path $h) { Select-String $h -Pattern "python|\.venv|robocopy" | ForEach-Object { $_.Line } | Set-Content "$pv\commands_used.txt" }

@@ -1,0 +1,5 @@
+iw,scenario,A,B,n_eps,dsurv,ci_lo,ci_hi,frac_boot_A_better,p_mcnemar
+0.3,healthy,residual,nmpc,100,0.62,0.52475,0.72,1.0,4.336808689942018e-19
+0.4,healthy,residual,nmpc,100,0.72,0.63,0.8,1.0,4.235164736271502e-22
+0.45,healthy,residual,nmpc,100,0.21999999999999997,0.14,0.29524999999999973,1.0,4.76837158203125e-07
+1.0,healthy,residual,nmpc,100,0.0,0.0,0.0,0.0,

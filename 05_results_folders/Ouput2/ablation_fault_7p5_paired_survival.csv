@@ -1,0 +1,5 @@
+iw,scenario,A,B,n_eps,dsurv,ci_lo,ci_hi,frac_boot_A_better,p_mcnemar
+1.0,act_delay_3,residual,nmpc,100,0.030000000000000027,0.0,0.06999999999999995,0.948,0.25
+1.0,act_sat_30pct,residual,nmpc,100,0.0,0.0,0.0,0.0,
+1.0,dropout_imu_p0.5,residual,nmpc,100,0.030000000000000027,-0.029999999999999916,0.08999999999999997,0.812,0.5078125
+1.0,healthy,residual,nmpc,100,0.010000000000000009,0.0,0.0352499999999998,0.628,1.0

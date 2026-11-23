@@ -1,0 +1,78 @@
+[
+  {
+    "trace_file": "act_sat_50pct__b0__s500000__A__pure.npz",
+    "case": "act_sat_50pct",
+    "fault_type": "actuator_saturation",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "A",
+    "controller": "pure",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {},
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 137,
+    "rmse": 0.1328465823226303,
+    "max_roll_deg": 46.75983930016324,
+    "max_gimbal_rad": 1.5707963267948966
+  },
+  {
+    "trace_file": "act_sat_50pct__b0__s500000__A__residual.npz",
+    "case": "act_sat_50pct",
+    "fault_type": "actuator_saturation",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "A",
+    "controller": "residual",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {},
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 194,
+    "rmse": 0.12576137419864633,
+    "max_roll_deg": 46.60648879856991,
+    "max_gimbal_rad": 1.5707963267948966
+  },
+  {
+    "trace_file": "act_sat_50pct__b0__s500000__B__pure.npz",
+    "case": "act_sat_50pct",
+    "fault_type": "actuator_saturation",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "B",
+    "controller": "pure",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {
+      "gimbal_limit": 0.8
+    },
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 161,
+    "rmse": 0.11742471901647192,
+    "max_roll_deg": 45.91679573330143,
+    "max_gimbal_rad": 0.8564126035091371
+  },
+  {
+    "trace_file": "act_sat_50pct__b0__s500000__B__residual.npz",
+    "case": "act_sat_50pct",
+    "fault_type": "actuator_saturation",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "B",
+    "controller": "residual",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {
+      "gimbal_limit": 0.8
+    },
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 237,
+    "rmse": 0.13525392485389215,
+    "max_roll_deg": 45.892487320074565,
+    "max_gimbal_rad": 0.8307489059390206
+  }
+]

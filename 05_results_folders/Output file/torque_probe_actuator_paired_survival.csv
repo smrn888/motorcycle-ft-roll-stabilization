@@ -1,0 +1,13 @@
+iw,scenario,A,B,n_eps,dsurv,ci_lo,ci_hi,frac_boot_A_better,p_mcnemar
+1.0,EXTRA_act_bias_diff_0.5,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,act_bias_neg,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,act_bias_pos,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,act_delay_3,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,act_delay_8,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,act_sat_30pct,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,act_sat_50pct,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,act_stuck_15Nm,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,act_stuck_zero,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,scale_gimbal_0.5,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,scale_gimbal_0.7,residual,nmpc,20,0.0,0.0,0.0,0.0,
+1.0,scale_gimbal_1.3,residual,nmpc,20,0.0,0.0,0.0,0.0,

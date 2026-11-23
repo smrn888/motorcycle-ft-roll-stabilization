@@ -1,0 +1,4 @@
+iw,scenario,A,B,n_both_alive,d_rmse,ci_lo,ci_hi,d_rmse_pct
+0.4,healthy,residual,nmpc,19,0.0,0.0,0.0,0.0
+0.45,healthy,residual,nmpc,72,0.0,0.0,0.0,0.0
+1.0,healthy,residual,nmpc,98,0.0,0.0,0.0,0.0

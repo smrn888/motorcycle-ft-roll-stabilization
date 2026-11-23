@@ -1,0 +1,15 @@
+iw,scenario,fam,n_models,n_eps,surv,surv_std_models,surv_min_model,surv_max_model,surv_ci_lo,surv_ci_hi,rmse_alive,group
+1.0,act_sat_30pct,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.14952383732282767,actuator
+1.0,act_sat_30pct,sac_plain,5,5,0.76,0.35777087639996635,0.2,1.0,0.3990000000000001,1.0,0.0660790561945506,actuator
+1.0,act_stuck_zero,nmpc,1,5,0.0,,0.0,0.0,0.0,0.0,,actuator
+1.0,act_stuck_zero,sac_plain,5,5,0.0,0.0,0.0,0.0,0.0,0.0,,actuator
+1.0,bias_roll_5deg,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.15604604424108734,sensor
+1.0,bias_roll_5deg,sac_plain,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.11811628616129202,sensor
+1.0,healthy,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.14952383732282767,healthy
+1.0,healthy,sac_plain,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.06537374207214468,healthy
+1.0,noise_imu_3deg,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.14915946764446186,sensor
+1.0,noise_imu_3deg,sac_plain,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.06612955782898172,sensor
+1.0,param_iw_p50,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.13401072240569978,param
+1.0,param_iw_p50,sac_plain,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.06219346232295227,param
+1.0,scale_gimbal_0.5,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.1572851303491984,actuator
+1.0,scale_gimbal_0.5,sac_plain,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.07016534909237847,actuator

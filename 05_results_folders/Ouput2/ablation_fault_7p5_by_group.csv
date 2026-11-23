@@ -1,0 +1,7 @@
+iw,group,fam,surv,surv_std_models,rmse_alive
+1.0,actuator,nmpc,0.96,,0.20177143661310443
+1.0,actuator,residual,0.975,,0.23994632968748075
+1.0,healthy,nmpc,0.98,,0.20209608871231527
+1.0,healthy,residual,0.99,,0.10582943399685557
+1.0,sensor,nmpc,0.9,,0.21915578442029235
+1.0,sensor,residual,0.93,,0.1286733928776157

@@ -1,0 +1,305 @@
+﻿if a.preflight_only:
+    raise SystemExit(1 if warns else 0)
+
+# Diagnostic wrapper: keeps the original filter policy and QP unchanged.
+# Records branch, fresh solve status, fallback and slack for EACH call.
+class InstrumentedHOCBF:
+    def __init__(self, original):
+        self.base = original
+        self.last = {}
+
+    def __getattr__(self, name):
+        return getattr(self.base, name)
+
+    def reset_stats(self):
+        self.base.reset_stats()
+        self.last = {}
+
+    def filter(self, x, tau_rl):
+        # Re-evaluate only the documented fast-path condition; never alter the action.
+        lf, lg, psi1, _ = self.base._compute_lie(x)
+        pre = float(lf + lg @ tau_rl + self.base.alpha2 * psi1)
+        bypass = bool(pre >= 0 and psi1 >= 0)
+        self.last = dict(qp_attempted=not bypass, qp_solved=False,
+                         qp_failed=False, fallback=False, qp_status='not_attempted',
+                         slack_value=np.nan, slack_used=False, bypass=bypass)
+        # Prevent stale OSQP values/status being mistaken for this call.
+        # Existing filter catches exceptions and falls back; no solver monkeypatching.
+        # Replace only solve on this instance during one synchronous filter call.
+        # This records whether OSQP was called and whether it returned or raised.
+        qp = self.base._qp
+        orig_solve = qp.solve
+        outcome = {'called': False, 'raised': False, 'status': None, 'has_tau': False}
+        def observed_solve(*args, **kwargs):
+            outcome['called'] = True
+            try:
+                result = orig_solve(*args, **kwargs)
+                outcome['status'] = qp.status
+                outcome['has_tau'] = self.base._tau.value is not None
+                return result
+            except Exception:
+                outcome['raised'] = True
+                outcome['status'] = qp.status
+                raise
+        qp.solve = observed_solve
+        try:
+            tau = self.base.filter(x, tau_rl)
+        finally:
+            qp.solve = orig_solve
+        if not bypass:
+            valid = outcome['status'] in (self.base.cp.OPTIMAL, self.base.cp.OPTIMAL_INACCURATE)
+            solved = bool(outcome['called'] and not outcome['raised'] and valid and outcome['has_tau'])
+            self.last.update(qp_attempted=outcome['called'], qp_status=str(outcome['status']),
+                             qp_solved=solved, qp_failed=not solved, fallback=not solved)
+            if solved and self.base._slack.value is not None:
+                sv = float(self.base._slack.value[0])
+                self.last.update(slack_value=sv, slack_used=bool(sv > 1e-3))
+        return tau
+
+
+# â•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گ env â•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گ
+from final_fault_benchmark import SCENARIOS, FaultedPlant, measure                  # noqa: E402
+from motorcycle_env_residual import MotorcycleEnvResidual                           # noqa: E402
+from motorcycle_dynamics import TAU_MAX, MotorcycleDynamics, Ts                     # noqa: E402
+
+
+class FaultEnv(MotorcycleEnvResidual):
+    scn = ("none", {})
+
+    def reset(self, seed=None, options=None):
+        ft, fp = self.scn
+        iw = float((options or {}).get("iw", 1.0))
+        self._mc, self._mrng, self._last_meas_phi = {}, np.random.default_rng([int(seed), 41]), 0.0
+        out = super().reset(seed=seed, options=options)           # _apply_iw(iw) ط¯ط§ط®ظ„ reset ط§ط¬ط±ط§ ظ…غŒâ€Œط´ظˆط¯
+        if ft == "param_fault":
+            p = dict(MotorcycleDynamics().p)
+            p["m"] *= fp.get("m_scale", 1.0); p["h"] *= fp.get("h_scale", 1.0)
+            dyn = MotorcycleDynamics(params=p, m_scale=1.0, Iw_scale=iw * fp.get("Iw_scale", 1.0))
+        else:
+            dyn = self._plant_dyn                                  # iw ط§ط¹ظ…ط§ظ„â€Œط´ط¯ظ‡ (iw=1 â‡’ self.dyn)
+        self._plant_dyn = FaultedPlant(dyn, ft, fp, TAU_MAX)
+        Qphi, Qphid, Rv, N = self.decode_action(np.zeros(4, np.float32))
+        self._target = np.array([Qphi, Qphid, self._mid4[2], Rv]); self._N_fixed = int(N)
+        self._last_ok_u = np.zeros(2)
+        return out
+
+    def _obs10(self):                                              # ط¢ظ†ع†ظ‡ آ«ع©ظ†طھط±ظ„ط±آ» ظ…غŒâ€Œط¨غŒظ†ط¯ (ط§ظ†ط¯ط§ط²ظ‡â€Œع¯غŒط±غŒ ط®ط±ط§ط¨)
+        k = self._steps
+        if k not in self._mc:
+            ft, fp = self.scn
+            s = measure(self.state[:6], k, ft, fp, self._mrng, self._last_meas_phi)
+            self._last_meas_phi = float(s[0]); phi_d = self._desired_roll()
+            self._mc[k] = np.array([*s, self.v, self.alpha, phi_d, s[0] - phi_d], np.float32)
+        return self._mc[k].copy()
+
+    def _nn_u(self, x):
+        t0 = time.perf_counter(); u = super()._nn_u(x); self.last_nn_ms = (time.perf_counter() - t0) * 1e3
+        return u
+
+    def mpc_control(self):
+        t0 = time.perf_counter()
+        x0 = self._obs10()[:6].astype(float); phi_d0 = self._desired_roll()
+        self._smoothed_weights = (1 - self.LP_ALPHA) * self._smoothed_weights + self.LP_ALPHA * self._target
+        w = self._smoothed_weights
+        Qd = np.array([w[0], w[1], w[2], w[2], w[2] * 0.1, w[2] * 0.1]); Rd = np.array([w[3], w[3]])
+        N = self._N_fixed
+        if N != self.mpc.N:
+            up = self.mpc.u_prev.value.copy(); self.mpc = self._solvers[N]
+            self.mpc.reset_warm_start(); self.mpc.u_prev.value = up
+        xd = np.zeros(6); xd[0] = phi_d0
+        A, B, bias = self.dyn.linearise(x0[0]); self.mpc.update_model(A, B, bias)
+        Pc = self._dare_chol(A, B, Q_diag=Qd, R_diag=Rd)
+        u = np.clip(self.mpc.solve(x0=x0, xd=xd, Q_diag=Qd, R_diag=Rd, P_chol=Pc), -TAU_MAX, TAU_MAX)
+        return u, str(self.mpc.last_solve_status), (time.perf_counter() - t0) * 1e3
+
+    def raw_step(self, u):          # ط¯ظ‚غŒظ‚ط§ظ‹ غŒع© ع¯ط§ظ… plant ط¨ط§ غŒع© ظپط±ظ…ط§ظ†ط› ظ‡ظ…ط§ظ† ظ†ظˆغŒط² v/alpha ظ…ط«ظ„ step() ط¨ط§ decision_k=1
+        self._steps += 1
+        self.state = self._plant_dyn.step(self.state, self._fault_eff * u)
+        self.v = float(np.clip(self.v + self.np_random.normal(0.0, self.V_NOISE), 1.0, 8.0))
+        self.alpha = float(np.clip(self.alpha + self.np_random.normal(0.0, self.ALPHA_NOISE), -0.20, 0.20))
+        c = abs(self.state[0]) > np.pi / 4
+        return c, c or self._steps >= self.MAX_STEPS
+
+
+env = FaultEnv(ckpt=a.ckpt, iw_list=(1.0,))
+
+def run(name, seed, iw):
+    c = ctrls[name]
+    ft, fp = env.scn
+    env.reset(seed=seed, options=dict(iw=iw, bucket=a.bucket))
+    use_cbf = c["kind"] == "sac" and c["hocbf"]
+    if use_cbf:
+        hocbf.reset_stats()
+    obs12 = np.concatenate([env._obs10(), (env._u_nn / env.U_REF).astype(np.float32)])
+    Ua, Uc, SAT, phi, cms, e2, n = [], [], [], [], [], 0.0, 0
+    D = dict(cond_meas=[], cond_true=[], psi1_true=[], dd_err=[], qp_fail=[], qp_attempt=[], qp_success=[], qp_fallback=[], qp_bypass=[], slack=[], slack_used=[], cond_meas_margin=[], cond_true_margin=[])
+    while True:
+        if c["kind"] == "rl":                                   # nmpc / residual (env.stepطŒ decision_k=1)
+            env.res_scale = c["scale"]
+            t0 = time.perf_counter(); act = c["pol"](obs12); pm = (time.perf_counter() - t0) * 1e3
+            obs12, r, crashed, tr, info = env.step(act); done = crashed or tr
+            cms.append(pm + getattr(env, "last_nn_ms", 0.0))
+            e2 += info["err_sq_sum"]; n += info["n_plant_steps"]; phi.append(info["phi"])
+        else:
+            x_true = env.state[:6].astype(np.float64).copy()
+            if c["kind"] == "sac":
+                x10 = env._obs10()
+                t0 = time.perf_counter()
+                tau = np.asarray(c["pol"](x10), np.float64).clip(-1.0, 1.0) * TAU_MAX
+                if use_cbf:
+                    x_f = x_true if a.hocbf_state == "true" else x10[:6].astype(np.float64)
+                    tau = np.asarray(hocbf.filter(x_f, tau), np.float64)
+                    z = hocbf.last
+                    for col, key in (("qp_fail", "qp_failed"), ("qp_attempt", "qp_attempted"),
+                                     ("qp_success", "qp_solved"), ("qp_fallback", "fallback"),
+                                     ("qp_bypass", "bypass"), ("slack_used", "slack_used")):
+                        D[col].append(float(z[key]))
+                    D["slack"].append(z["slack_value"])
+                    Lf, Lg, psi1, _, _ = cbf_terms(x_f)
+                    margin = float(Lf + Lg @ tau + hocbf.alpha2 * psi1)
+                    D["cond_meas_margin"].append(margin)
+                    D["cond_meas"].append(float(margin < -1e-6))
+                cms.append((time.perf_counter() - t0) * 1e3)
+                u = tau
+            else:                                               # mpc
+                u, st, ms = env.mpc_control(); cms.append(ms)
+            phidot0 = float(env.state[1])
+            crashed, done = env.raw_step(u)
+            p = float(env.state[0]); e2 += (p - env._desired_roll()) ** 2; n += 1; phi.append(p)
+            if use_cbf:                                         # طھط´ط®غŒطµ ط¨ط§ state ظˆط§ظ‚ط¹غŒ ظˆ ع¯ط´طھط§ظˆط± آ«ط§ط¹ظ…ط§ظ„â€Œط´ط¯ظ‡آ»
+                ua = env._plant_dyn.last_app
+                Lf_t, Lg_t, psi1_t, f_t, g_t = cbf_terms(x_true)
+                margin_true = float(Lf_t + Lg_t @ ua + hocbf.alpha2 * psi1_t)
+                D["cond_true_margin"].append(margin_true)
+                D["cond_true"].append(float(margin_true < -1e-6))
+                D["psi1_true"].append(float(psi1_t < 0))
+                D["dd_err"].append((f_t + g_t @ ua) - (float(env.state[1]) - phidot0) / Ts)
+        pl = env._plant_dyn
+        Ua.append(pl.last_app.copy()); Uc.append(pl.last_cmd.copy())
+        SAT.append(bool(np.any(np.abs(pl.last_cmd) >= 0.99 * pl.last_limit)))
+        if done:
+            break
+    Ua, Uc, phi, cms = np.array(Ua), np.array(Uc), np.array(phi), np.array(cms)
+    dd = lambda U: float(np.linalg.norm(np.diff(U, axis=0), axis=1).mean()) if len(U) > 1 else 0.0
+    row = dict(crashed=bool(crashed), steps=len(phi), rmse=float(np.sqrt(e2 / max(n, 1))),
+               peak_phi=float(np.rad2deg(np.abs(phi).max())),
+               u_rms=float(np.sqrt(np.mean(Ua ** 2))), u2_sum=float(np.sum(Ua ** 2)), du=dd(Ua),
+               u_rms_cmd=float(np.sqrt(np.mean(Uc ** 2))), du_cmd=dd(Uc), sat=float(np.mean(SAT)),
+               ms=float(cms.mean()), inj_ok=check_injection(ft, fp, Uc, Ua),
+               freq_ok=bool(pl.k == len(phi) == env._steps))
+    if use_cbf:
+        self.n_total      = 0
+        self.n_slack_used = 0   # طھط¹ط¯ط§ط¯ ط¯ظپط¹ط§طھغŒ ع©ظ‡ s > threshold (ظ‚غŒط¯ relaxed ط´ط¯)
+
+    # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    def _compute_lie(self, x: np.ndarray):
+        """
+        ظ…ط­ط§ط³ط¨ظ‡ Lf_دˆâ‚پطŒ Lg_دˆâ‚پ ظˆ دˆâ‚پ.
+
+        x = [د†, د†ج‡, خ´_f, خ´_r, خ´ج‡_f, خ´ج‡_r]
+        """
+        phi, phi_dot = x[0], x[1]
+        ddot_f, ddot_r = x[4], x[5]
+
+        # دˆâ‚€ ظˆ دˆâ‚پ
+        psi0 = CRASH_ANGLE ** 2 - phi ** 2
+        psi1 = -2.0 * phi * phi_dot + self.alpha1 * psi0
+
+        # f_phi(x): drift term roll acceleration (ط¨ط¯ظˆظ† ع©ظ†طھط±ظ„)
+        cos_phi = np.cos(phi)
+        sin_phi = np.sin(phi)
+        f_phi = (
+            self.mgh * sin_phi
+            - self.IwO * (ddot_f - ddot_r) * cos_phi
+        ) / self.Iphi
+
+        # g_phi: âˆ‚د†جˆ/âˆ‚د„
+        # د„ â†’ خ´جˆ â†’ خ´ج‡_next (غŒظ‡ step طھط£ط®غŒط±)
+        # âˆ‚خ´ج‡_f_next/âˆ‚د„_f â‰ˆ Ts / I_d   (ط§ط² ط¯غŒظ†ط§ظ…غŒع© ع¯غŒظ…ط¨ط§ظ„)
+        # د†جˆ = (... âˆ’ Iwخ©آ·(خ´ج‡_fâˆ’خ´ج‡_r)آ·cos(د†)) / I_phi
+        # âˆ‚د†جˆ/âˆ‚د„_f â‰ˆ âˆ’Iwخ©آ·cos(د†)آ·(Ts/I_d) / I_phi
+        # âˆ‚د†جˆ/âˆ‚د„_r â‰ˆ +Iwخ©آ·cos(د†)آ·(Ts/I_d) / I_phi
+        k = self.IwO * cos_phi * Ts / (self.Iphi * self.Id)
+        g_phi = np.array([-k, +k])   # [âˆ‚د†جˆ/âˆ‚د„_f, âˆ‚د†جˆ/âˆ‚د„_r]
+
+        # دˆج‡â‚پ = Lf_دˆâ‚پ + Lg_دˆâ‚پ آ· د„
+        # Lf_دˆâ‚پ = âˆ’2د†ج‡آ² âˆ’ 2د†آ·f_phi âˆ’ 2خ±â‚پآ·د†آ·د†ج‡
+        Lf_psi1 = (
+            -2.0 * phi_dot ** 2
+            - 2.0 * phi * f_phi
+            - 2.0 * self.alpha1 * phi * phi_dot
+        )
+        # Lg_دˆâ‚پ = âˆ’2د† آ· g_phi
+        Lg_psi1 = -2.0 * phi * g_phi
+
+        return Lf_psi1, Lg_psi1, psi1, psi0
+
+    # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    def filter(self, x: np.ndarray, tau_rl: np.ndarray) -> np.ndarray:
+        """
+        ط§ع¯ط± د„_rl ط´ط±ط· HOCBF ط±ط§ ط¨ط±ط¢ظˆط±ط¯ظ‡ ع©ظ†ط¯ â†’ ط¨ط¯ظˆظ† طھط؛غŒغŒط±.
+        ظˆع¯ط±ظ†ظ‡ â†’ QP ط¨ط§ slack variable (ظ‡ظ…غŒط´ظ‡ feasible).
+
+        Slack variable طھط¶ظ…غŒظ† ظ…غŒâ€Œع©ظ†ط¯ ع©ظ‡ QP ظ‡ط±ع¯ط² infeasible ظ†ظ…غŒâ€Œط´ظˆط¯.
+        ط§ع¯ط± s > 0 ط¯ط± ط¬ظˆط§ط¨ â†’ ظ‚غŒط¯ CBF ط¨ط§ ط¬ط±غŒظ…ظ‡ خ»آ·sآ² relaxed ط´ط¯ظ‡.
+        """
+        self.n_total += 1
+
+        Lf_psi1, Lg_psi1, psi1, psi0 = self._compute_lie(x)
+
+        # ط¨ط±ط±ط³غŒ ط§غŒظ…ظ†غŒ
+        cbf_val = Lf_psi1 + Lg_psi1 @ tau_rl + self.alpha2 * psi1
+        if cbf_val >= 0 and psi1 >= 0:
+            return np.clip(tau_rl, -TAU_MAX, TAU_MAX)
+
+        # QP ط¨ط§ slack
+        self._tau_rl.value  = tau_rl
+        self._Lf_p.value    = np.array([Lf_psi1])
+        self._Lg_p.value    = Lg_psi1
+        self._psi1_p.value  = np.array([psi1])
+        self._lam_p.value   = np.array([self.lambda_slack])
+
+        try:
+            self._qp.solve(
+                solver=self.cp.OSQP,
+                warm_start=True,
+                eps_abs=1e-5, eps_rel=1e-5,
+                verbose=False,
+            )
+            if (self._qp.status in (self.cp.OPTIMAL, self.cp.OPTIMAL_INACCURATE)
+                    and self._tau.value is not None):
+                self.n_filtered += 1
+                # ط±ط¯غŒط§ط¨غŒ: ط¢غŒط§ slack ظپط¹ط§ظ„ ط´ط¯طں
+                s_val = float(self._slack.value[0]) if self._slack.value is not None else 0.0
+                if s_val > 1e-3:
+                    self.n_slack_used += 1
+                return np.clip(self._tau.value, -TAU_MAX, TAU_MAX)
+        except Exception:
+            pass
+
+        # fallback ط§ط¶ط·ط±ط§ط±غŒ: ط¨ط§ slack QP ظ†ط¨ط§غŒط¯ ط¨ظ‡ ط§غŒظ†ط¬ط§ ط¨ط±ط³ط¯طŒ
+        # ظˆظ„غŒ ط¨ط±ط§غŒ ظ‡ط± ط§ط­طھظ…ط§ظ„غŒ tau_rl clipâ€Œط´ط¯ظ‡ ط¨ط±ظ…غŒâ€Œع¯ط±ط¯ط§ظ†غŒظ….
+        self.n_filtered += 1
+        return np.clip(tau_rl, -TAU_MAX, TAU_MAX)
+
+    def reset_stats(self):
+        self.n_filtered   = 0
+        self.n_total      = 0
+        self.n_slack_used = 0
+
+    @property
+    def filter_rate(self) -> float:
+        return self.n_filtered / self.n_total if self.n_total > 0 else 0.0
+
+    @property
+    def slack_rate(self) -> float:
+        """ظ†ط³ط¨طھ ط¯ظپط¹ط§طھغŒ ع©ظ‡ slack ظپط¹ط§ظ„ ط´ط¯ (ظ‚غŒط¯ CBF relaxed ط´ط¯)."""
+        return self.n_slack_used / self.n_total if self.n_total > 0 else 0.0
+
+
+# â•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گ
+# ظ…ط­غŒط· ظ¾ط§غŒظ‡
+# â•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گâ•گ
+
+class MotorcycleSACEnv(gym.Env):
+    """

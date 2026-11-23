@@ -1,0 +1,24 @@
+﻿parameter,value,status,interpretation_or_needed_measurement
+total_mass_kg,85.0,given,Mass of motorcycle + rider in reduced model; whether CMGs included is unspecified
+center_of_mass_height_m,0.5,given,Reduced-model effective COM height; not a 3D COM measurement
+wheelbase_m,1.2,given,Wheelbase
+rotor_axial_inertia_each_kg_m2,0.5,given,Interpretation as each rotor requires confirmation
+rotor_spin_rad_s,200.0,given,Magnitude; signs of counter-rotation not specified
+gimbal_inertia_kg_m2,0.1,given,Effective gimbal inertia; not full 3D inertia tensor
+gimbal_torque_limit_Nm,50.0,given,Per actuator
+gimbal_angle_limit_rad,1.5707963267948966,given,Per gimbal
+gimbal_rate_limit_rad_s,20.0,given,Per gimbal
+gimbal_damping_per_s,2.0,given,"Effective rate damping, not joint viscous coefficient"
+controller_dt_s,0.01,given,Controller sampling interval
+target_forward_speed_m_s,3.0,user_selected,Desired operating speed
+wheel_radius_m,,missing,Measure actual front/rear radii
+wheel_mass_kg,,missing,Measure front/rear wheel masses
+chassis_3d_inertia_kg_m2,,missing,"Ixx,Iyy,Izz and off-diagonal terms"
+chassis_geometry,,missing,CAD/physical dimensions and frame orientation
+steering_geometry,,missing,"Steer axis inclination, trail, offsets"
+tire_contact_model,,missing,"Lateral slip, friction and stiffness"
+rotor_geometry_and_mass,,missing,Needed to realize Iw=0.5 physically
+gimbal_axis_3d_orientation,,missing,Must match signs in reduced model
+rotor_spin_direction,,missing,Need both signed angular velocities
+motor_actuator_dynamics,,missing,"Torque response, speed regulation and delay"
+vehicle_drive_and_speed_control,,missing,Traction / rear-wheel drive parameters

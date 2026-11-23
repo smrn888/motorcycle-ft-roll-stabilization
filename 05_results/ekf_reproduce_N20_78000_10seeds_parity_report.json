@@ -1,0 +1,94 @@
+{
+  "comparison": "archived_N20_confirmatory_vs_fresh_10seeds",
+  "expected_keys": 150,
+  "old_total_rows": 1500,
+  "new_total_rows": 150,
+  "atol": 1e-06,
+  "metrics": {
+    "surv": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0,
+      "by_scenario": {}
+    },
+    "steps": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0,
+      "by_scenario": {}
+    },
+    "rmse": {
+      "mismatch_count": 149,
+      "max_abs_diff": 0.008388229166659322,
+      "by_scenario": {
+        "dropout_imu_p0.3": 30,
+        "dropout_imu_p0.5": 29,
+        "healthy": 30,
+        "intermittent_imu_burst20": 30,
+        "stuck_phi_15deg": 30
+      }
+    },
+    "peak_phi": {
+      "mismatch_count": 147,
+      "max_abs_diff": 0.9884786864442345,
+      "by_scenario": {
+        "dropout_imu_p0.3": 29,
+        "dropout_imu_p0.5": 30,
+        "healthy": 28,
+        "intermittent_imu_burst20": 30,
+        "stuck_phi_15deg": 30
+      }
+    },
+    "u_rms": {
+      "mismatch_count": 150,
+      "max_abs_diff": 1.1554053941047242,
+      "by_scenario": {
+        "dropout_imu_p0.3": 30,
+        "dropout_imu_p0.5": 30,
+        "healthy": 30,
+        "intermittent_imu_burst20": 30,
+        "stuck_phi_15deg": 30
+      }
+    },
+    "du": {
+      "mismatch_count": 150,
+      "max_abs_diff": 0.894619773856525,
+      "by_scenario": {
+        "dropout_imu_p0.3": 30,
+        "dropout_imu_p0.5": 30,
+        "healthy": 30,
+        "intermittent_imu_burst20": 30,
+        "stuck_phi_15deg": 30
+      }
+    },
+    "sat": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0,
+      "by_scenario": {}
+    },
+    "ekf_roll_rmse": {
+      "mismatch_count": 120,
+      "max_abs_diff": 0.0066554720900536294,
+      "by_scenario": {
+        "dropout_imu_p0.3": 30,
+        "dropout_imu_p0.5": 30,
+        "intermittent_imu_burst20": 30,
+        "stuck_phi_15deg": 30
+      }
+    },
+    "ekf_rejections": {
+      "mismatch_count": 36,
+      "max_abs_diff": 13.0,
+      "by_scenario": {
+        "dropout_imu_p0.3": 17,
+        "dropout_imu_p0.5": 17,
+        "intermittent_imu_burst20": 2
+      }
+    },
+    "solver_failures": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0,
+      "by_scenario": {}
+    }
+  },
+  "pass": false,
+  "caveat": "Subset parity cannot independently certify archived 100-seed runs for all horizons or exact historical code environment."
+}

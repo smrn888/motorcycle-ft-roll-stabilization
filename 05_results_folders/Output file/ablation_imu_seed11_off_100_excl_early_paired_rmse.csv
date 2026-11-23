@@ -1,0 +1,2 @@
+iw,scenario,A,B,n_both_alive,d_rmse,ci_lo,ci_hi,d_rmse_pct
+1.0,dropout_imu_p0.5,residual,nmpc,88,0.0,0.0,0.0,0.0

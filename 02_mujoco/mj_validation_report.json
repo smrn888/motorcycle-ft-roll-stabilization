@@ -1,0 +1,74 @@
+{
+  "T1": {
+    "mj_reduced_mean": 1.3908678515459014e-06,
+    "mj_reduced_max": 4.877295536775961e-06,
+    "project_rk4_mean": 1.0800693125462313e-06,
+    "project_rk4_max": 6.940498189944577e-06,
+    "PASS": true
+  },
+  "T2": {
+    "PASS": true
+  },
+  "T3": {
+    "per_scenario": {
+      "healthy": {
+        "project_surv": 1.0,
+        "mj_reduced_surv": 1.0,
+        "project_rmse": 0.028862357602171523,
+        "mj_reduced_rmse": 0.028862314590527294,
+        "per_episode_survival_identical": true,
+        "mean_abs_drmse": 4.549517677301593e-08
+      },
+      "dropout_imu_p0.3": {
+        "project_surv": 1.0,
+        "mj_reduced_surv": 1.0,
+        "project_rmse": 0.027910479970544376,
+        "mj_reduced_rmse": 0.027910418099101192,
+        "per_episode_survival_identical": true,
+        "mean_abs_drmse": 6.51693964420167e-08
+      },
+      "stuck_phi_15deg": {
+        "project_surv": 0.0,
+        "mj_reduced_surv": 0.0,
+        "project_rmse": 0.17689521804596026,
+        "mj_reduced_rmse": 0.1768961353823941,
+        "per_episode_survival_identical": true,
+        "mean_abs_drmse": 9.173364338296852e-07
+      }
+    },
+    "PASS": true
+  },
+  "T4_info_full_mode": {
+    "gimbal_rate_after_one_step_tau10": {
+      "project": 0.9900663333333334,
+      "mj_reduced": 0.9900663248601173,
+      "mj_full": 0.9595860454561317
+    },
+    "unactuated_bike_from_phi0_0p05_for_1s": {
+      "project": {
+        "phi_after_1s": 0.8161060335844819,
+        "crashed": true
+      },
+      "mj_full": {
+        "phi_after_1s": 0.050816016421901304,
+        "crashed": false
+      }
+    },
+    "gyroscopic_reaction_on_gimbal_Nm_per_rad_s": 100.0,
+    "estimated_gyro_spring_rad_s": 43.386091563731235,
+    "closed_loop_lqr": {
+      "healthy": {
+        "surv": 1.0,
+        "rmse": 0.05991946425746222
+      },
+      "dropout_imu_p0.3": {
+        "surv": 1.0,
+        "rmse": 0.058548491753060906
+      },
+      "stuck_phi_15deg": {
+        "surv": 0.0,
+        "rmse": 0.3045410849614974
+      }
+    }
+  }
+}

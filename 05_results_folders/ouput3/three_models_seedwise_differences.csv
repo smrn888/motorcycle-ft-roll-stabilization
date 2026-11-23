@@ -1,0 +1,106 @@
+metric,method_A,method_B,training_seed,difference_A_minus_B
+survival_pct,Residual SAC + Neural MPC,Neural MPC,11,1.352941176470594
+survival_pct,Residual SAC + Neural MPC,Neural MPC,22,0.9117647058823621
+survival_pct,Residual SAC + Neural MPC,Neural MPC,33,4.735294117647058
+survival_pct,Residual SAC + Neural MPC,Neural MPC,44,3.411764705882362
+survival_pct,Residual SAC + Neural MPC,Neural MPC,55,3.941176470588246
+survival_pct,Residual SAC + Neural MPC,Standalone SAC,11,8.676470588235304
+survival_pct,Residual SAC + Neural MPC,Standalone SAC,22,2.529411764705884
+survival_pct,Residual SAC + Neural MPC,Standalone SAC,33,3.02941176470587
+survival_pct,Residual SAC + Neural MPC,Standalone SAC,44,1.32352941176471
+survival_pct,Residual SAC + Neural MPC,Standalone SAC,55,7.558823529411782
+survival_pct,Standalone SAC,Neural MPC,11,-7.32352941176471
+survival_pct,Standalone SAC,Neural MPC,22,-1.6176470588235219
+survival_pct,Standalone SAC,Neural MPC,33,1.7058823529411882
+survival_pct,Standalone SAC,Neural MPC,44,2.088235294117652
+survival_pct,Standalone SAC,Neural MPC,55,-3.617647058823536
+rmse_alive,Residual SAC + Neural MPC,Neural MPC,11,-0.08421488974645099
+rmse_alive,Residual SAC + Neural MPC,Neural MPC,22,-0.0821001832381641
+rmse_alive,Residual SAC + Neural MPC,Neural MPC,33,-0.1082422173729777
+rmse_alive,Residual SAC + Neural MPC,Neural MPC,44,-0.11485582416521861
+rmse_alive,Residual SAC + Neural MPC,Neural MPC,55,-0.1076903852890134
+rmse_alive,Residual SAC + Neural MPC,Standalone SAC,11,0.02924461974653031
+rmse_alive,Residual SAC + Neural MPC,Standalone SAC,22,0.0192859325974946
+rmse_alive,Residual SAC + Neural MPC,Standalone SAC,33,0.017066421878796104
+rmse_alive,Residual SAC + Neural MPC,Standalone SAC,44,0.0098016159948172
+rmse_alive,Residual SAC + Neural MPC,Standalone SAC,55,0.0249222050340326
+rmse_alive,Standalone SAC,Neural MPC,11,-0.1134595094929813
+rmse_alive,Standalone SAC,Neural MPC,22,-0.10138611583565871
+rmse_alive,Standalone SAC,Neural MPC,33,-0.12530863925177382
+rmse_alive,Standalone SAC,Neural MPC,44,-0.12465744016003581
+rmse_alive,Standalone SAC,Neural MPC,55,-0.132612590323046
+rmse_common,Residual SAC + Neural MPC,Neural MPC,11,-0.0861619424590216
+rmse_common,Residual SAC + Neural MPC,Neural MPC,22,-0.0817891091001485
+rmse_common,Residual SAC + Neural MPC,Neural MPC,33,-0.1121393864492866
+rmse_common,Residual SAC + Neural MPC,Neural MPC,44,-0.11498156686540949
+rmse_common,Residual SAC + Neural MPC,Neural MPC,55,-0.1138391670943292
+rmse_common,Residual SAC + Neural MPC,Standalone SAC,11,0.025260178416547596
+rmse_common,Residual SAC + Neural MPC,Standalone SAC,22,0.017483157894231702
+rmse_common,Residual SAC + Neural MPC,Standalone SAC,33,0.011558616523198492
+rmse_common,Residual SAC + Neural MPC,Standalone SAC,44,0.007874486060029107
+rmse_common,Residual SAC + Neural MPC,Standalone SAC,55,0.016465549143836897
+rmse_common,Standalone SAC,Neural MPC,11,-0.1114221208755692
+rmse_common,Standalone SAC,Neural MPC,22,-0.0992722669943802
+rmse_common,Standalone SAC,Neural MPC,33,-0.1236980029724851
+rmse_common,Standalone SAC,Neural MPC,44,-0.1228560529254386
+rmse_common,Standalone SAC,Neural MPC,55,-0.13030471623816609
+u_rms,Residual SAC + Neural MPC,Neural MPC,11,1.6392820967726387
+u_rms,Residual SAC + Neural MPC,Neural MPC,22,1.6935740045370262
+u_rms,Residual SAC + Neural MPC,Neural MPC,33,1.2050391827254252
+u_rms,Residual SAC + Neural MPC,Neural MPC,44,1.4803601696808184
+u_rms,Residual SAC + Neural MPC,Neural MPC,55,1.2006066969206004
+u_rms,Residual SAC + Neural MPC,Standalone SAC,11,-21.265703887229844
+u_rms,Residual SAC + Neural MPC,Standalone SAC,22,-9.12187503877604
+u_rms,Residual SAC + Neural MPC,Standalone SAC,33,-15.121473157499349
+u_rms,Residual SAC + Neural MPC,Standalone SAC,44,-12.880737181247788
+u_rms,Residual SAC + Neural MPC,Standalone SAC,55,-12.984102754420757
+u_rms,Standalone SAC,Neural MPC,11,22.904985984002483
+u_rms,Standalone SAC,Neural MPC,22,10.815449043313066
+u_rms,Standalone SAC,Neural MPC,33,16.326512340224774
+u_rms,Standalone SAC,Neural MPC,44,14.361097350928608
+u_rms,Standalone SAC,Neural MPC,55,14.184709451341357
+du,Residual SAC + Neural MPC,Neural MPC,11,1.560272684064393
+du,Residual SAC + Neural MPC,Neural MPC,22,1.2790532186889711
+du,Residual SAC + Neural MPC,Neural MPC,33,1.2676241456688229
+du,Residual SAC + Neural MPC,Neural MPC,44,1.8636290101253947
+du,Residual SAC + Neural MPC,Neural MPC,55,1.324637694321247
+du,Residual SAC + Neural MPC,Standalone SAC,11,-14.915771557799886
+du,Residual SAC + Neural MPC,Standalone SAC,22,-9.512926910391425
+du,Residual SAC + Neural MPC,Standalone SAC,33,-10.368779149336671
+du,Residual SAC + Neural MPC,Standalone SAC,44,-6.464954319020384
+du,Residual SAC + Neural MPC,Standalone SAC,55,-13.943909582285855
+du,Standalone SAC,Neural MPC,11,16.47604424186428
+du,Standalone SAC,Neural MPC,22,10.791980129080395
+du,Standalone SAC,Neural MPC,33,11.636403295005493
+du,Standalone SAC,Neural MPC,44,8.32858332914578
+du,Standalone SAC,Neural MPC,55,15.268547276607102
+runtime_ms,Residual SAC + Neural MPC,Neural MPC,11,0.2720429246813421
+runtime_ms,Residual SAC + Neural MPC,Neural MPC,22,0.3226284661274745
+runtime_ms,Residual SAC + Neural MPC,Neural MPC,33,0.2890849750879621
+runtime_ms,Residual SAC + Neural MPC,Neural MPC,44,0.28396003052219393
+runtime_ms,Residual SAC + Neural MPC,Neural MPC,55,0.2782406048421638
+runtime_ms,Residual SAC + Neural MPC,Standalone SAC,11,0.10651810014255508
+runtime_ms,Residual SAC + Neural MPC,Standalone SAC,22,0.182956019675872
+runtime_ms,Residual SAC + Neural MPC,Standalone SAC,33,0.13405981479876222
+runtime_ms,Residual SAC + Neural MPC,Standalone SAC,44,0.1267972390944213
+runtime_ms,Residual SAC + Neural MPC,Standalone SAC,55,0.11564260890097822
+runtime_ms,Standalone SAC,Neural MPC,11,0.16552482453878703
+runtime_ms,Standalone SAC,Neural MPC,22,0.13967244645160248
+runtime_ms,Standalone SAC,Neural MPC,33,0.15502516028919988
+runtime_ms,Standalone SAC,Neural MPC,44,0.15716279142777262
+runtime_ms,Standalone SAC,Neural MPC,55,0.16259799594118557
+mean_steps,Residual SAC + Neural MPC,Neural MPC,11,2.2991176470588925
+mean_steps,Residual SAC + Neural MPC,Neural MPC,22,2.071470588235229
+mean_steps,Residual SAC + Neural MPC,Neural MPC,33,16.511470588235284
+mean_steps,Residual SAC + Neural MPC,Neural MPC,44,11.540882352941196
+mean_steps,Residual SAC + Neural MPC,Neural MPC,55,14.272058823529449
+mean_steps,Residual SAC + Neural MPC,Standalone SAC,11,39.36176470588242
+mean_steps,Residual SAC + Neural MPC,Standalone SAC,22,12.34911764705879
+mean_steps,Residual SAC + Neural MPC,Standalone SAC,33,12.8302941176471
+mean_steps,Residual SAC + Neural MPC,Standalone SAC,44,6.987352941176539
+mean_steps,Residual SAC + Neural MPC,Standalone SAC,55,36.278823529411795
+mean_steps,Standalone SAC,Neural MPC,11,-37.06264705882353
+mean_steps,Standalone SAC,Neural MPC,22,-10.277647058823561
+mean_steps,Standalone SAC,Neural MPC,33,3.681176470588184
+mean_steps,Standalone SAC,Neural MPC,44,4.553529411764657
+mean_steps,Standalone SAC,Neural MPC,55,-22.006764705882347

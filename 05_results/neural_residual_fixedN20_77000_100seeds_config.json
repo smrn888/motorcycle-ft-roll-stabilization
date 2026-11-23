@@ -1,0 +1,35 @@
+{
+  "ckpt": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\neural_mpc_multi13.pt",
+  "training_seeds": [
+    101,
+    202,
+    303,
+    404,
+    505
+  ],
+  "stems": [
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\sac_seed101_continued_1m_best",
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\sac_seed202_continued_1m_best",
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\sac_seed303_continued_1m_best",
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\sac_seed404_fromscratch_1m_best_eval",
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\sac_seed505_fromscratch_1m_best_eval"
+  ],
+  "seed0": 77000,
+  "episodes": 100,
+  "buckets": [
+    0,
+    1,
+    2
+  ],
+  "only": [
+    "healthy",
+    "dropout_imu_p0.3",
+    "dropout_imu_p0.5",
+    "intermittent_imu_burst20",
+    "stuck_phi_15deg"
+  ],
+  "horizon": 20,
+  "iw": 1.0,
+  "res_scale": 5.0,
+  "method": "frozen residual policy, horizon forced to N; residual action[2] ignored"
+}

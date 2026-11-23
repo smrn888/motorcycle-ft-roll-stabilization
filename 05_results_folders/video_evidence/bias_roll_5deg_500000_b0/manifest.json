@@ -1,0 +1,78 @@
+[
+  {
+    "trace_file": "bias_roll_5deg__b0__s500000__A__pure.npz",
+    "case": "bias_roll_5deg",
+    "fault_type": "bias_phi",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "A",
+    "controller": "pure",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {},
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 155,
+    "rmse": 0.12439586690371465,
+    "max_roll_deg": 46.23374772114591,
+    "max_gimbal_rad": 1.5707963267948966
+  },
+  {
+    "trace_file": "bias_roll_5deg__b0__s500000__A__residual.npz",
+    "case": "bias_roll_5deg",
+    "fault_type": "bias_phi",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "A",
+    "controller": "residual",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {},
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 205,
+    "rmse": 0.12958971527957416,
+    "max_roll_deg": 45.291009918986255,
+    "max_gimbal_rad": 1.5707963267948966
+  },
+  {
+    "trace_file": "bias_roll_5deg__b0__s500000__B__pure.npz",
+    "case": "bias_roll_5deg",
+    "fault_type": "bias_phi",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "B",
+    "controller": "pure",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {
+      "gimbal_limit": 0.8
+    },
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 212,
+    "rmse": 0.12581479241659962,
+    "max_roll_deg": 45.80984331271539,
+    "max_gimbal_rad": 0.8756519956542065
+  },
+  {
+    "trace_file": "bias_roll_5deg__b0__s500000__B__residual.npz",
+    "case": "bias_roll_5deg",
+    "fault_type": "bias_phi",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "B",
+    "controller": "residual",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {
+      "gimbal_limit": 0.8
+    },
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 349,
+    "rmse": 0.2479383260386566,
+    "max_roll_deg": 45.72462799405685,
+    "max_gimbal_rad": 0.8255915658168888
+  }
+]

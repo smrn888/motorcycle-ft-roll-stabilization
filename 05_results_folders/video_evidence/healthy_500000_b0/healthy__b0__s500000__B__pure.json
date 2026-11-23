@@ -1,0 +1,19 @@
+{
+  "case": "healthy",
+  "fault_type": "none",
+  "bucket": 0,
+  "seed": 500000,
+  "configuration": "B",
+  "controller": "pure",
+  "physics": "full",
+  "dt": 0.01,
+  "intervention": {
+    "gimbal_limit": 0.8
+  },
+  "limitations": "no tyre-ground contact; idealized wheel spin",
+  "survived": 0,
+  "steps": 162,
+  "rmse": 0.11625208974256512,
+  "max_roll_deg": 45.496388065768414,
+  "max_gimbal_rad": 0.8785631693768554
+}

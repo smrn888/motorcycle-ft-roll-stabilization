@@ -1,0 +1,79 @@
+{
+  "protocol": "ekf_combined_current_osqp_holdout_v1",
+  "source_hash": "e1dda6ed8050fa08aebc2049924a7b159a5292099053a256769fa302850fe45b",
+  "checkpoint_hash": "03e0e8b0f15297fa4c7b28710e15b4ec46d374920393884b1c075114eed79907",
+  "evaluator_hash": "38f29ffe2651a710ab9461774ce695a9a434c6daecb74a3c289500dd706da9b3",
+  "seed0": 78000,
+  "episodes": 100,
+  "buckets": [
+    0,
+    1,
+    2
+  ],
+  "scenarios": [
+    "healthy",
+    "dropout_imu_p0.3",
+    "dropout_imu_p0.5",
+    "intermittent_imu_burst20",
+    "stuck_phi_15deg"
+  ],
+  "horizons": [
+    10,
+    20,
+    30,
+    40
+  ],
+  "osqp": {
+    "eps_abs": 0.0001,
+    "eps_rel": 0.0001,
+    "max_iter": 4000,
+    "warm_start": true,
+    "fallback": "zero"
+  },
+  "ekf": {
+    "ekf_gate": 9.21,
+    "ekf_q": [
+      0.002,
+      0.05,
+      0.005,
+      0.005,
+      0.1,
+      0.1
+    ],
+    "ekf_r": [
+      0.01,
+      0.1,
+      0.005,
+      0.005,
+      0.05,
+      0.05
+    ],
+    "ekf_p0": [
+      0.05,
+      0.5,
+      0.05,
+      0.05,
+      0.5,
+      0.5
+    ],
+    "stale_phi_tol": 1e-10,
+    "stale_rate_tol": 1e-10,
+    "stale_run": 2,
+    "recovery_run": 5,
+    "recovery_factor": 4.0,
+    "recovery_cap": 1.0
+  },
+  "smoke": {
+    "seed": 78000,
+    "bucket": 0,
+    "horizon": 20,
+    "scenarios": [
+      "healthy",
+      "dropout_imu_p0.3",
+      "dropout_imu_p0.5",
+      "intermittent_imu_burst20",
+      "stuck_phi_15deg"
+    ]
+  },
+  "note": "Do not adjust controller or estimator after reviewing seed 78000 smoke results; smoke is an integrity check only."
+}

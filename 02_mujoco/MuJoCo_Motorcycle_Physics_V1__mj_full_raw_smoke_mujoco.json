@@ -1,0 +1,8 @@
+{
+  "engine": "mujoco",
+  "mujoco_version": "3.16.0",
+  "mode": "full",
+  "servo": false,
+  "timestep": 0.001,
+  "script": "compare_34faults_res_scale.py"
+}

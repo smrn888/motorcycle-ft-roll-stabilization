@@ -1,0 +1,4 @@
+iw,group,fam,surv,surv_std_models,rmse_alive
+1.0,healthy,nmpc,1.0,,0.1959372988396029
+1.0,sensor,nmpc,0.413265306122449,,0.22461252414656543
+1.0,sensor,residual,0.413265306122449,,0.22461252414656543

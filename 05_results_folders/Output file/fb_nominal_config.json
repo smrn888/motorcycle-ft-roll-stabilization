@@ -1,0 +1,44 @@
+{
+ "args": {
+  "ckpt": "neural_mpc.pt",
+  "sac": [
+   "res_pilot5_best",
+   "res_main1m_best",
+   "res_main1m_final"
+  ],
+  "ablate": true,
+  "mpc": false,
+  "mpc_hold": false,
+  "mpc_iw": null,
+  "iw": [
+   1.0,
+   0.6,
+   0.5,
+   0.45,
+   0.42,
+   0.4,
+   0.35,
+   0.3
+  ],
+  "episodes": 100,
+  "seed0": 75000,
+  "cal_seed0": 76000,
+  "cal_eps": 10,
+  "bucket": 0,
+  "boot": 2000,
+  "out": "fb_nominal"
+ },
+ "file_sha256": {
+  "neural_mpc.pt": "d62bac77554622e5",
+  "res_pilot5_best.zip": "2247c60730039385",
+  "res_pilot5_best_vecnorm.pkl": "d8f33f5afcc566d4",
+  "res_main1m_best.zip": "38d7e7ed8304a794",
+  "res_main1m_best_vecnorm.pkl": "6dd754d114ad20fa",
+  "res_main1m_final.zip": "20284b3e098e7cce",
+  "res_main1m_final_vecnorm.pkl": "2a23e52010a47cff"
+ },
+ "unrecoverable_seeds": [
+  75022,
+  75096
+ ]
+}

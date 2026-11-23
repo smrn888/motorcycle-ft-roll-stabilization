@@ -1,0 +1,6 @@
+iw,scenario,fam,n_models,n_eps,surv,surv_std_models,surv_min_model,surv_max_model,surv_ci_lo,surv_ci_hi,rmse_alive,group
+1.0,dropout_imu_p0.5,nmpc,1,100,0.88,,0.88,0.88,0.8322499999999999,0.94,0.22573685948984276,sensor
+1.0,dropout_imu_p0.5,residual,1,100,0.88,,0.88,0.88,0.8322499999999999,0.94,0.22573685948984276,sensor
+1.0,healthy,nmpc,1,100,0.98,,0.98,0.98,0.9422499999999999,1.0,0.2020950564315973,healthy
+1.0,intermittent_imu_burst20,nmpc,1,100,0.0,,0.0,0.0,0.0,0.0,,sensor
+1.0,intermittent_imu_burst20,residual,1,100,0.0,,0.0,0.0,0.0,0.0,,sensor

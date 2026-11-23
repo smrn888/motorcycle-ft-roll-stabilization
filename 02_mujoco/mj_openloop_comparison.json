@@ -1,0 +1,69 @@
+{
+  "parameters": {
+    "phi0_rad": 0.05,
+    "seconds": 1.0,
+    "Ts": 0.01
+  },
+  "traces": {
+    "paper_rk4": {
+      "last": {
+        "phi": 1.9306973080633618,
+        "phi_dot": 7.280835311640443,
+        "df": 0.0,
+        "dr": 0.0,
+        "wgf": 0.0,
+        "wgr": 0.0,
+        "spin_f": NaN,
+        "spin_r": NaN
+      },
+      "max_abs_roll": 1.9306973080633618,
+      "all_finite_six_states": true,
+      "first_time_over_45deg_s": 0.79
+    },
+    "full_reset_each_step": {
+      "last": {
+        "phi": 0.050816016421901304,
+        "phi_dot": -0.005172649299866418,
+        "df": 0.10603469781950722,
+        "dr": -0.10603469781950722,
+        "wgf": 0.11398564017582148,
+        "wgr": -0.11398564017582148,
+        "spin_f": NaN,
+        "spin_r": NaN
+      },
+      "max_abs_roll": 0.050880447091743344,
+      "all_finite_six_states": true,
+      "first_time_over_45deg_s": null
+    },
+    "full_continuous_spinning": {
+      "last": {
+        "phi": 0.0508160333424468,
+        "phi_dot": -0.005173260303658648,
+        "df": 0.10603480662695787,
+        "dr": -0.10603480662695787,
+        "wgf": 0.11398849330184536,
+        "wgr": -0.11398849330184536,
+        "spin_f": 200.00054751832116,
+        "spin_r": -200.00054751832116
+      },
+      "max_abs_roll": 0.05088046837390342,
+      "all_finite_six_states": true,
+      "first_time_over_45deg_s": null
+    },
+    "full_continuous_no_spin": {
+      "last": {
+        "phi": 1.9306973128111669,
+        "phi_dot": 7.280835275982082,
+        "df": 7.197424373213446e-22,
+        "dr": -7.197424373213446e-22,
+        "wgf": -5.2007592977124744e-21,
+        "wgr": 5.2007592977124744e-21,
+        "spin_f": -5.6106933316947126e-21,
+        "spin_r": 5.6106933316947126e-21
+      },
+      "max_abs_roll": 1.9306973128111669,
+      "all_finite_six_states": true,
+      "first_time_over_45deg_s": 0.79
+    }
+  }
+}

@@ -1,0 +1,355 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\emailauthor{sm.razavinabavi@ut.ac.ir}{S. M. Razavi-Nabavi}
+\emailauthor{m.ayati@ut.ac.ir}{M. Ayati\corref {cor1}}
+\emailauthor{sm.razavinabavi@ut.ac.ir}{Taraneh Mahdibehesht}
+\Newlabel{cor1}{1}
+\def\@LN@column{1}
+\Newlabel{inst1}{a}
+\citation{johannink2019residual}
+\citation{haarnoja2018soft,haarnoja2018softapps}
+\citation{amos2018differentiable}
+\citation{kalman1960new}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{section.1}\protected@file@percent }
+\citation{todorov2012mujoco}
+\def\@LN@column{1}
+\citation{wie2001singularity,schaub1998cmg}
+\citation{beznos1998control,yetkin2014gyro,tofigh2021fractional,zheng2022dynamic}
+\citation{beznos1998control}
+\citation{yetkin2014gyro}
+\citation{tofigh2021fractional}
+\citation{zheng2022dynamic}
+\citation{wie2001singularity,takada2010control}
+\citation{wie2001singularity}
+\citation{takada2010control}
+\citation{papakonstantinou2021global}
+\citation{schaub1998cmg}
+\citation{zheng2022dynamic}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related work}{4}{section.2}\protected@file@percent }
+\newlabel{sec:related_work}{{2}{4}{Related work}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}CMG-based stabilization and single-track vehicle dynamics}{4}{subsection.2.1}\protected@file@percent }
+\citation{rawlings2017model}
+\citation{stellato2020osqp}
+\citation{parisini1995neural}
+\citation{karg2020efficient}
+\citation{hertneck2018learning}
+\citation{chen2022large}
+\citation{amos2018differentiable}
+\citation{johannink2019residual}
+\citation{silver2018residual}
+\citation{haarnoja2018soft,haarnoja2018softapps}
+\citation{ames2019control}
+\citation{xiao2022high}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Model predictive control and neural distillation}{5}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Residual reinforcement learning and safety filters}{5}{subsection.2.3}\protected@file@percent }
+\citation{blanke2016diagnosis,isermann2011fault,patton2000fault}
+\citation{tan2002sliding}
+\citation{du2014isolation}
+\citation{ailadel2021integrated}
+\citation{sun2025adaptive}
+\citation{ayati2016pmsm}
+\citation{ayati2015fault}
+\citation{rahnavard2017sliding,rahnavard2019finite}
+\citation{kalman1960new}
+\citation{einicke1999robust}
+\citation{fang2022robust}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Fault-tolerant control and robust Kalman state estimation}{6}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Observer-based sensor-fault handling.}{6}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Robust extended Kalman filtering.}{6}{section*.2}\protected@file@percent }
+\citation{mehra1971innovations}
+\citation{willsky1976survey}
+\citation{barshalom2001estimation}
+\citation{song2024innovation}
+\citation{pazera2018robust}
+\citation{sun2025adaptive}
+\citation{du2014isolation}
+\citation{sinopoli2004kalman}
+\citation{mehra1970identification}
+\citation{zarringhalam2013optimal}
+\citation{tao2024simultaneous}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {paragraph}{Innovation-based fault detection.}{7}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Multiple sensor faults.}{7}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{State estimation under intermittent measurements.}{7}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Fault accommodation in vehicle control.}{7}{section*.6}\protected@file@percent }
+\citation{tobin2017domain}
+\citation{peng2018sim}
+\citation{henderson2018deep}
+\citation{todorov2012mujoco}
+\citation{beznos1998control,yetkin2014gyro,tofigh2021fractional,zheng2022dynamic}
+\citation{fang2022robust,pazera2018robust,zarringhalam2013optimal}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Sim-to-sim and sim-to-real transfer gaps}{8}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Literature gap and research positioning}{8}{subsection.2.6}\protected@file@percent }
+\citation{hertneck2018learning,chen2022large,johannink2019residual}
+\citation{zheng2022dynamic}
+\citation{yetkin2014gyro}
+\citation{tofigh2021fractional}
+\citation{hertneck2018learning}
+\citation{chen2022large}
+\citation{johannink2019residual}
+\citation{xiao2022high}
+\citation{fang2022robust}
+\citation{pazera2018robust}
+\citation{zarringhalam2013optimal}
+\citation{ayati2016pmsm}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Comparison with related literature on CMG balance stabilization, sensor-fault handling and learned control architectures (n/a: not applicable; ---: not reported in the cited work).}}{9}{table.1}\protected@file@percent }
+\newlabel{tab:literature_comparison}{{1}{9}{Comparison with related literature on CMG balance stabilization, sensor-fault handling and learned control architectures (n/a: not applicable; ---: not reported in the cited work)}{table.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}System model and control problem}{9}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Nonlinear reduced-order motorcycle--CMG dynamics}{9}{subsection.3.1}\protected@file@percent }
+\def\@LN@column{1}
+\newlabel{eq:roll}{{2}{10}{Nonlinear reduced-order motorcycle--CMG dynamics}{equation.2}{}}
+\newlabel{eq:gimbal}{{3}{10}{Nonlinear reduced-order motorcycle--CMG dynamics}{equation.3}{}}
+\newlabel{eq:affine}{{4}{10}{Nonlinear reduced-order motorcycle--CMG dynamics}{equation.4}{}}
+\newlabel{eq:fg}{{5}{10}{Nonlinear reduced-order motorcycle--CMG dynamics}{equation.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Constrained nominal MPC teacher}{10}{subsection.3.2}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Motorcycle with two control-moment gyros. (a) Side view: front and rear CMG gimbals ($\delta _f,\tau _f$ and $\delta _r,\tau _r$), center of mass at height $h$, wheelbase $L$, counter-rotating rotor momenta. (b) Front view: gravity moment $M_g=mgh\sin \phi $ and control moment $M_{\rm  gyro}=-I_w\Omega (\dot  \delta _f-\dot  \delta _r)\cos \phi $ of the reduced model; $\phi >0$ is a lean toward $+y$.}}{11}{figure.1}\protected@file@percent }
+\newlabel{fig:config}{{1}{11}{Motorcycle with two control-moment gyros. (a) Side view: front and rear CMG gimbals ($\delta _f,\tau _f$ and $\delta _r,\tau _r$), center of mass at height $h$, wheelbase $L$, counter-rotating rotor momenta. (b) Front view: gravity moment $M_g=mgh\sin \phi $ and control moment $M_{\rm gyro}=-I_w\Omega (\dot \delta _f-\dot \delta _r)\cos \phi $ of the reduced model; $\phi >0$ is a lean toward $+y$}{figure.1}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Nominal reduced-order simulation parameters.}}{12}{table.2}\protected@file@percent }
+\newlabel{tab:par}{{2}{12}{Nominal reduced-order simulation parameters}{table.2}{}}
+\newlabel{eq:Ac}{{6}{12}{Constrained nominal MPC teacher}{equation.6}{}}
+\newlabel{eq:mpc}{{8}{12}{Constrained nominal MPC teacher}{equation.8}{}}
+\citation{stellato2020osqp}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Controller architectures}{13}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Neural MPC, Pure SAC and residual SAC}{13}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:nn}{{4.1}{13}{Neural MPC, Pure SAC and residual SAC}{subsection.4.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Design rationale.}{13}{section*.7}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Held-out validation torque error of the distilled 10-input neural MPC (N\,m).}}{14}{table.3}\protected@file@percent }
+\newlabel{tab:val10}{{3}{14}{Held-out validation torque error of the distilled 10-input neural MPC (N\,m)}{table.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Distillation of the 10-input network.}{14}{section*.8}\protected@file@percent }
+\newlabel{eq:loss}{{10}{14}{Distillation of the 10-input network}{equation.10}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Paired healthy-plant closed-loop comparison of the teacher MPC and the distilled 10-input neural MPC (100 seeds per condition). Time is the mean command-computation time; Median/P95/Max are episode-level statistics (median of 100 episode means, mean of per-episode 95th percentiles, maximum over all steps).}}{15}{table.4}\protected@file@percent }
+\newlabel{tab:cl}{{4}{15}{Paired healthy-plant closed-loop comparison of the teacher MPC and the distilled 10-input neural MPC (100 seeds per condition). Time is the mean command-computation time; Median/P95/Max are episode-level statistics (median of 100 episode means, mean of per-episode 95th percentiles, maximum over all steps)}{table.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Distillation of the 13-input network.}{15}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Residual design.}{15}{section*.10}\protected@file@percent }
+\newlabel{eq:res}{{11}{15}{Residual design}{equation.11}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Held-out validation torque error of the 13-input neural MPC (N\,m).}}{16}{table.5}\protected@file@percent }
+\newlabel{tab:val13}{{5}{16}{Held-out validation torque error of the 13-input neural MPC (N\,m)}{table.5}{}}
+\newlabel{eq:dures}{{12}{16}{Residual design}{equation.12}{}}
+\newlabel{eq:resbound}{{13}{16}{Residual design}{equation.13}{}}
+\def\@LN@column{1}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Residual controller architecture. The measured/estimated observation $\bm  {o}_t$ feeds the base neural MPC ($\bm  {u}_{NN}=\pi _{NN}(\bm  {o}_t)$) and the residual SAC policy ($\bm  {a}_t=[a_f,a_r,a_h]$). The torque channels give $\Delta \bm  {u}=\text  {res\_scale}\cdot [a_f,a_r]$, the horizon channel selects $N=\mathrm  {map}(a_h)$, and the applied torque is $\bm  {u}_t=\mathrm  {clip}(\bm  {u}_{NN}+\Delta \bm  {u},-\tau _{\max },\tau _{\max })$. Sensor faults and uncertainty enter the plant loop. The base network has 13 inputs; the adaptive residual observation has 15 components.}}{17}{figure.2}\protected@file@percent }
+\newlabel{fig:arch}{{2}{17}{Residual controller architecture. The measured/estimated observation $\bm o_t$ feeds the base neural MPC ($\bm u_{NN}=\pi _{NN}(\bm o_t)$) and the residual SAC policy ($\bm a_t=[a_f,a_r,a_h]$). The torque channels give $\Delta \bm u=\text {res\_scale}\cdot [a_f,a_r]$, the horizon channel selects $N=\mathrm {map}(a_h)$, and the applied torque is $\bm u_t=\mathrm {clip}(\bm u_{NN}+\Delta \bm u,-\tmax ,\tmax )$. Sensor faults and uncertainty enter the plant loop. The base network has 13 inputs; the adaptive residual observation has 15 components}{figure.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Training of the adaptive-horizon residual policies.}{17}{section*.11}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Training steps of the best-score and final SAC checkpoints. The fixed-horizon residual of Tables~\ref {tab:34} and \ref {tab:iw} has its best checkpoint at 875{,}000 and its final at 1{,}000{,}000 steps.}}{18}{table.6}\protected@file@percent }
+\newlabel{tab:steps}{{6}{18}{Training steps of the best-score and final SAC checkpoints. The fixed-horizon residual of Tables~\ref {tab:34} and \ref {tab:iw} has its best checkpoint at 875{,}000 and its final at 1{,}000{,}000 steps}{table.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Reward and the fixed-horizon family.}{18}{section*.12}\protected@file@percent }
+\newlabel{eq:rew}{{15}{18}{Reward and the fixed-horizon family}{equation.15}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Reward parameters of Eq.~\eqref  {eq:rew} in all reported runs.}}{19}{table.7}\protected@file@percent }
+\newlabel{tab:rew}{{7}{19}{Reward parameters of Eq.~\eqref {eq:rew} in all reported runs}{table.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Robust EKF and online MPC}{19}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:ekf}{{4.2}{19}{Robust EKF and online MPC}{subsection.4.2}{}}
+\newlabel{eq:meas}{{16}{19}{Robust EKF and online MPC}{equation.16}{}}
+\newlabel{eq:maha}{{18}{19}{Robust EKF and online MPC}{equation.18}{}}
+\def\@LN@column{1}
+\newlabel{eq:upd}{{19}{20}{Robust EKF and online MPC}{equation.19}{}}
+\newlabel{eq:joseph}{{20}{20}{Robust EKF and online MPC}{equation.20}{}}
+\@writefile{toc}{\contentsline {paragraph}{Covariance recovery.}{20}{section*.13}\protected@file@percent }
+\newlabel{eq:infl}{{21}{20}{Covariance recovery}{equation.21}{}}
+\def\@LN@column{1}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces One step of EKF--MPC with robust roll-channel validation}}{21}{algorithm.1}\protected@file@percent }
+\newlabel{alg:ekfmpc}{{1}{21}{Covariance recovery}{algorithm.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Boundedness analysis}{21}{subsection.4.3}\protected@file@percent }
+\newlabel{sec:bound}{{4.3}{21}{Boundedness analysis}{subsection.4.3}{}}
+\newlabel{lem:gate}{{1}{21}{Gated update}{lemma.1}{}}
+\def\@LN@column{1}
+\newlabel{as:iss}{{1}{22}{ISS of the baseline loop}{assumption.1}{}}
+\newlabel{prop:ub}{{1}{22}{Ultimate boundedness}{proposition.1}{}}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Fault injection and evaluation design}{23}{section.5}\protected@file@percent }
+\newlabel{sec:protocol}{{5}{23}{Fault injection and evaluation design}{section.5}{}}
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {paragraph}{Fault definitions.}{24}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Survival.}{24}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cohort.}{24}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Metrics.}{24}{section*.17}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {paragraph}{Information available to each controller.}{25}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Integration checks.}{25}{section*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Results}{25}{section.6}\protected@file@percent }
+\newlabel{sec:results}{{6}{25}{Results}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Focused fault-benchmark comparison}{25}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Sensitivity to prediction horizon}{25}{subsection.6.2}\protected@file@percent }
+\newlabel{sec:horizon}{{6.2}{25}{Sensitivity to prediction horizon}{subsection.6.2}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Survival (\%) in the focused five-scenario holdout (3 buckets $\times $ 100 seeds per cell). Neural MPC (13-input network, $N=20$) and EKF--MPC each use one checkpoint/configuration; residual SAC aggregates the best-score checkpoints of five adaptive-horizon policies, Pure SAC five policies.}}{26}{table.8}\protected@file@percent }
+\newlabel{tab:focus}{{8}{26}{Survival (\%) in the focused five-scenario holdout (3 buckets $\times $ 100 seeds per cell). Neural MPC (13-input network, $N=20$) and EKF--MPC each use one checkpoint/configuration; residual SAC aggregates the best-score checkpoints of five adaptive-horizon policies, Pure SAC five policies}{table.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Focused holdout episode completion by scenario (values of Table~\ref {tab:focus}).}}{26}{figure.3}\protected@file@percent }
+\newlabel{fig:focus}{{3}{26}{Focused holdout episode completion by scenario (values of Table~\ref {tab:focus})}{figure.3}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces EKF--MPC scenario-macro horizon sweep (1{,}500 unique episodes per horizon, first complete frozen run). RMSE is conditioned on survival. Solver calls: 630{,}685; 646{,}252; 651{,}961; 653{,}421 for $N=10,20,30,40$.}}{27}{table.9}\protected@file@percent }
+\newlabel{tab:hor}{{9}{27}{EKF--MPC scenario-macro horizon sweep (1{,}500 unique episodes per horizon, first complete frozen run). RMSE is conditioned on survival. Solver calls: 630{,}685; 646{,}252; 651{,}961; 653{,}421 for $N=10,20,30,40$}{table.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces EKF--MPC survival (\%) by fault type and horizon (300 cases per cell).}}{27}{table.10}\protected@file@percent }
+\newlabel{tab:horfault}{{10}{27}{EKF--MPC survival (\%) by fault type and horizon (300 cases per cell)}{table.10}{}}
+\@writefile{toc}{\contentsline {paragraph}{Complete repeat.}{27}{section*.20}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Effect of prediction horizon on EKF--MPC completion (Table~\ref {tab:horfault}); a plateau is apparent between $N=30$ and $N=40$.}}{28}{figure.4}\protected@file@percent }
+\newlabel{fig:hor}{{4}{28}{Effect of prediction horizon on EKF--MPC completion (Table~\ref {tab:horfault}); a plateau is apparent between $N=30$ and $N=40$}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Complementary 34-scenario benchmark}{28}{subsection.6.3}\protected@file@percent }
+\newlabel{sec:34}{{6.3}{28}{Complementary 34-scenario benchmark}{subsection.6.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Paired inference.}{28}{section*.21}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Complementary 34-scenario benchmark (separate cohort). Effort is mean squared torque per step, not energy.}}{29}{table.11}\protected@file@percent }
+\newlabel{tab:34}{{11}{29}{Complementary 34-scenario benchmark (separate cohort). Effort is mean squared torque per step, not energy}{table.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Survival--tracking--effort trade-off in the 34-scenario benchmark; marker area scales with mean squared torque per step; RMSE is conditional on survival.}}{29}{figure.5}\protected@file@percent }
+\newlabel{fig:trade}{{5}{29}{Survival--tracking--effort trade-off in the 34-scenario benchmark; marker area scales with mean squared torque per step; RMSE is conditional on survival}{figure.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Where the differences arise.}{29}{section*.22}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Pairwise survival differences $\Delta S=S_A-S_B$ (percentage points), 95\% hierarchical bootstrap intervals, Holm-adjusted $p$.}}{30}{table.12}\protected@file@percent }
+\newlabel{tab:p1}{{12}{30}{Pairwise survival differences $\Delta S=S_A-S_B$ (percentage points), 95\% hierarchical bootstrap intervals, Holm-adjusted $p$}{table.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces Paired tracking contrasts on jointly surviving episodes, $\Delta \mathrm  {RMSE}=\mathrm  {RMSE}_A-\mathrm  {RMSE}_B$ (positive favors B). All six Holm-adjusted $p<0.002$.}}{30}{table.13}\protected@file@percent }
+\newlabel{tab:p2}{{13}{30}{Paired tracking contrasts on jointly surviving episodes, $\Delta \mathrm {RMSE}=\mathrm {RMSE}_A-\mathrm {RMSE}_B$ (positive favors B). All six Holm-adjusted $p<0.002$}{table.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Sensitivity to CMG rotor axial-inertia reduction}{30}{subsection.6.4}\protected@file@percent }
+\newlabel{sec:inertia}{{6.4}{30}{Sensitivity to CMG rotor axial-inertia reduction}{subsection.6.4}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Survival probability versus rotor axial-inertia scale (100 seeds per controller instance; SAC families average five policies).}}{31}{table.14}\protected@file@percent }
+\newlabel{tab:iw}{{14}{31}{Survival probability versus rotor axial-inertia scale (100 seeds per controller instance; SAC families average five policies)}{table.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Oracle-state barrier-filter diagnostic}{31}{subsection.6.5}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Survival versus rotor axial-inertia scale (values of Table~\ref {tab:iw}); the shaded region lies below the lowest scale (0.4) used to train the fixed-horizon residual.}}{32}{figure.6}\protected@file@percent }
+\newlabel{fig:iw}{{6}{32}{Survival versus rotor axial-inertia scale (values of Table~\ref {tab:iw}); the shaded region lies below the lowest scale (0.4) used to train the fixed-horizon residual}{figure.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces Oracle-state minus measured-state HOCBF survival (paired; hierarchical bootstrap; McNemar $p$ pools discordant pairs and is exploratory).}}{32}{table.15}\protected@file@percent }
+\newlabel{tab:oracle}{{15}{32}{Oracle-state minus measured-state HOCBF survival (paired; hierarchical bootstrap; McNemar $p$ pools discordant pairs and is exploratory)}{table.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Estimator ablation and matched information}{32}{subsection.6.6}\protected@file@percent }
+\newlabel{sec:ablation}{{6.6}{32}{Estimator ablation and matched information}{subsection.6.6}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Survival (\%) of the online MPC ($N=20$) under three information configurations, with the neural MPC of Table~\ref {tab:focus} for reference (300 cases per cell).}}{33}{table.16}\protected@file@percent }
+\newlabel{tab:abl}{{16}{33}{Survival (\%) of the online MPC ($N=20$) under three information configurations, with the neural MPC of Table~\ref {tab:focus} for reference (300 cases per cell)}{table.16}{}}
+\@writefile{toc}{\contentsline {paragraph}{Neural MPC with the same gate-only EKF.}{33}{section*.23}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces Survival (\%) of four controllers in one run (seeds 78000--78099, $N=20$, 300 cases per scenario).}}{34}{table.17}\protected@file@percent }
+\newlabel{tab:abl2}{{17}{34}{Survival (\%) of four controllers in one run (seeds 78000--78099, $N=20$, 300 cases per scenario)}{table.17}{}}
+\@writefile{toc}{\contentsline {paragraph}{Matched information for all controllers.}{34}{section*.24}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces Survival (\%) with matched information (300 cases per scenario and policy; residual and Pure SAC aggregate five policies each). The last row is the EKF--MPC of Table~\ref {tab:focus}.}}{35}{table.18}\protected@file@percent }
+\newlabel{tab:match}{{18}{35}{Survival (\%) with matched information (300 cases per scenario and policy; residual and Pure SAC aggregate five policies each). The last row is the EKF--MPC of Table~\ref {tab:focus}}{table.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Estimator sensitivity under sensor noise and rotor-inertia mismatch}{35}{subsection.6.7}\protected@file@percent }
+\newlabel{sec:noisemis}{{6.7}{35}{Estimator sensitivity under sensor noise and rotor-inertia mismatch}{subsection.6.7}{}}
+\citation{mehra1970identification}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {19}{\ignorespaces Supplementary stress test (300 episodes per cell, identical seeds). RMSE is the roll-tracking error conditioned on survival; EKF columns apply to EKF--MPC only (``--'': no estimator). Rejections are the total number of roll-channel samples rejected by the $\chi ^2$ gate.}}{36}{table.19}\protected@file@percent }
+\newlabel{tab:noisemis}{{19}{36}{Supplementary stress test (300 episodes per cell, identical seeds). RMSE is the roll-tracking error conditioned on survival; EKF columns apply to EKF--MPC only (``--'': no estimator). Rejections are the total number of roll-channel samples rejected by the $\chi ^2$ gate}{table.19}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {20}{\ignorespaces Survival (\%) of the adaptive-horizon residual with torque scale $\lambda $ and horizon varied (five policies, raw measurements).}}{37}{table.20}\protected@file@percent }
+\newlabel{tab:lam}{{20}{37}{Survival (\%) of the adaptive-horizon residual with torque scale $\lambda $ and horizon varied (five policies, raw measurements)}{table.20}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Torque residual and horizon channel}{37}{subsection.6.8}\protected@file@percent }
+\newlabel{sec:lambda}{{6.8}{37}{Torque residual and horizon channel}{subsection.6.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Cross-simulator validation and frozen-controller transfer}{37}{section.7}\protected@file@percent }
+\newlabel{sec:cross}{{7}{37}{Cross-simulator validation and frozen-controller transfer}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Protocol and model distinction}{37}{subsection.7.1}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {paragraph}{Model audit of HF-A.}{38}{section*.25}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {21}{\ignorespaces Confirmatory cross-simulator survival on seeds 500000--500004 (450 paired keys per controller/configuration; 95\% Wilson intervals). Only HF-A is unmodified zero-shot transfer. Scenarios share seeds and initial conditions, so the intervals are optimistic.}}{39}{table.21}\protected@file@percent }
+\newlabel{tab:xs}{{21}{39}{Confirmatory cross-simulator survival on seeds 500000--500004 (450 paired keys per controller/configuration; 95\% Wilson intervals). Only HF-A is unmodified zero-shot transfer. Scenarios share seeds and initial conditions, so the intervals are optimistic}{table.21}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Survival degradation and intervention response}{39}{subsection.7.2}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Held-out cross-simulator episode completion of frozen policies (error bars: 95\% Wilson intervals; values of Table~\ref {tab:xs}). A distinct 30-scenario experiment, not pooled with the five-scenario EKF study.}}{40}{figure.7}\protected@file@percent }
+\newlabel{fig:xs}{{7}{40}{Held-out cross-simulator episode completion of frozen policies (error bars: 95\% Wilson intervals; values of Table~\ref {tab:xs}). A distinct 30-scenario experiment, not pooled with the five-scenario EKF study}{figure.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Paired comparisons and cluster-aware uncertainty}{40}{subsection.7.3}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {22}{\ignorespaces Paired comparisons against HF-A (episodes surviving in only one configuration); sign-test $p$ values are descriptive.}}{41}{table.22}\protected@file@percent }
+\newlabel{tab:disc}{{22}{41}{Paired comparisons against HF-A (episodes surviving in only one configuration); sign-test $p$ values are descriptive}{table.22}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {23}{\ignorespaces Seed-cluster bootstrap survival contrasts relative to unmodified HF-A (percentage points; five evaluation-seed clusters within the fixed 30-scenario suite).}}{41}{table.23}\protected@file@percent }
+\newlabel{tab:boot}{{23}{41}{Seed-cluster bootstrap survival contrasts relative to unmodified HF-A (percentage points; five evaluation-seed clusters within the fixed 30-scenario suite)}{table.23}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Fault-family results}{41}{subsection.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Dynamics-based interpretation and design requirements}{41}{subsection.7.5}\protected@file@percent }
+\newlabel{sec:mech}{{7.5}{41}{Dynamics-based interpretation and design requirements}{subsection.7.5}{}}
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {24}{\ignorespaces Survival rate by fault family on the confirmatory seeds (P = Pure SAC, R = Residual SAC); 15 episodes per scenario (three buckets $\times $ five seeds); Healthy is a single scenario.}}{42}{table.24}\protected@file@percent }
+\newlabel{tab:fam}{{24}{42}{Survival rate by fault family on the confirmatory seeds (P = Pure SAC, R = Residual SAC); 15 episodes per scenario (three buckets $\times $ five seeds); Healthy is a single scenario}{table.24}{}}
+\def\@LN@column{1}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces MuJoCo frames at $t=1.20$ s for the \texttt  {act\_sat\_50pct} scenario, seed 500000, bucket 0 (rows: HF-A and Stop B; columns: Pure SAC and residual SAC). Roll / front gimbal / rear gimbal: Pure--A $+22.7^\circ $/$+1.57$/$-1.57$ rad; Residual--A $+15.8^\circ $/$+0.15$/$-1.57$ rad; Pure--B $+17.9^\circ $/$+0.78$/$-0.80$ rad; Residual--B $+9.8^\circ $/$+0.80$/$-0.29$ rad. All four episodes are still running at this instant and end in failure later (after 137, 194, 161 and 237 steps).}}{43}{figure.8}\protected@file@percent }
+\newlabel{fig:frames}{{8}{43}{MuJoCo frames at $t=1.20$ s for the \texttt {act\_sat\_50pct} scenario, seed 500000, bucket 0 (rows: HF-A and Stop B; columns: Pure SAC and residual SAC). Roll / front gimbal / rear gimbal: Pure--A $+22.7^\circ $/$+1.57$/$-1.57$ rad; Residual--A $+15.8^\circ $/$+0.15$/$-1.57$ rad; Pure--B $+17.9^\circ $/$+0.78$/$-0.80$ rad; Residual--B $+9.8^\circ $/$+0.80$/$-0.29$ rad. All four episodes are still running at this instant and end in failure later (after 137, 194, 161 and 237 steps)}{figure.8}{}}
+\@writefile{toc}{\contentsline {paragraph}{Parameter selection.}{43}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Design requirements.}{43}{section*.27}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Discussion}{44}{section.8}\protected@file@percent }
+\def\@LN@column{1}
+\newlabel{sec:long}{{8}{45}{Long-duration behavior}{section*.28}{}}
+\@writefile{toc}{\contentsline {paragraph}{Long-duration behavior.}{45}{section*.28}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Limitations and reproducibility}{46}{section.9}\protected@file@percent }
+\newlabel{sec:limits}{{9}{46}{Limitations and reproducibility}{section.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{Scope.}{46}{section*.29}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {paragraph}{Harness semantics.}{47}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Reproducibility of the EKF--MPC runs.}{47}{section*.31}\protected@file@percent }
+\def\@LN@column{1}
+\@writefile{toc}{\contentsline {paragraph}{Computing environment.}{48}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}Conclusions}{48}{section.10}\protected@file@percent }
+\def\@LN@column{1}
+\bibcite{johannink2019residual}{{1}{}{{}}{{}}}
+\bibcite{haarnoja2018soft}{{2}{}{{}}{{}}}
+\bibcite{haarnoja2018softapps}{{3}{}{{}}{{}}}
+\bibcite{amos2018differentiable}{{4}{}{{}}{{}}}
+\bibcite{stellato2020osqp}{{5}{}{{}}{{}}}
+\def\@LN@column{1}
+\@writefile{toc}{\let\numberline\tmptocnumberline}
+\@writefile{toc}{\contentsline {section}{\numberline {Appendix~A}Scenario-level survival in the 34-scenario benchmark}{50}{appendix.A}\protected@file@percent }
+\bibcite{kalman1960new}{{6}{}{{}}{{}}}
+\bibcite{todorov2012mujoco}{{7}{}{{}}{{}}}
+\bibcite{zheng2022dynamic}{{8}{}{{}}{{}}}
+\bibcite{tofigh2021fractional}{{9}{}{{}}{{}}}
+\bibcite{hertneck2018learning}{{10}{}{{}}{{}}}
+\bibcite{tobin2017domain}{{11}{}{{}}{{}}}
+\bibcite{henderson2018deep}{{12}{}{{}}{{}}}
+\bibcite{wie2001singularity}{{13}{}{{}}{{}}}
+\bibcite{schaub1998cmg}{{14}{}{{}}{{}}}
+\bibcite{beznos1998control}{{15}{}{{}}{{}}}
+\def\@LN@column{1}
+\bibcite{yetkin2014gyro}{{16}{}{{}}{{}}}
+\bibcite{takada2010control}{{17}{}{{}}{{}}}
+\bibcite{papakonstantinou2021global}{{18}{}{{}}{{}}}
+\bibcite{rawlings2017model}{{19}{}{{}}{{}}}
+\bibcite{karg2020efficient}{{20}{}{{}}{{}}}
+\bibcite{chen2022large}{{21}{}{{}}{{}}}
+\bibcite{parisini1995neural}{{22}{}{{}}{{}}}
+\bibcite{silver2018residual}{{23}{}{{}}{{}}}
+\bibcite{xiao2022high}{{24}{}{{}}{{}}}
+\bibcite{ames2019control}{{25}{}{{}}{{}}}
+\bibcite{blanke2016diagnosis}{{26}{}{{}}{{}}}
+\def\@LN@column{1}
+\bibcite{isermann2011fault}{{27}{}{{}}{{}}}
+\bibcite{patton2000fault}{{28}{}{{}}{{}}}
+\bibcite{tan2002sliding}{{29}{}{{}}{{}}}
+\bibcite{du2014isolation}{{30}{}{{}}{{}}}
+\bibcite{ailadel2021integrated}{{31}{}{{}}{{}}}
+\bibcite{sun2025adaptive}{{32}{}{{}}{{}}}
+\bibcite{ayati2016pmsm}{{33}{}{{}}{{}}}
+\bibcite{ayati2015fault}{{34}{}{{}}{{}}}
+\bibcite{rahnavard2017sliding}{{35}{}{{}}{{}}}
+\bibcite{rahnavard2019finite}{{36}{}{{}}{{}}}
+\bibcite{barshalom2001estimation}{{37}{}{{}}{{}}}
+\bibcite{song2024innovation}{{38}{}{{}}{{}}}
+\def\@LN@column{1}
+\bibcite{mehra1970identification}{{39}{}{{}}{{}}}
+\bibcite{peng2018sim}{{40}{}{{}}{{}}}
+\bibcite{einicke1999robust}{{41}{}{{}}{{}}}
+\bibcite{fang2022robust}{{42}{}{{}}{{}}}
+\bibcite{mehra1971innovations}{{43}{}{{}}{{}}}
+\bibcite{willsky1976survey}{{44}{}{{}}{{}}}
+\bibcite{pazera2018robust}{{45}{}{{}}{{}}}
+\bibcite{sinopoli2004kalman}{{46}{}{{}}{{}}}
+\bibcite{zarringhalam2013optimal}{{47}{}{{}}{{}}}
+\bibcite{tao2024simultaneous}{{48}{}{{}}{{}}}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\def\@LN@column{1}
+\@writefile{lot}{\contentsline {table}{\numberline {A.25}{\ignorespaces Survival (\%) by scenario and controller family in the 34-scenario benchmark.}}{55}{table.25}\protected@file@percent }
+\newlabel{tab:app}{{A.25}{55}{Survival (\%) by scenario and controller family in the 34-scenario benchmark}{table.25}{}}
+\gdef \@abspage@last{55}

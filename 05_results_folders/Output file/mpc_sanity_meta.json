@@ -1,0 +1,57 @@
+{
+ "args": {
+  "episodes": 5,
+  "seed0": 10000,
+  "levels": [
+   8
+  ],
+  "p_buckets": [
+   0.4,
+   0.3,
+   0.3
+  ],
+  "out": "mpc_sanity.npz"
+ },
+ "episodes": [
+  {
+   "ep": 0,
+   "seed": 10000,
+   "bucket": 1,
+   "level": 8,
+   "steps": 500,
+   "crashed": false
+  },
+  {
+   "ep": 1,
+   "seed": 10001,
+   "bucket": 0,
+   "level": 8,
+   "steps": 500,
+   "crashed": false
+  },
+  {
+   "ep": 2,
+   "seed": 10002,
+   "bucket": 0,
+   "level": 8,
+   "steps": 500,
+   "crashed": false
+  },
+  {
+   "ep": 3,
+   "seed": 10003,
+   "bucket": 2,
+   "level": 8,
+   "steps": 500,
+   "crashed": false
+  },
+  {
+   "ep": 4,
+   "seed": 10004,
+   "bucket": 2,
+   "level": 8,
+   "steps": 500,
+   "crashed": false
+  }
+ ]
+}

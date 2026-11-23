@@ -1,0 +1,30 @@
+{
+  "complete": true,
+  "per_horizon": {
+    "10": {
+      "episodes": 1500,
+      "survival": 0.8346666666666667,
+      "solver_failures": 0,
+      "solver_optimal_inaccurate": 675
+    },
+    "20": {
+      "episodes": 1500,
+      "survival": 0.8566666666666667,
+      "solver_failures": 1,
+      "solver_optimal_inaccurate": 1228
+    },
+    "30": {
+      "episodes": 1500,
+      "survival": 0.8646666666666667,
+      "solver_failures": 8,
+      "solver_optimal_inaccurate": 687
+    },
+    "40": {
+      "episodes": 1500,
+      "survival": 0.8666666666666667,
+      "solver_failures": 1,
+      "solver_optimal_inaccurate": 453
+    }
+  },
+  "frozen_manifest": "ekf_paper_final_clean_v1\\ekf_frozen_manifest.json"
+}

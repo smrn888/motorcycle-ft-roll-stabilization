@@ -1,0 +1,9 @@
+{
+  "engine": "mujoco",
+  "mujoco_version": "3.16.0",
+  "mode": "reduced",
+  "servo": false,
+  "timestep": 0.001,
+  "script": "compare_34faults_res_scale.py",
+  "launcher": "patched_module_main_v2"
+}

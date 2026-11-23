@@ -1,0 +1,78 @@
+[
+  {
+    "trace_file": "healthy__b0__s500000__A__pure.npz",
+    "case": "healthy",
+    "fault_type": "none",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "A",
+    "controller": "pure",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {},
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 146,
+    "rmse": 0.11642597765195441,
+    "max_roll_deg": 47.101895187996405,
+    "max_gimbal_rad": 1.5707963267948966
+  },
+  {
+    "trace_file": "healthy__b0__s500000__A__residual.npz",
+    "case": "healthy",
+    "fault_type": "none",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "A",
+    "controller": "residual",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {},
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 194,
+    "rmse": 0.12611351319990782,
+    "max_roll_deg": 46.97348769429265,
+    "max_gimbal_rad": 1.5707963267948966
+  },
+  {
+    "trace_file": "healthy__b0__s500000__B__pure.npz",
+    "case": "healthy",
+    "fault_type": "none",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "B",
+    "controller": "pure",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {
+      "gimbal_limit": 0.8
+    },
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 162,
+    "rmse": 0.11625208974256512,
+    "max_roll_deg": 45.496388065768414,
+    "max_gimbal_rad": 0.8785631693768554
+  },
+  {
+    "trace_file": "healthy__b0__s500000__B__residual.npz",
+    "case": "healthy",
+    "fault_type": "none",
+    "bucket": 0,
+    "seed": 500000,
+    "configuration": "B",
+    "controller": "residual",
+    "physics": "full",
+    "dt": 0.01,
+    "intervention": {
+      "gimbal_limit": 0.8
+    },
+    "limitations": "no tyre-ground contact; idealized wheel spin",
+    "survived": 0,
+    "steps": 237,
+    "rmse": 0.13490960566915916,
+    "max_roll_deg": 45.56365703333793,
+    "max_gimbal_rad": 0.8307489059390206
+  }
+]

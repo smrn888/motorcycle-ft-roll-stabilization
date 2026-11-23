@@ -1,0 +1,5 @@
+trace_file,case,bucket,seed,configuration,controller,survived,steps,rmse,max_roll_deg,max_gimbal_rad
+bias_roll_5deg__b0__s500000__A__pure.npz,bias_roll_5deg,0,500000,A,pure,0,155,0.12439586690371465,46.23374772114591,1.5707963267948966
+bias_roll_5deg__b0__s500000__A__residual.npz,bias_roll_5deg,0,500000,A,residual,0,205,0.12958971527957416,45.291009918986255,1.5707963267948966
+bias_roll_5deg__b0__s500000__B__pure.npz,bias_roll_5deg,0,500000,B,pure,0,212,0.12581479241659962,45.80984331271539,0.8756519956542065
+bias_roll_5deg__b0__s500000__B__residual.npz,bias_roll_5deg,0,500000,B,residual,0,349,0.2479383260386566,45.72462799405685,0.8255915658168888

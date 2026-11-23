@@ -1,0 +1,15 @@
+iw,scenario,fam,n_models,n_eps,surv,surv_std_models,surv_min_model,surv_max_model,surv_ci_lo,surv_ci_hi,rmse_alive,group
+1.0,act_sat_30pct,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.14952383738137326,actuator
+1.0,act_sat_30pct,residual,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.20014977822488902,actuator
+1.0,act_stuck_zero,nmpc,1,5,0.0,,0.0,0.0,0.0,0.0,,actuator
+1.0,act_stuck_zero,residual,5,5,0.0,0.0,0.0,0.0,0.0,0.0,,actuator
+1.0,bias_roll_5deg,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.1560460441665324,sensor
+1.0,bias_roll_5deg,residual,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.2058031932375792,sensor
+1.0,healthy,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.14952383738137326,healthy
+1.0,healthy,residual,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.20003058983188196,healthy
+1.0,noise_imu_3deg,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.14915946754637496,sensor
+1.0,noise_imu_3deg,residual,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.1947005866227559,sensor
+1.0,param_iw_p50,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.13401072221602248,param
+1.0,param_iw_p50,residual,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.1829194781092569,param
+1.0,scale_gimbal_0.5,nmpc,1,5,1.0,,1.0,1.0,1.0,1.0,0.1572851300821145,actuator
+1.0,scale_gimbal_0.5,residual,5,5,1.0,0.0,1.0,1.0,1.0,1.0,0.18008361429727932,actuator

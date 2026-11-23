@@ -1,0 +1,531 @@
+﻿
+  baseline4_sac_cbf_train.py:9:──────────────────────────────────────────────────────────────────
+  baseline4_sac_cbf_train.py:10:سه اصلاح اصلی نسبت به نسخه قبل:
+  baseline4_sac_cbf_train.py:11:
+> baseline4_sac_cbf_train.py:12:[FIX-1]  HOCBF  (High-Order CBF)  به‌جای CBF درجه-۱ اشتباه
+  baseline4_sac_cbf_train.py:13:    ─────────────────────────────────────────────────────────────
+  baseline4_sac_cbf_train.py:14:    دینامیک موتورسیکلت:
+  baseline4_sac_cbf_train.py:15:        φ̈ = f_phi(x) + g_phi(x) · τ   ← کنترل مستقیم روی φ̈ وارد می‌شود
+  baseline4_sac_cbf_train.py:16:
+  baseline4_sac_cbf_train.py:17:    h(x) = (π/4)² − φ²   →   relative degree = 2
+  baseline4_sac_cbf_train.py:21:        ψ₀ = h  = (π/4)² − φ²
+  baseline4_sac_cbf_train.py:22:        ψ₁ = ψ̇₀ + α₁·ψ₀  =  −2φ·φ̇ + α₁·((π/4)² − φ²)
+  baseline4_sac_cbf_train.py:23:
+> baseline4_sac_cbf_train.py:24:    شرط HOCBF روی ψ₁:
+  baseline4_sac_cbf_train.py:25:        ψ̇₁ + α₂·ψ₁ ≥ 0
+  baseline4_sac_cbf_train.py:26:
+  baseline4_sac_cbf_train.py:27:    و ψ̇₁ شامل τ (کنترل) می‌شود — پس QP می‌تواند حل کند.
+  baseline4_sac_cbf_train.py:28:
+  baseline4_sac_cbf_train.py:29:    محاسبه ψ̇₁:
+  baseline4_sac_cbf_train.py:150:
+  baseline4_sac_cbf_train.py:151:
+  baseline4_sac_cbf_train.py:152:# ═══════════════════════════════════════════════════════════════════════════
+> baseline4_sac_cbf_train.py:153:# [FIX-1]  High-Order CBF  (HOCBF)  — relative degree 2
+  baseline4_sac_cbf_train.py:154:# ═══════════════════════════════════════════════════════════════════════════
+  baseline4_sac_cbf_train.py:155:
+> baseline4_sac_cbf_train.py:156:class HOCBFSafetyFilter:
+  baseline4_sac_cbf_train.py:157:    """
+  baseline4_sac_cbf_train.py:158:    High-Order CBF برای سیستم relative-degree 2.
+  baseline4_sac_cbf_train.py:159:
+  baseline4_sac_cbf_train.py:160:    دینامیک roll:
+  baseline4_sac_cbf_train.py:161:        φ̈ = f_phi(φ, φ̇, δ̇_f, δ̇_r)  +  g_phi(φ) · τ
+  baseline4_sac_cbf_train.py:171:        ψ₀ = (π/4)² − φ²
+  baseline4_sac_cbf_train.py:172:        ψ₁ = ψ̇₀ + α₁·ψ₀  =  −2φ·φ̇ + α₁·((π/4)² − φ²)
+  baseline4_sac_cbf_train.py:173:
+> baseline4_sac_cbf_train.py:174:    شرط HOCBF (روی ψ₁):
+  baseline4_sac_cbf_train.py:175:        ψ̇₁ + α₂·ψ₁ ≥ 0
+  baseline4_sac_cbf_train.py:176:
+  baseline4_sac_cbf_train.py:177:    ψ̇₁ = −2φ̇² − 2φ·φ̈ − 2α₁·φ·φ̇
+  baseline4_sac_cbf_train.py:178:         = [−2φ̇² − 2φ·f_phi − 2α₁·φ·φ̇]  +  [−2φ · g_phi] · τ
+  baseline4_sac_cbf_train.py:179:           ↑ Lf_ψ₁                           ↑ Lg_ψ₁
+  baseline4_sac_cbf_train.py:229:            _cp.sum_squares(self._tau - self._tau_rl)
+  baseline4_sac_cbf_train.py:230:            + self._lam_p[0] * _cp.sum_squares(self._slack)
+  baseline4_sac_cbf_train.py:231:        )
+> baseline4_sac_cbf_train.py:232:        hocbf_c = (
+  baseline4_sac_cbf_train.py:233:            self._Lf_p[0]
+  baseline4_sac_cbf_train.py:234:            + self._Lg_p @ self._tau
+  baseline4_sac_cbf_train.py:235:            + self.alpha2 * self._psi1_p[0]
+  baseline4_sac_cbf_train.py:236:            + self._slack[0]
+  baseline4_sac_cbf_train.py:237:            >= 0
+  baseline4_sac_cbf_train.py:238:        )
+  baseline4_sac_cbf_train.py:239:        self._qp = _cp.Problem(
+  baseline4_sac_cbf_train.py:240:            _cp.Minimize(cost),
+> baseline4_sac_cbf_train.py:241:            [hocbf_c, _cp.norm_inf(self._tau) <= TAU_MAX]
+  baseline4_sac_cbf_train.py:242:            # قید s ≥ 0 از طریق nonneg=True در Variable تعریف شده
+  baseline4_sac_cbf_train.py:243:        )
+  baseline4_sac_cbf_train.py:244:
+  baseline4_sac_cbf_train.py:245:        self.n_filtered   = 0
+  baseline4_sac_cbf_train.py:246:        self.n_total      = 0
+  baseline4_sac_cbf_train.py:292:    # ─────────────────────────────────────────────────────────────────────
+  baseline4_sac_cbf_train.py:293:    def filter(self, x: np.ndarray, tau_rl: np.ndarray) -> np.ndarray:
+  baseline4_sac_cbf_train.py:294:        """
+> baseline4_sac_cbf_train.py:295:        اگر τ_rl شرط HOCBF را برآورده کند → بدون تغییر.
+  baseline4_sac_cbf_train.py:296:        وگرنه → QP با slack variable (همیشه feasible).
+  baseline4_sac_cbf_train.py:297:
+  baseline4_sac_cbf_train.py:298:        Slack variable تضمین می‌کند که QP هرگز infeasible نمی‌شود.
+  baseline4_sac_cbf_train.py:299:        اگر s > 0 در جواب → قید CBF با جریمه λ·s² relaxed شده.
+  baseline4_sac_cbf_train.py:300:        """
+  baseline4_sac_cbf_train.py:358:
+  baseline4_sac_cbf_train.py:359:class MotorcycleSACEnv(gym.Env):
+  baseline4_sac_cbf_train.py:360:    """
+> baseline4_sac_cbf_train.py:361:    محیط SAC (با یا بدون HOCBF).
+  baseline4_sac_cbf_train.py:362:
+  baseline4_sac_cbf_train.py:363:    Obs  (10): [φ, φ̇, δ_f, δ_r, δ̇_f, δ̇_r, v, α, φ_d, err]
+  baseline4_sac_cbf_train.py:364:    Act   (2): τ_norm ∈ [-1,1]²  →  τ = a·TAU_MAX  [N·m]
+  baseline4_sac_cbf_train.py:365:    Reward   : همان mpc17 (raw، بدون normalization)
+  baseline4_sac_cbf_train.py:366:    """
+  baseline4_sac_cbf_train.py:378:        self.dyn     = MotorcycleDynamics()
+  baseline4_sac_cbf_train.py:379:
+  baseline4_sac_cbf_train.py:380:        if use_cbf:
+> baseline4_sac_cbf_train.py:381:            self.hocbf = HOCBFSafetyFilter(
+  baseline4_sac_cbf_train.py:382:                self.dyn,
+  baseline4_sac_cbf_train.py:383:                alpha1=cbf_alpha1,
+  baseline4_sac_cbf_train.py:384:                alpha2=cbf_alpha2,
+  baseline4_sac_cbf_train.py:385:                lambda_slack=lambda_slack,
+  baseline4_sac_cbf_train.py:386:            )
+  baseline4_sac_cbf_train.py:387:        else:
+> baseline4_sac_cbf_train.py:388:            self.hocbf = None
+  baseline4_sac_cbf_train.py:389:
+  baseline4_sac_cbf_train.py:390:        # ── Observation Space (همان mpc17) ──────────────────────────────
+  baseline4_sac_cbf_train.py:391:        obs_high = np.array([
+  baseline4_sac_cbf_train.py:392:            np.pi / 2, 10.0,
+  baseline4_sac_cbf_train.py:393:            np.pi / 2, np.pi / 2,
+  baseline4_sac_cbf_train.py:430:        self._steps = 0
+  baseline4_sac_cbf_train.py:431:        self.state  = np.zeros(6)
+  baseline4_sac_cbf_train.py:432:
+> baseline4_sac_cbf_train.py:433:        if self.hocbf is not None:
+> baseline4_sac_cbf_train.py:434:            self.hocbf.reset_stats()
+  baseline4_sac_cbf_train.py:435:
+  baseline4_sac_cbf_train.py:436:        phi_r, phidot_r = CURRICULUM_LEVELS[self.curriculum_level]
+  baseline4_sac_cbf_train.py:437:        self.state[0] = self.np_random.uniform(-phi_r, phi_r)
+  baseline4_sac_cbf_train.py:438:        self.state[1] = self.np_random.uniform(-phidot_r, phidot_r)
+  baseline4_sac_cbf_train.py:439:        self.v     = float(self.np_random.uniform(1.0, 8.0))
+  baseline4_sac_cbf_train.py:458:        # denormalize
+  baseline4_sac_cbf_train.py:459:        tau_rl = np.clip(rl_action, -1.0, 1.0).astype(np.float64) * TAU_MAX
+  baseline4_sac_cbf_train.py:460:
+> baseline4_sac_cbf_train.py:461:        # HOCBF filter
+> baseline4_sac_cbf_train.py:462:        if self.hocbf is not None:
+> baseline4_sac_cbf_train.py:463:            tau_applied    = self.hocbf.filter(self.state, tau_rl)
+  baseline4_sac_cbf_train.py:464:            cbf_intervened = bool(np.linalg.norm(tau_applied - tau_rl) > 1e-3)
+  baseline4_sac_cbf_train.py:465:        else:
+  baseline4_sac_cbf_train.py:466:            tau_applied    = tau_rl
+  baseline4_sac_cbf_train.py:467:            cbf_intervened = False
+  baseline4_sac_cbf_train.py:468:
+  baseline4_sac_cbf_train.py:490:
+  baseline4_sac_cbf_train.py:491:        # CBF penalty (فقط در مدل CBF) — تشویق RL برای کاهش نیاز به filter
+  baseline4_sac_cbf_train.py:492:        cbf_penalty = 0.0
+> baseline4_sac_cbf_train.py:493:        if self.hocbf is not None:
+  baseline4_sac_cbf_train.py:494:            cbf_penalty = -0.1 * float(np.linalg.norm(tau_applied - tau_rl))
+  baseline4_sac_cbf_train.py:495:
+  baseline4_sac_cbf_train.py:496:        raw_reward = (
+  baseline4_sac_cbf_train.py:497:            tracking_reward + stability_bonus + phi_dot_penalty
+  baseline4_sac_cbf_train.py:498:            + control_cost + danger_penalty + survival_bonus
+  baseline4_sac_cbf_train.py:510:            "tau_applied":    tau_applied.tolist(),
+  baseline4_sac_cbf_train.py:511:            "tau_rl":         tau_rl.tolist(),
+  baseline4_sac_cbf_train.py:512:            "cbf_intervened": cbf_intervened,
+> baseline4_sac_cbf_train.py:513:            "cbf_filter_rate": self.hocbf.filter_rate if self.hocbf else 0.0,
+> baseline4_sac_cbf_train.py:514:            "cbf_slack_rate":  self.hocbf.slack_rate  if self.hocbf else 0.0,
+  baseline4_sac_cbf_train.py:515:            # [FIX-3] متریک‌های انرژی — برای هر step ذخیره می‌شود
+  baseline4_sac_cbf_train.py:516:            "tau_sq_sum":     float(np.sum(tau_applied ** 2)),
+  baseline4_sac_cbf_train.py:517:            "tau_abs_sum":    float(np.sum(np.abs(tau_applied))),
+  baseline4_sac_cbf_train.py:518:            "tau_rms":        float(np.sqrt(np.mean(tau_applied ** 2))),
+  baseline4_sac_cbf_train.py:519:            "reward_raw":     float(raw_reward),
+  baseline4_sac_cbf_train.py:580:    lambda_slack: float = 1e4,
+  baseline4_sac_cbf_train.py:581:    load_model:   str   = None,
+  baseline4_sac_cbf_train.py:582:) -> str:
+> baseline4_sac_cbf_train.py:583:    """آموزش SAC Plain یا SAC+HOCBF."""
+  baseline4_sac_cbf_train.py:584:    try:
+  baseline4_sac_cbf_train.py:585:        from stable_baselines3 import SAC
+  baseline4_sac_cbf_train.py:586:        from stable_baselines3.common.env_util import make_vec_env
+  baseline4_sac_cbf_train.py:587:        from stable_baselines3.common.vec_env import (
+  baseline4_sac_cbf_train.py:588:            SubprocVecEnv, VecNormalize, DummyVecEnv)
+  baseline4_sac_cbf_train.py:601:        device = "cpu"
+  baseline4_sac_cbf_train.py:602:
+  baseline4_sac_cbf_train.py:603:    model_name = MODEL_CBF_PATH if use_cbf else MODEL_PLAIN_PATH
+> baseline4_sac_cbf_train.py:604:    label      = "SAC + HOCBF" if use_cbf else "SAC Plain"
+  baseline4_sac_cbf_train.py:605:
+  baseline4_sac_cbf_train.py:606:    print("\n" + "═" * 65)
+  baseline4_sac_cbf_train.py:607:    print(f"  آموزش {label}")
+  baseline4_sac_cbf_train.py:608:    print(f"  steps={total_steps:,}  envs={n_envs}  "
+  baseline4_sac_cbf_train.py:609:          f"device={device}  seed={seed}")
+  baseline4_sac_cbf_train.py:746:    cbf_alpha2:       float = 2.0,
+  baseline4_sac_cbf_train.py:747:    lambda_slack:     float = 1e4,
+  baseline4_sac_cbf_train.py:748:) -> dict:
+> baseline4_sac_cbf_train.py:749:    """ارزیابی SAC Plain یا SAC+HOCBF."""
+  baseline4_sac_cbf_train.py:750:    try:
+  baseline4_sac_cbf_train.py:751:        from stable_baselines3 import SAC as _SAC
+  baseline4_sac_cbf_train.py:752:        from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+  baseline4_sac_cbf_train.py:753:        from stable_baselines3.common.monitor import Monitor
+  baseline4_sac_cbf_train.py:754:    except ImportError:
+  baseline4_sac_cbf_train.py:755:        _SAC = None
+  baseline4_sac_cbf_train.py:756:
+> baseline4_sac_cbf_train.py:757:    label = "SAC + HOCBF" if use_cbf else "SAC Plain"
+  baseline4_sac_cbf_train.py:758:
+  baseline4_sac_cbf_train.py:759:    if model_path is None:
+  baseline4_sac_cbf_train.py:760:        model_path = MODEL_CBF_PATH if use_cbf else MODEL_PLAIN_PATH
+  baseline4_sac_cbf_train.py:761:
+  baseline4_sac_cbf_train.py:762:    clean = model_path.replace(".zip", "")
+  baseline4_sac_cbf_train.py:835:        inner_env.np_random = np.random.default_rng(int(seed + ep))
+  baseline4_sac_cbf_train.py:836:        obs = env.reset()   # دوباره با seed جدید
+  baseline4_sac_cbf_train.py:837:
+> baseline4_sac_cbf_train.py:838:        if inner_env.hocbf:
+> baseline4_sac_cbf_train.py:839:            inner_env.hocbf.reset_stats()
+  baseline4_sac_cbf_train.py:840:
+  baseline4_sac_cbf_train.py:841:        ep_r        = 0.0
+  baseline4_sac_cbf_train.py:842:        ep_err_sq   = []
+  baseline4_sac_cbf_train.py:843:        ep_len      = 0
+  baseline4_sac_cbf_train.py:844:        max_ph      = 0.0
+  baseline4_sac_cbf_train.py:883:                max_phi_abs.append(max_ph)
+  baseline4_sac_cbf_train.py:884:                rmse_list.append(float(np.sqrt(np.mean(ep_err_sq))))
+  baseline4_sac_cbf_train.py:885:                cbf_rates.append(
+> baseline4_sac_cbf_train.py:886:                    inner_env.hocbf.filter_rate if inner_env.hocbf else 0.0)
+  baseline4_sac_cbf_train.py:887:                cbf_int_count.append(n_intervene)
+  baseline4_sac_cbf_train.py:888:                ep_control_energy.append(float(np.sum(step_tau_sq)))
+  baseline4_sac_cbf_train.py:889:                ep_tau_abs_mean.append(float(np.mean(step_tau_abs)))
+  baseline4_sac_cbf_train.py:890:                ep_tau_rms.append(float(np.mean(step_tau_rms)))
+  baseline4_sac_cbf_train.py:891:                break
+  baseline4_sac_cbf_train.py:901:                  f"survival={sr:.1%}  reward={rw:.1f}  "
+  baseline4_sac_cbf_train.py:902:                  f"rmse={rm:.4f}  energy={en:.1f}{extra}")
+  baseline4_sac_cbf_train.py:903:
+> baseline4_sac_cbf_train.py:904:    method_name = ("SAC + HOCBF (Baseline 4)"
+  baseline4_sac_cbf_train.py:905:                   if use_cbf else "SAC Plain (Baseline 4b)")
+  baseline4_sac_cbf_train.py:906:
+  baseline4_sac_cbf_train.py:907:    results: dict = {
+  baseline4_sac_cbf_train.py:908:        "method":            method_name,
+  baseline4_sac_cbf_train.py:909:        "use_cbf":           use_cbf,
+  baseline4_sac_cbf_train.py:928:
+  baseline4_sac_cbf_train.py:929:    if use_cbf:
+  baseline4_sac_cbf_train.py:930:        results.update({
+> baseline4_sac_cbf_train.py:931:            "cbf_filter_rate":        float(np.mean(cbf_rates)),
+  baseline4_sac_cbf_train.py:932:            "cbf_interventions_mean": float(np.mean(cbf_int_count)),
+> baseline4_sac_cbf_train.py:933:            "cbf_slack_rate":         float(inner_env.hocbf.slack_rate) if inner_env.hocbf else 0.0,
+  baseline4_sac_cbf_train.py:934:            "cbf_alpha1":             cbf_alpha1,
+  baseline4_sac_cbf_train.py:935:            "cbf_alpha2":             cbf_alpha2,
+  baseline4_sac_cbf_train.py:936:            "cbf_lambda_slack":       lambda_slack,
+> baseline4_sac_cbf_train.py:937:            "cbf_type":               "HOCBF (relative_degree=2, soft)",
+  baseline4_sac_cbf_train.py:938:        })
+  baseline4_sac_cbf_train.py:939:
+  baseline4_sac_cbf_train.py:940:    print("\n" + "=" * 62)
+  baseline4_sac_cbf_train.py:941:    print(f"  نتایج {label}")
+  baseline4_sac_cbf_train.py:942:    print("=" * 62)
+  baseline4_sac_cbf_train.py:991:    parser.add_argument("--cbf_alpha1",   type=float, default=2.0,
+  baseline4_sac_cbf_train.py:992:                        help="α₁: نرخ decay برای ψ₁")
+  baseline4_sac_cbf_train.py:993:    parser.add_argument("--cbf_alpha2",   type=float, default=2.0,
+> baseline4_sac_cbf_train.py:994:                        help="α₂: نرخ decay برای شرط HOCBF")
+  baseline4_sac_cbf_train.py:995:    parser.add_argument("--lambda_slack", type=float, default=1e4,
+  baseline4_sac_cbf_train.py:996:                        help="λ: وزن جریمه slack در QP (بزرگتر→سخت‌تر، کوچکتر→نرم‌تر)")
+  baseline4_sac_cbf_train.py:997:    parser.add_argument("--plain_model",  default=MODEL_PLAIN_PATH)
+  baseline4_sac_cbf_train.py:998:    parser.add_argument("--cbf_model",    default=MODEL_CBF_PATH)
+  baseline4_sac_cbf_train.py:999:    args = parser.parse_args()
+  baseline4_sac_cbf_train.py:1055:        # جدول مقایسه‌ای
+  baseline4_sac_cbf_train.py:1056:        if len(all_results) == 2:
+  baseline4_sac_cbf_train.py:1057:            print("\n" + "═" * 88)
+> baseline4_sac_cbf_train.py:1058:            print("  مقایسه SAC Plain vs SAC+HOCBF")
+  baseline4_sac_cbf_train.py:1059:            print("═" * 88)
+> baseline4_sac_cbf_train.py:1060:            print(f"  {'Metric':<32} {'SAC Plain':>22} {'SAC+HOCBF':>22}")
+  baseline4_sac_cbf_train.py:1061:            print("─" * 88)
+  baseline4_sac_cbf_train.py:1062:            keys = [
+  baseline4_sac_cbf_train.py:1063:                ("survival_rate",       "Survival Rate"),
+  baseline4_sac_cbf_train.py:1064:                ("mean_reward",         "Mean Reward"),
+  baseline4_sac_cbf_train.py:1065:                ("mean_rmse_rad",       "RMSE [rad]"),
+  baseline4_sac_cbf_train.py:1072:                v0 = all_results[0].get(key, float("nan"))
+  baseline4_sac_cbf_train.py:1073:                v1 = all_results[1].get(key, float("nan"))
+  baseline4_sac_cbf_train.py:1074:                print(f"  {label:<32} {v0:>22.4f} {v1:>22.4f}")
+> baseline4_sac_cbf_train.py:1075:            if "cbf_filter_rate" in all_results[1]:
+  baseline4_sac_cbf_train.py:1076:                print(f"  {'CBF Filter Rate':<32} {'—':>22} "
+> baseline4_sac_cbf_train.py:1077:                      f"{all_results[1]['cbf_filter_rate']:>21.1%}")
+  baseline4_sac_cbf_train.py:1078:                print(f"  {'CBF Slack Rate (relaxed)':<32} {'—':>22} "
+  baseline4_sac_cbf_train.py:1079:                      f"{all_results[1].get('cbf_slack_rate', 0.0):>21.1%}")
+  baseline4_sac_cbf_train.py:1080:            print("═" * 88)
+  baseline4_sac_cbf_train.py:1081:
+  baseline4_sac_cbf_train.py:1082:    print("\n  تمام شد.\n")
+  bench_stats.py:3:
+  bench_stats.py:4:ورودی: DataFrame اپیزودها با ستون‌های
+  bench_stats.py:5:  iw, scenario, type, ctrl, seed, crashed, rmse, u_rms, du, [cbf_*] ...
+> bench_stats.py:6:نام ctrl: 'nmpc' | 'res:<stem>' | 'sac_plain_sK' | 'sac_hocbf_sK' | 'sac_hocbf_oracle_sK' | 'mpc'
+> bench_stats.py:7:خانواده (fam): residual | nmpc | mpc | sac_plain | sac_hocbf | sac_hocbf_oracle
+  bench_stats.py:8:
+  bench_stats.py:9:اصول:
+  bench_stats.py:10:  * تحلیل اصلی روی «همه‌ی seedها» است. تحلیل بدون early-failure فقط تکمیلی است (tag="_excl_early").
+  bench_stats.py:11:  * برای خانواده‌های چندمدلی (SAC با ۵ seed آموزشی) دو منبع تغییر داریم: مدل‌های آموزشی و seedهای اپیزود.
+  bench_stats.py:12:    CI بقا با bootstrap دوسطحی (نمونه‌گیری مدل‌ها، بعد اپیزودها) محاسبه می‌شود؛ Wilson روی داده‌ی pooled
+  bench_stats.py:18:warnings.filterwarnings("ignore", message="Mean of empty slice")
+  bench_stats.py:19:
+  bench_stats.py:20:SENSOR = {"bias_phi", "noise_phi", "drift_phi", "stuck_phi", "dropout_phi", "intermittent_phi", "multifault"}
+> bench_stats.py:21:SAC_FAMS = ("sac_plain", "sac_hocbf", "sac_hocbf_oracle")
+> bench_stats.py:22:COMPARISONS = [("residual", "nmpc"), ("sac_plain", "nmpc"), ("sac_hocbf", "nmpc"),
+> bench_stats.py:23:               ("residual", "sac_plain"), ("residual", "sac_hocbf"), ("sac_hocbf", "sac_plain"),
+> bench_stats.py:24:               ("sac_hocbf_oracle", "sac_hocbf"), ("mpc", "nmpc"), ("residual", "mpc")]
+  bench_stats.py:25:
+  bench_stats.py:26:
+  bench_stats.py:27:def wilson(k, n, z=1.96):
+  bench_stats.py:28:    if n == 0:
+  bench_stats.py:29:        return (np.nan, np.nan)
+  bench_stats.py:154:    return dict(summary=S, family=F, paired_surv=P1, paired_rmse=P2)
+  bench_stats.py:155:
+  bench_stats.py:156:
+> bench_stats.py:157:HOCBF_COLS = ["cbf_filter_rate", "cbf_slack_rate", "cbf_qp_fail_rate", "cbf_cond_viol_meas", "cbf_cond_viol_true",
+  bench_stats.py:158:              "cbf_psi1_viol_true", "cbf_phiddot_rmse", "cbf_phiddot_bias",
+  bench_stats.py:159:               "cbf_qp_attempt_rate", "cbf_qp_success_rate", "cbf_fallback_rate", "cbf_bypass_rate",
+  bench_stats.py:160:               "cbf_slack_mean_on_solve", "cbf_slack_max", "cbf_cond_margin_meas_mean",
+  bench_stats.py:161:               "cbf_cond_margin_true_mean", "cbf_cond_margin_true_min"]
+  bench_stats.py:162:
+  bench_stats.py:163:
+> bench_stats.py:164:def hocbf_diag(D, out):
+  bench_stats.py:165:    """رفتار فیلتر جدا از نرخ بقا: slack، شکست QP، نقض شرط CBF با state اندازه‌گیری‌شده/واقعی، و خطای تقریب φ̈."""
+> bench_stats.py:166:    cols = [c for c in HOCBF_COLS if c in D]
+> bench_stats.py:167:    H = D[D.ctrl.str.startswith("sac_hocbf") & D[cols].notna().any(axis=1)] if cols else D.iloc[0:0]
+  bench_stats.py:168:    if H.empty:
+  bench_stats.py:169:        return None
+  bench_stats.py:170:    G = H.groupby(["iw", "scenario", "fam"])[cols].mean()
+> bench_stats.py:171:    G.to_csv(f"{out}_hocbf_diag.csv")
+  bench_stats.py:172:    return G
+  collect_logs.py:1:"""
+  collect_logs.py:2:collect_logs.py — خلاصهٔ کوتاه آموزش‌ها به‌صورت متن (برای paste کردن در گفتگو).
+  collect_logs.py:3:
+> collect_logs.py:4:    python collect_logs.py --run_dir runs --tags sachocbf
+  collect_logs.py:5:    python collect_logs.py --run_dir runs --tags sacplain
+  collect_logs.py:6:    python collect_logs.py --run_dir runs --tags v17          # RL-TVL-MPC
+  collect_logs.py:7:
+  collect_logs.py:8:برای هر seed: وضعیت پایان (خطا یا کامل)، سطح curriculum، زمان، و نرخ بقای آموزش در
+> collect_logs.py:9:سطح ۸ به تفکیک بازه‌های ۲۵۰ هزار گام (برای SAC+HOCBF نرخ دخالت فیلتر هم).
+  collect_logs.py:10:"""
+  collect_logs.py:11:import argparse
+  collect_logs.py:12:import glob
+  collect_logs.py:13:import json
+  collect_logs.py:14:import os
+  collect_logs.py:50:                    d8 = df
+  collect_logs.py:51:                d8 = d8.assign(blk=(d8.timestep // args.block) * args.block)
+  collect_logs.py:52:                agg = {"surv": ("survived", "mean"), "n": ("survived", "size")}
+> collect_logs.py:53:                if "cbf_filter_rate" in d8.columns and d8.cbf_filter_rate.max() > 0:
+> collect_logs.py:54:                    agg["cbf"] = ("cbf_filter_rate", "mean")
+  collect_logs.py:55:                g = d8.groupby("blk").agg(**agg)
+  collect_logs.py:56:                row = f"  بقا٪ (هر {args.block // 1000}k): "
+  collect_logs.py:57:                row += " ".join(f"{100 * v:.0f}" for v in g["surv"])
+  collect_logs.py:58:                print(row)
+  collect_logs.py:59:                if "cbf" in g:
+> collect_logs.py:60:                    print("  دخالت HOCBF%: " + " ".join(f"{100 * v:.0f}" for v in g["cbf"]))
+  collect_logs.py:61:
+  collect_logs.py:62:
+  collect_logs.py:63:if __name__ == "__main__":
+  collect_logs.py:64:    main()
+  train_sac_baselines.py:1:"""
+  train_sac_baselines.py:2:train_sac_baselines.py
+  train_sac_baselines.py:3:======================
+> train_sac_baselines.py:4:آموزش یک seed از SAC Plain یا SAC+HOCBF با همان محیط و همان هایپرپارامترهای
+  train_sac_baselines.py:5:baseline4_sac_cbf_train.py (MotorcycleSACEnv / CurriculumWrapper /
+> train_sac_baselines.py:6:HOCBFSafetyFilter مستقیماً از آن فایل import می‌شوند؛ آن فایل تغییر نمی‌کند).
+  train_sac_baselines.py:7:
+  train_sac_baselines.py:8:تفاوت با train() داخل baseline4 (فقط زیرساخت، نه الگوریتم):
+  train_sac_baselines.py:9:  - هر seed پوشهٔ مستقل: {out_dir}/{tag}_seed{seed}/
+  train_sac_baselines.py:10:  - checkpoint هر --ckpt_freq گام همراه با «آمار VecNormalize همان لحظه»
+  train_sac_baselines.py:11:    (norm_obs=True است؛ بدون آمار همان لحظه checkpointهای میانی قابل ارزیابی نیستند)
+  train_sac_baselines.py:55:        self._f = open(self.csv_path, "w", newline="")
+  train_sac_baselines.py:56:        self._w = csv.writer(self._f)
+  train_sac_baselines.py:57:        self._w.writerow(["timestep", "ep_len", "ep_reward", "survived",
+> train_sac_baselines.py:58:                          "curriculum_level", "cbf_filter_rate", "cbf_slack_rate"])
+  train_sac_baselines.py:59:
+  train_sac_baselines.py:60:    def _on_step(self):
+  train_sac_baselines.py:61:        infos = self.locals.get("infos", [])
+  train_sac_baselines.py:62:        dones = self.locals.get("dones", [])
+  train_sac_baselines.py:63:        for i, (info, done) in enumerate(zip(infos, dones)):
+  train_sac_baselines.py:68:                ep_len = int(ep["l"])
+  train_sac_baselines.py:69:                self._w.writerow([self.num_timesteps, ep_len, float(ep["r"]),
+  train_sac_baselines.py:70:                                  int(ep_len >= MAX_STEPS), self.levels.get(i, 0),
+> train_sac_baselines.py:71:                                  info.get("cbf_filter_rate", 0.0),
+  train_sac_baselines.py:72:                                  info.get("cbf_slack_rate", 0.0)])
+  train_sac_baselines.py:73:        if self.n_calls % 200 == 0:
+  train_sac_baselines.py:74:            self._f.flush()
+  train_sac_baselines.py:75:        return True
+  train_sac_baselines.py:76:
+  train_sac_baselines.py:141:
+  train_sac_baselines.py:142:def main():
+  train_sac_baselines.py:143:    ap = argparse.ArgumentParser()
+> train_sac_baselines.py:144:    ap.add_argument("--method", choices=["plain", "hocbf"], required=True)
+  train_sac_baselines.py:145:    ap.add_argument("--seed", type=int, default=0)
+  train_sac_baselines.py:146:    ap.add_argument("--steps", type=int, default=3_000_000)
+  train_sac_baselines.py:147:    ap.add_argument("--envs", type=int, default=8)
+  train_sac_baselines.py:148:    ap.add_argument("--device", default="cpu")
+> train_sac_baselines.py:149:    ap.add_argument("--tag", default=None, help="پیش‌فرض: sacplain یا sachocbf")
+  train_sac_baselines.py:150:    ap.add_argument("--out_dir", default="./runs")
+  train_sac_baselines.py:151:    ap.add_argument("--tb_dir", default="./tb_logs")
+  train_sac_baselines.py:152:    ap.add_argument("--eval_freq", type=int, default=500_000)
+  train_sac_baselines.py:153:    ap.add_argument("--eval_episodes", type=int, default=10)
+  train_sac_baselines.py:154:    ap.add_argument("--ckpt_freq", type=int, default=50_000)
+  train_sac_baselines.py:157:    ap.add_argument("--lambda_slack", type=float, default=1e4)
+  train_sac_baselines.py:158:    args = ap.parse_args()
+  train_sac_baselines.py:159:
+> train_sac_baselines.py:160:    use_cbf = args.method == "hocbf"
+> train_sac_baselines.py:161:    tag = args.tag or ("sachocbf" if use_cbf else "sacplain")
+  train_sac_baselines.py:162:    assert args.ckpt_freq % args.envs == 0, "ckpt_freq باید مضرب envs باشد (نام checkpoint دقیق بماند)"
+  train_sac_baselines.py:163:
+  train_sac_baselines.py:164:    import torch
+  train_sac_baselines.py:165:    device = args.device
+  train_sac_baselines.py:166:    if device == "cuda" and not torch.cuda.is_available():
+  train_sac_baselines.py:173:    os.makedirs(run_dir, exist_ok=True)
+  train_sac_baselines.py:174:    t_start = time.time()
+  train_sac_baselines.py:175:
+> train_sac_baselines.py:176:    print(f"\n{'SAC + HOCBF' if use_cbf else 'SAC Plain'}  seed={args.seed}  steps={args.steps:,}  "
+  train_sac_baselines.py:177:          f"envs={args.envs}  device={device}  tag={tag}")
+  train_sac_baselines.py:178:
+  train_sac_baselines.py:179:    env_kw = dict(use_cbf=use_cbf, cbf_alpha1=args.cbf_alpha1,
+  train_sac_baselines.py:180:                  cbf_alpha2=args.cbf_alpha2, lambda_slack=args.lambda_slack)
+  train_sac_baselines.py:181:
+  unified_fault_benchmark.py:1:"""
+> unified_fault_benchmark.py:2:unified_fault_benchmark.py (v2) — benchmark مشترک: Neural MPC / Residual SAC / SAC Plain / SAC+HOCBF (/ Original MPC)
+  unified_fault_benchmark.py:3:
+  unified_fault_benchmark.py:4:همه‌ی کنترلرها روی «یک» FaultEnv اجرا می‌شوند ⇒ دینامیک، IC، نویز v/alpha، مرجع roll، خرابی‌ها و متریک‌ها یکسان.
+  unified_fault_benchmark.py:5:  nmpc          : residual = 0
+  unified_fault_benchmark.py:6:  res:<stem>    : Residual SAC، obs ۱۲بعدی، u = clip(u_NN + res_scale·a)
+  unified_fault_benchmark.py:7:  sac_plain_sK  : obs ۱۰بعدی اندازه‌گیری‌شده، u = a·TAU_MAX
+> unified_fault_benchmark.py:8:  sac_hocbf_sK  : مثل بالا + HOCBF (alpha/lambda مثل baseline4)؛ پیش‌فرض روی state «اندازه‌گیری‌شده»
+> unified_fault_benchmark.py:9:  sac_hocbf_oracle_sK : (--hocbf_state true) همان فیلتر ولی روی state «واقعی» ⇒ اثر خرابی حسگر روی فیلتر جدا می‌شود
+  unified_fault_benchmark.py:10:  mpc           : Original MPC (اختیاری، کند)
+  unified_fault_benchmark.py:11:
+  unified_fault_benchmark.py:12:تغییرات v2 نسبت به v1:
+  unified_fault_benchmark.py:13:  1) گزارش اصلی روی «همه‌ی seedها»؛ تحلیل بدون early-failure فقط تکمیلی (فایل‌های *_excl_early_*).
+  unified_fault_benchmark.py:14:  2) نام‌گذاری: early_failure_seeds (نه unrecoverable)؛ جدول می‌گوید همان seedها را کنترلرهای دیگر زنده می‌مانند یا نه.
+  unified_fault_benchmark.py:15:  3) کنترل فرکانس: assert decision_k==1 ، ستون freq_ok (گام plant = گام فرمان)، مقایسه MAX_STEPS با baseline4.
+  unified_fault_benchmark.py:16:  4) preflight مدل‌ها (وجود/جفت‌بودن .zip و .pkl، شکل obs، num_timesteps، training_summary) قبل از هر اجرا.
+> unified_fault_benchmark.py:17:  5) HOCBF: تشخیص‌های جدا (slack، شکست QP، نقض شرط با state اندازه‌گیری‌شده/واقعی، خطای تقریب φ̈) + حالت oracle.
+  unified_fault_benchmark.py:18:  6) آمار: bootstrap دوسطحی (مدل‌های آموزشی × اپیزودها)، مقایسه‌ی زوجی با همان seed اپیزود (bench_stats.py).
+  unified_fault_benchmark.py:19:
+  unified_fault_benchmark.py:20:اجرا:
+  unified_fault_benchmark.py:21:  python unified_fault_benchmark.py --ckpt neural_mpc.pt --res res_main1m_best --sac_root runs --preflight_only
+  unified_fault_benchmark.py:22:  python unified_fault_benchmark.py ... --smoke --out ub_smoke
+  unified_fault_benchmark.py:38:ap = argparse.ArgumentParser()
+  unified_fault_benchmark.py:39:ap.add_argument("--ckpt", default="neural_mpc.pt")
+  unified_fault_benchmark.py:40:ap.add_argument("--res", nargs="*", default=[], help="stem[@res_scale] ... (stem بدون .zip)")
+> unified_fault_benchmark.py:41:ap.add_argument("--sac_root", default="runs", help="ریشه‌ی جست‌وجوی (بازگشتی) مدل‌های SAC Plain/HOCBF")
+  unified_fault_benchmark.py:42:ap.add_argument("--seeds_sac", nargs="*", type=int, default=[0, 1, 2, 3, 4])
+> unified_fault_benchmark.py:43:ap.add_argument("--methods", nargs="*", default=["plain", "hocbf"], choices=["plain", "hocbf"])
+  unified_fault_benchmark.py:44:ap.add_argument("--sac_steps", type=int, default=3_000_000)
+  unified_fault_benchmark.py:45:ap.add_argument("--prefer", choices=["final", "ckpt"], default="final")
+  unified_fault_benchmark.py:46:ap.add_argument("--cbf_alpha1", type=float, default=2.0)
+  unified_fault_benchmark.py:47:ap.add_argument("--cbf_alpha2", type=float, default=2.0)
+  unified_fault_benchmark.py:48:ap.add_argument("--lambda_slack", type=float, default=1e4)
+> unified_fault_benchmark.py:49:ap.add_argument("--hocbf_state", choices=["measured", "true"], default="measured")
+  unified_fault_benchmark.py:50:ap.add_argument("--mpc", action="store_true")
+  unified_fault_benchmark.py:51:ap.add_argument("--iw", nargs="*", type=float, default=[1.0])
+  unified_fault_benchmark.py:52:ap.add_argument("--only", nargs="*", default=None, help="فقط این scenario idها")
+  unified_fault_benchmark.py:53:ap.add_argument("--episodes", type=int, default=100)
+  unified_fault_benchmark.py:54:ap.add_argument("--seed0", type=int, default=77000)
+  unified_fault_benchmark.py:75:    bs.analyze(D, out, "", B=B)                                         # گزارش اصلی: همه‌ی seedها
+  unified_fault_benchmark.py:76:    if early:
+  unified_fault_benchmark.py:77:        bs.analyze(D[~D.early_failure], out, "_excl_early", B=B, verbose=False)   # تکمیلی
+> unified_fault_benchmark.py:78:    H = bs.hocbf_diag(D, out)
+  unified_fault_benchmark.py:79:    if H is not None:
+  unified_fault_benchmark.py:80:        pd.set_option("display.width", 250)
+> unified_fault_benchmark.py:81:        print("\n===== HOCBF diagnostics (میانگین هر سناریو) =====\n", H.round(4).to_string())
+  unified_fault_benchmark.py:82:    bad = D[(~D.inj_ok) | (~D.freq_ok)]
+  unified_fault_benchmark.py:83:    print(f"\ninjection/frequency check ناموفق: {len(bad)} اپیزود" +
+  unified_fault_benchmark.py:84:          (f" → {sorted(bad.groupby(['scenario', 'ctrl']).size().items())[:10]}" if len(bad) else " ✓"))
+  unified_fault_benchmark.py:85:    print(f"\nearly_failure_seeds (nmpc، healthy، iw=1.0، سقوط ≤{EARLY} گام): {early}")
+  unified_fault_benchmark.py:86:    if early:
+  unified_fault_benchmark.py:113:
+  unified_fault_benchmark.py:114:
+  unified_fault_benchmark.py:115:def find_sac(method, seed):
+> unified_fault_benchmark.py:116:    tag = {"plain": "sacplain", "hocbf": "sachocbf"}[method]
+  unified_fault_benchmark.py:117:    rt = f"{tag}_seed{seed}"
+  unified_fault_benchmark.py:118:    g = lambda pat: sorted(glob.glob(os.path.join(a.sac_root, "**", pat), recursive=True))
+  unified_fault_benchmark.py:119:    cand = {"final": (g(f"final_{rt}.zip"), g(f"vecnorm_final_{rt}.pkl")),
+  unified_fault_benchmark.py:120:            "ckpt": (g(f"ckpt_{rt}_{a.sac_steps}_steps.zip"), g(f"vecnorm_{rt}_{a.sac_steps}_steps.pkl"))}
+  unified_fault_benchmark.py:121:    problems = []
+  unified_fault_benchmark.py:173:        for s in a.seeds_sac:
+  unified_fault_benchmark.py:174:            z, p, kind = find_sac(m, s)
+  unified_fault_benchmark.py:175:            pol = SACPolicy(z, p, 10)
+> unified_fault_benchmark.py:176:            suffix = "_oracle" if (m == "hocbf" and a.hocbf_state == "true") else ""
+  unified_fault_benchmark.py:177:            name = f"sac_{m}{suffix}_s{s}"
+> unified_fault_benchmark.py:178:            ctrls[name] = dict(kind="sac", pol=pol, hocbf=(m == "hocbf"), fam=f"sac_{m}{suffix}", src=kind)
+  unified_fault_benchmark.py:179:            files[z] = sha(z); files[p] = sha(p)
+  unified_fault_benchmark.py:180:            ts = training_summary(z)
+  unified_fault_benchmark.py:181:            msg = f"[load] {name:22s} {kind:5s} ts={pol.ts:,} vecnorm_count={pol.count:.3g} {os.path.basename(z)}"
+  unified_fault_benchmark.py:182:            if pol.ts != a.sac_steps:
+  unified_fault_benchmark.py:183:                warns.append(f"{name}: num_timesteps={pol.ts:,} ≠ {a.sac_steps:,}")
+  unified_fault_benchmark.py:203:
+  unified_fault_benchmark.py:204:# Diagnostic wrapper: keeps the original filter policy and QP unchanged.
+  unified_fault_benchmark.py:205:# Records branch, fresh solve status, fallback and slack for EACH call.
+> unified_fault_benchmark.py:206:class InstrumentedHOCBF:
+  unified_fault_benchmark.py:207:    def __init__(self, original):
+  unified_fault_benchmark.py:208:        self.base = original
+  unified_fault_benchmark.py:209:        self.last = {}
+  unified_fault_benchmark.py:210:
+  unified_fault_benchmark.py:211:    def __getattr__(self, name):
+  unified_fault_benchmark.py:330:    import baseline4_sac_cbf_train as b4
+  unified_fault_benchmark.py:331:    if int(b4.MAX_STEPS) != int(env.MAX_STEPS):
+  unified_fault_benchmark.py:332:        print(f"⚠  MAX_STEPS: env={env.MAX_STEPS} ولی baseline4={b4.MAX_STEPS}؛ SAC ها روی افق متفاوتی آموزش دیده‌اند")
+> unified_fault_benchmark.py:333:    hocbf = None
+> unified_fault_benchmark.py:334:    if any(c.get("hocbf") for c in ctrls.values()):
+> unified_fault_benchmark.py:335:        hocbf = InstrumentedHOCBF(b4.HOCBFSafetyFilter(env.dyn, alpha1=a.cbf_alpha1, alpha2=a.cbf_alpha2, 
+lambda_slack=a.lambda_slack))
+  unified_fault_benchmark.py:336:
+  unified_fault_benchmark.py:337:
+  unified_fault_benchmark.py:338:def check_injection(ft, fp, Uc, Ua):
+  unified_fault_benchmark.py:339:    """گشتاور اعمال‌شده = تبدیل خرابی روی فرمان (برای هر نوع کنترلر)."""
+  unified_fault_benchmark.py:340:    if len(Uc) < 3:
+  unified_fault_benchmark.py:356:
+  unified_fault_benchmark.py:357:def cbf_terms(x):
+  unified_fault_benchmark.py:358:    """Lf_ψ₁، Lg_ψ₁، ψ₁ و پیش‌بینی φ̈ مدل فیلتر (f_phi + g_phi·τ) در state x."""
+> unified_fault_benchmark.py:359:    Lf, Lg, psi1, psi0 = hocbf._compute_lie(x)
+  unified_fault_benchmark.py:360:    phi = x[0]
+> unified_fault_benchmark.py:361:    f_phi = (hocbf.mgh * np.sin(phi) - hocbf.IwO * (x[4] - x[5]) * np.cos(phi)) / hocbf.Iphi
+> unified_fault_benchmark.py:362:    k = hocbf.IwO * np.cos(phi) * Ts / (hocbf.Iphi * hocbf.Id)
+  unified_fault_benchmark.py:363:    return Lf, Lg, psi1, f_phi, np.array([-k, k])
+  unified_fault_benchmark.py:364:
+  unified_fault_benchmark.py:365:
+  unified_fault_benchmark.py:366:def run(name, seed, iw):
+  unified_fault_benchmark.py:367:    c = ctrls[name]
+  unified_fault_benchmark.py:368:    ft, fp = env.scn
+  unified_fault_benchmark.py:369:    env.reset(seed=seed, options=dict(iw=iw, bucket=a.bucket))
+> unified_fault_benchmark.py:370:    use_cbf = c["kind"] == "sac" and c["hocbf"]
+  unified_fault_benchmark.py:371:    if use_cbf:
+> unified_fault_benchmark.py:372:        hocbf.reset_stats()
+  unified_fault_benchmark.py:373:    obs12 = np.concatenate([env._obs10(), (env._u_nn / env.U_REF).astype(np.float32)])
+  unified_fault_benchmark.py:374:    Ua, Uc, SAT, phi, cms, e2, n = [], [], [], [], [], 0.0, 0
+  unified_fault_benchmark.py:375:    D = dict(cond_meas=[], cond_true=[], psi1_true=[], dd_err=[], qp_fail=[], qp_attempt=[], qp_success=[], qp_fallback=[], 
+qp_bypass=[], slack=[], slack_used=[], cond_meas_margin=[], cond_true_margin=[])
+  unified_fault_benchmark.py:376:    while True:
+  unified_fault_benchmark.py:377:        if c["kind"] == "rl":                                   # nmpc / residual (env.step، decision_k=1)
+  unified_fault_benchmark.py:387:                t0 = time.perf_counter()
+  unified_fault_benchmark.py:388:                tau = np.asarray(c["pol"](x10), np.float64).clip(-1.0, 1.0) * TAU_MAX
+  unified_fault_benchmark.py:389:                if use_cbf:
+> unified_fault_benchmark.py:390:                    x_f = x_true if a.hocbf_state == "true" else x10[:6].astype(np.float64)
+> unified_fault_benchmark.py:391:                    tau = np.asarray(hocbf.filter(x_f, tau), np.float64)
+> unified_fault_benchmark.py:392:                    z = hocbf.last
+  unified_fault_benchmark.py:393:                    for col, key in (("qp_fail", "qp_failed"), ("qp_attempt", "qp_attempted"),
+  unified_fault_benchmark.py:394:                                     ("qp_success", "qp_solved"), ("qp_fallback", "fallback"),
+  unified_fault_benchmark.py:395:                                     ("qp_bypass", "bypass"), ("slack_used", "slack_used")):
+  unified_fault_benchmark.py:396:                        D[col].append(float(z[key]))
+  unified_fault_benchmark.py:397:                    D["slack"].append(z["slack_value"])
+  unified_fault_benchmark.py:398:                    Lf, Lg, psi1, _, _ = cbf_terms(x_f)
+> unified_fault_benchmark.py:399:                    margin = float(Lf + Lg @ tau + hocbf.alpha2 * psi1)
+  unified_fault_benchmark.py:400:                    D["cond_meas_margin"].append(margin)
+  unified_fault_benchmark.py:401:                    D["cond_meas"].append(float(margin < -1e-6))
+  unified_fault_benchmark.py:402:                cms.append((time.perf_counter() - t0) * 1e3)
+  unified_fault_benchmark.py:403:                u = tau
+  unified_fault_benchmark.py:404:            else:                                               # mpc
+  unified_fault_benchmark.py:409:            if use_cbf:                                         # تشخیص با state واقعی و گشتاور «اعمال‌شده»
+  unified_fault_benchmark.py:410:                ua = env._plant_dyn.last_app
+  unified_fault_benchmark.py:411:                Lf_t, Lg_t, psi1_t, f_t, g_t = cbf_terms(x_true)
+> unified_fault_benchmark.py:412:                margin_true = float(Lf_t + Lg_t @ ua + hocbf.alpha2 * psi1_t)
+  unified_fault_benchmark.py:413:                D["cond_true_margin"].append(margin_true)
+  unified_fault_benchmark.py:414:                D["cond_true"].append(float(margin_true < -1e-6))
+  unified_fault_benchmark.py:415:                D["psi1_true"].append(float(psi1_t < 0))
+  unified_fault_benchmark.py:416:                D["dd_err"].append((f_t + g_t @ ua) - (float(env.state[1]) - phidot0) / Ts)
+  unified_fault_benchmark.py:417:        pl = env._plant_dyn
+  unified_fault_benchmark.py:429:               freq_ok=bool(pl.k == len(phi) == env._steps))
+  unified_fault_benchmark.py:430:    if use_cbf:
+  unified_fault_benchmark.py:431:        dde = np.array(D["dd_err"])
+> unified_fault_benchmark.py:432:        row.update(cbf_filter_rate=hocbf.filter_rate, cbf_slack_rate=hocbf.slack_rate,
+  unified_fault_benchmark.py:433:                   cbf_qp_fail_rate=float(np.mean(D["qp_fail"])), cbf_cond_viol_meas=float(np.mean(D["cond_meas"])),
+  unified_fault_benchmark.py:434:                   cbf_cond_viol_true=float(np.mean(D["cond_true"])), cbf_psi1_viol_true=float(np.mean(D["psi1_true"])),
+  unified_fault_benchmark.py:435:                   cbf_phiddot_rmse=float(np.sqrt(np.mean(dde ** 2))), cbf_phiddot_bias=float(dde.mean()),
+  unified_fault_benchmark.py:436:                   cbf_qp_attempt_rate=float(np.mean(D["qp_attempt"])),
+  unified_fault_benchmark.py:437:                   cbf_qp_success_rate=float(np.mean(D["qp_success"])),
+  unified_fault_benchmark.py:487:    early = summarize(D, a.out, a.boot)
+  unified_fault_benchmark.py:488:json.dump(dict(args=vars(a), file_sha256=files, early_failure_seeds=early, warnings=warns,
+  unified_fault_benchmark.py:489:               sac_sources={k: v.get("src") for k, v in ctrls.items() if v["kind"] == "sac"},
+> unified_fault_benchmark.py:490:               hocbf_state=a.hocbf_state, decision_k=env.decision_k, max_steps=env.MAX_STEPS),
+  unified_fault_benchmark.py:491:          open(a.out + (f"_shard{a.shard.split('/')[0]}" if a.shard else "") + "_config.json", "w"), indent=1)
+
+

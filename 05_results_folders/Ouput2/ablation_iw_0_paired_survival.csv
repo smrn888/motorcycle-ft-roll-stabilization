@@ -1,0 +1,5 @@
+iw,scenario,A,B,n_eps,dsurv,ci_lo,ci_hi,frac_boot_A_better,p_mcnemar
+0.3,healthy,residual,nmpc,100,0.0,0.0,0.0,0.0,
+0.4,healthy,residual,nmpc,100,0.0,0.0,0.0,0.0,
+0.45,healthy,residual,nmpc,100,0.0,0.0,0.0,0.0,
+1.0,healthy,residual,nmpc,100,0.0,0.0,0.0,0.0,

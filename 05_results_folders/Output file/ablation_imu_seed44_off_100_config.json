@@ -1,0 +1,54 @@
+{
+ "args": {
+  "ckpt": "multiseed_runs\\pair_04_seed44\\neural_mpc.pt",
+  "res": [
+   "multiseed_runs\\pair_04_seed44\\residual_sac_best@0"
+  ],
+  "sac_root": "runs",
+  "seeds_sac": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "methods": [],
+  "sac_steps": 3000000,
+  "prefer": "best",
+  "cbf_alpha1": 2.0,
+  "cbf_alpha2": 2.0,
+  "lambda_slack": 10000.0,
+  "hocbf_state": "measured",
+  "mpc": false,
+  "iw": [
+   1.0
+  ],
+  "only": [
+   "dropout_imu_p0.5",
+   "intermittent_imu_burst20"
+  ],
+  "episodes": 100,
+  "seed0": 77000,
+  "bucket": 0,
+  "boot": 50,
+  "smoke": false,
+  "preflight_only": false,
+  "shard": null,
+  "resume": false,
+  "aggregate": false,
+  "out": "ablation_imu_seed44_off_100"
+ },
+ "file_sha256": {
+  "multiseed_runs\\pair_04_seed44\\neural_mpc.pt": "fc3d803d4c2bac83",
+  "multiseed_runs\\pair_04_seed44\\residual_sac_best.zip": "c230c7504f4d353b",
+  "multiseed_runs\\pair_04_seed44\\residual_sac_best_vecnorm.pkl": "5c4d41fc02ea3ae0"
+ },
+ "early_failure_seeds": [
+  77076
+ ],
+ "warnings": [],
+ "sac_sources": {},
+ "hocbf_state": "measured",
+ "decision_k": 1,
+ "max_steps": 500
+}

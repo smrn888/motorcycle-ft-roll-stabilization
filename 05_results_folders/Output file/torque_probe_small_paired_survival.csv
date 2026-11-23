@@ -1,0 +1,5 @@
+iw,scenario,A,B,n_eps,dsurv,ci_lo,ci_hi,frac_boot_A_better,p_mcnemar
+1.0,act_bias_neg,residual,nmpc,5,0.0,0.0,0.0,0.0,
+1.0,act_sat_30pct,residual,nmpc,5,0.0,0.0,0.0,0.0,
+1.0,healthy,residual,nmpc,5,0.0,0.0,0.0,0.0,
+1.0,scale_gimbal_1.3,residual,nmpc,5,0.0,0.0,0.0,0.0,

@@ -1,0 +1,253 @@
+{
+  "parameters": {
+    "Iw_Omega_angular_momentum_each_kgm2_per_s": 100.0,
+    "roll_inertia_target_kgm2": 21.25,
+    "gravity_torque_coefficient_Nm": 416.925,
+    "gimbal_nominal_inertia_kgm2": 0.1,
+    "full_flywheel_transverse_inertia_each_kgm2": 0.25,
+    "gimbal_gear_ratio": 2.5000099999999996,
+    "physical_torque_note": "MuJoCo applied hinge torque = controller torque times actuator gear; not a raw Nm transfer."
+  },
+  "gravity": {
+    "spinning": {
+      "roll_accel": 1.9587315422508194,
+      "gimbal_accel": [
+        8.80914261620815e-20,
+        -8.80914261620815e-20
+      ],
+      "spin_accel": [
+        2.1373288573610295e-22,
+        -2.1373288573610295e-22
+      ],
+      "spin_rate": [
+        200.0,
+        -200.0
+      ]
+    },
+    "nonspinning": {
+      "roll_accel": 1.9587315422508194,
+      "gimbal_accel": [
+        6.776263550929346e-21,
+        -6.776263550929346e-21
+      ],
+      "spin_accel": [
+        1.9746489225279e-24,
+        -1.9746489225279e-24
+      ],
+      "spin_rate": [
+        0.0,
+        0.0
+      ]
+    },
+    "reference_accel_rad_s2": 1.9587316346107684,
+    "interpretation": "At zero gimbal rates, gravity should destabilize +roll; deviations quantify added inertial coupling."
+  },
+  "front_positive": {
+    "spin": {
+      "roll_accel": -4.705881909591737,
+      "gimbal_accel": [
+        -2.0000079919999676,
+        1.6263032522230436e-19
+      ],
+      "spin_accel": [
+        4.235164736271502e-22,
+        0.0
+      ],
+      "spin_rate": [
+        200.0,
+        -200.0
+      ]
+    },
+    "zero_spin": {
+      "roll_accel": 0.0,
+      "gimbal_accel": [
+        -2.0000079919999676,
+        -6.776263550929348e-21
+      ],
+      "spin_accel": [
+        0.0,
+        0.0
+      ],
+      "spin_rate": [
+        0.0,
+        0.0
+      ]
+    },
+    "paper_reference_roll_accel": -4.705882352941177
+  },
+  "rear_positive": {
+    "spin": {
+      "roll_accel": 4.705881909591737,
+      "gimbal_accel": [
+        -1.6263032522230436e-19,
+        -2.0000079919999676
+      ],
+      "spin_accel": [
+        0.0,
+        4.235164736271502e-22
+      ],
+      "spin_rate": [
+        200.0,
+        -200.0
+      ]
+    },
+    "zero_spin": {
+      "roll_accel": 0.0,
+      "gimbal_accel": [
+        6.776263550929348e-21,
+        -2.0000079919999676
+      ],
+      "spin_accel": [
+        0.0,
+        0.0
+      ],
+      "spin_rate": [
+        0.0,
+        0.0
+      ]
+    },
+    "paper_reference_roll_accel": 4.705882352941177
+  },
+  "differential": {
+    "spin": {
+      "roll_accel": -9.411763819183474,
+      "gimbal_accel": [
+        -2.0000079919999676,
+        2.0000079919999676
+      ],
+      "spin_accel": [
+        4.235164736271502e-22,
+        -4.235164736271502e-22
+      ],
+      "spin_rate": [
+        200.0,
+        -200.0
+      ]
+    },
+    "zero_spin": {
+      "roll_accel": 0.0,
+      "gimbal_accel": [
+        -2.0000079919999676,
+        2.0000079919999676
+      ],
+      "spin_accel": [
+        0.0,
+        0.0
+      ],
+      "spin_rate": [
+        0.0,
+        0.0
+      ]
+    },
+    "paper_reference_roll_accel": -9.411764705882353
+  },
+  "common": {
+    "spin": {
+      "roll_accel": 0.0,
+      "gimbal_accel": [
+        -2.0000079919999676,
+        -2.0000079919999676
+      ],
+      "spin_accel": [
+        4.235164736271502e-22,
+        4.235164736271502e-22
+      ],
+      "spin_rate": [
+        200.0,
+        -200.0
+      ]
+    },
+    "zero_spin": {
+      "roll_accel": 0.0,
+      "gimbal_accel": [
+        -2.0000079919999676,
+        -2.0000079919999676
+      ],
+      "spin_accel": [
+        0.0,
+        0.0
+      ],
+      "spin_rate": [
+        0.0,
+        0.0
+      ]
+    },
+    "paper_reference_roll_accel": -0.0
+  },
+  "gimbal_torque_10": {
+    "spin": {
+      "roll_accel": 0.0,
+      "gimbal_accel": [
+        100.00039959999837,
+        1.6263032522230436e-19
+      ],
+      "spin_accel": [
+        0.0,
+        0.0
+      ],
+      "spin_rate": [
+        200.0,
+        -200.0
+      ]
+    },
+    "zero_spin": {
+      "roll_accel": 0.0,
+      "gimbal_accel": [
+        100.00039959999837,
+        -6.776263550929348e-21
+      ],
+      "spin_accel": [
+        0.0,
+        0.0
+      ],
+      "spin_rate": [
+        0.0,
+        0.0
+      ]
+    },
+    "paper_reference_gimbal_accel": 100.0
+  },
+  "stateless_repetition": {
+    "max_absolute_state_difference": 0.0,
+    "PASS": true
+  },
+  "open_loop_1s": {
+    "samples": [
+      {
+        "step": 1,
+        "roll_rad": 0.05004752437533498,
+        "roll_rate_rad_s": 0.009208189337493615
+      },
+      {
+        "step": 10,
+        "roll_rad": 0.050082781045252656,
+        "roll_rate_rad_s": -0.0023126951807831667
+      },
+      {
+        "step": 50,
+        "roll_rad": 0.050425468878211525,
+        "roll_rate_rad_s": -0.006859625072138542
+      },
+      {
+        "step": 100,
+        "roll_rad": 0.050816016421901304,
+        "roll_rate_rad_s": -0.005172649299866418
+      }
+    ],
+    "all_finite": true
+  },
+  "sanity_checks": {
+    "gravity_roll_positive": true,
+    "gyro_front_response_opposes_rear": true,
+    "gyro_spin_effect_nonzero": true,
+    "stability_finite": true,
+    "stateless_repetition": true
+  },
+  "limitations": [
+    "Flywheel speeds are reinitialized to +Omega/-Omega at each outer 0.01-s step; this is an idealized speed source, not a motor dynamics model.",
+    "Full mode actuator gear modifies physical torque authority: controller input Nm cannot be interpreted as actual hinge Nm.",
+    "No tire-ground contact, steering, forward speed or full motorcycle dynamics.",
+    "6-state interface discards flywheel spin phase/speed after each step; report as assumption.",
+    "Sanity checks are necessary, not sufficient, for independent physical validation."
+  ]
+}

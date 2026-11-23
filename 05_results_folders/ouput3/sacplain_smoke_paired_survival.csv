@@ -1,0 +1,8 @@
+iw,scenario,A,B,n_eps,dsurv,ci_lo,ci_hi,frac_boot_A_better,p_mcnemar,models_A_better
+1.0,act_sat_30pct,sac_plain,nmpc,5,-0.24,-0.6009999999999999,0.0,0.0,,0
+1.0,act_stuck_zero,sac_plain,nmpc,5,0.0,0.0,0.0,0.0,,0
+1.0,bias_roll_5deg,sac_plain,nmpc,5,0.0,0.0,0.0,0.0,,0
+1.0,healthy,sac_plain,nmpc,5,0.0,0.0,0.0,0.0,,0
+1.0,noise_imu_3deg,sac_plain,nmpc,5,0.0,0.0,0.0,0.0,,0
+1.0,param_iw_p50,sac_plain,nmpc,5,0.0,0.0,0.0,0.0,,0
+1.0,scale_gimbal_0.5,sac_plain,nmpc,5,0.0,0.0,0.0,0.0,,0

@@ -1,0 +1,69 @@
+{
+ "args": {
+  "ckpt": "neural_mpc.pt",
+  "res": [
+   "./residual_eval/residual_seed11_best",
+   "./residual_eval/residual_seed22_best",
+   "./residual_eval/residual_seed33_best",
+   "./residual_eval/residual_seed44_best",
+   "./residual_eval/residual_seed55_best"
+  ],
+  "sac_root": "runs",
+  "seeds_sac": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "methods": [],
+  "sac_steps": 3000000,
+  "prefer": "best",
+  "cbf_alpha1": 2.0,
+  "cbf_alpha2": 2.0,
+  "lambda_slack": 10000.0,
+  "hocbf_state": "measured",
+  "mpc": false,
+  "iw": [
+   1.0
+  ],
+  "only": [
+   "healthy",
+   "bias_roll_5deg",
+   "noise_imu_3deg",
+   "scale_gimbal_0.5",
+   "act_stuck_zero",
+   "act_sat_30pct",
+   "param_iw_p50"
+  ],
+  "episodes": 5,
+  "seed0": 77000,
+  "bucket": 0,
+  "boot": 2000,
+  "smoke": true,
+  "preflight_only": false,
+  "shard": null,
+  "resume": false,
+  "aggregate": false,
+  "out": "residual_best_smoke"
+ },
+ "file_sha256": {
+  "neural_mpc.pt": "d62bac77554622e5",
+  "./residual_eval/residual_seed11_best.zip": "bf652a61ca25af17",
+  "./residual_eval/residual_seed11_best_vecnorm.pkl": "1a3044b01d91eb91",
+  "./residual_eval/residual_seed22_best.zip": "a93e444df3731137",
+  "./residual_eval/residual_seed22_best_vecnorm.pkl": "3a7707a556d87b7b",
+  "./residual_eval/residual_seed33_best.zip": "0042ffe63d369dab",
+  "./residual_eval/residual_seed33_best_vecnorm.pkl": "533d55f282bab64d",
+  "./residual_eval/residual_seed44_best.zip": "c230c7504f4d353b",
+  "./residual_eval/residual_seed44_best_vecnorm.pkl": "5c4d41fc02ea3ae0",
+  "./residual_eval/residual_seed55_best.zip": "e122af6cdff69da4",
+  "./residual_eval/residual_seed55_best_vecnorm.pkl": "139ea6c0e2e92cff"
+ },
+ "early_failure_seeds": [],
+ "warnings": [],
+ "sac_sources": {},
+ "hocbf_state": "measured",
+ "decision_k": 1,
+ "max_steps": 500
+}

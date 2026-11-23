@@ -1,0 +1,5 @@
+trace_file,case,bucket,seed,configuration,controller,survived,steps,rmse,max_roll_deg,max_gimbal_rad
+dropout_imu_p0.3__b0__s500000__A__pure.npz,dropout_imu_p0.3,0,500000,A,pure,0,146,0.11437517127461705,45.65487792117728,1.5707963267948966
+dropout_imu_p0.3__b0__s500000__A__residual.npz,dropout_imu_p0.3,0,500000,A,residual,0,192,0.1222762747049901,45.10166534007683,1.5707963267948966
+dropout_imu_p0.3__b0__s500000__B__pure.npz,dropout_imu_p0.3,0,500000,B,pure,0,160,0.11927757987148462,46.65383330138799,0.8508708411158002
+dropout_imu_p0.3__b0__s500000__B__residual.npz,dropout_imu_p0.3,0,500000,B,residual,0,238,0.1370183331507739,46.643710257946765,0.8303731212729174

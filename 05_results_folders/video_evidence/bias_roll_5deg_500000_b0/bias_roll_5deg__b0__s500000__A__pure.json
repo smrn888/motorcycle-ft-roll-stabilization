@@ -1,0 +1,17 @@
+{
+  "case": "bias_roll_5deg",
+  "fault_type": "bias_phi",
+  "bucket": 0,
+  "seed": 500000,
+  "configuration": "A",
+  "controller": "pure",
+  "physics": "full",
+  "dt": 0.01,
+  "intervention": {},
+  "limitations": "no tyre-ground contact; idealized wheel spin",
+  "survived": 0,
+  "steps": 155,
+  "rmse": 0.12439586690371465,
+  "max_roll_deg": 46.23374772114591,
+  "max_gimbal_rad": 1.5707963267948966
+}

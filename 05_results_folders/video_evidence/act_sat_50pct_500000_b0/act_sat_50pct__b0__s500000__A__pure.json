@@ -1,0 +1,17 @@
+{
+  "case": "act_sat_50pct",
+  "fault_type": "actuator_saturation",
+  "bucket": 0,
+  "seed": 500000,
+  "configuration": "A",
+  "controller": "pure",
+  "physics": "full",
+  "dt": 0.01,
+  "intervention": {},
+  "limitations": "no tyre-ground contact; idealized wheel spin",
+  "survived": 0,
+  "steps": 137,
+  "rmse": 0.1328465823226303,
+  "max_roll_deg": 46.75983930016324,
+  "max_gimbal_rad": 1.5707963267948966
+}

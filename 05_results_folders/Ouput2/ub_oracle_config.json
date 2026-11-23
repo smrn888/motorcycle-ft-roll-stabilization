@@ -1,0 +1,72 @@
+{
+ "args": {
+  "ckpt": "neural_mpc.pt",
+  "res": [],
+  "sac_root": "runs",
+  "seeds_sac": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "methods": [
+   "hocbf"
+  ],
+  "sac_steps": 3000000,
+  "prefer": "final",
+  "cbf_alpha1": 2.0,
+  "cbf_alpha2": 2.0,
+  "lambda_slack": 10000.0,
+  "hocbf_state": "true",
+  "mpc": false,
+  "iw": [
+   1.0
+  ],
+  "only": [
+   "healthy",
+   "noise_imu_7deg",
+   "dropout_imu_p0.5",
+   "act_delay_3",
+   "act_sat_30pct"
+  ],
+  "episodes": 100,
+  "seed0": 77000,
+  "bucket": 0,
+  "boot": 2000,
+  "smoke": false,
+  "preflight_only": false,
+  "shard": null,
+  "resume": false,
+  "aggregate": false,
+  "out": "ub_oracle"
+ },
+ "file_sha256": {
+  "neural_mpc.pt": "d62bac77554622e5",
+  "runs\\sachocbf_seed0\\final_sachocbf_seed0.zip": "b58eed8bae5173e3",
+  "runs\\sachocbf_seed0\\vecnorm_final_sachocbf_seed0.pkl": "ffeb6eb7afca0c0a",
+  "runs\\sachocbf_seed1\\final_sachocbf_seed1.zip": "d5995a04f99ca295",
+  "runs\\sachocbf_seed1\\vecnorm_final_sachocbf_seed1.pkl": "8d87f9125b5e8fef",
+  "runs\\sachocbf_seed2\\final_sachocbf_seed2.zip": "d37bb05203e37e90",
+  "runs\\sachocbf_seed2\\vecnorm_final_sachocbf_seed2.pkl": "0a91610d6ff9c1a1",
+  "runs\\sachocbf_seed3\\final_sachocbf_seed3.zip": "1ccd17abd26c2120",
+  "runs\\sachocbf_seed3\\vecnorm_final_sachocbf_seed3.pkl": "611329118e70a969",
+  "runs\\sachocbf_seed4\\final_sachocbf_seed4.zip": "6a620070447b5bd9",
+  "runs\\sachocbf_seed4\\vecnorm_final_sachocbf_seed4.pkl": "e95b906f8459b680"
+ },
+ "early_failure_seeds": [
+  77074,
+  77076
+ ],
+ "warnings": [],
+ "sac_sources": {
+  "sac_hocbf_oracle_s0": "final",
+  "sac_hocbf_oracle_s1": "final",
+  "sac_hocbf_oracle_s2": "final",
+  "sac_hocbf_oracle_s3": "final",
+  "sac_hocbf_oracle_s4": "final"
+ },
+ "hocbf_state": "true",
+ "decision_k": 1,
+ "max_steps": 500
+}

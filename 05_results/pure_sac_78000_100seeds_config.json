@@ -1,0 +1,59 @@
+{
+  "controller": "pure_sac",
+  "training_seeds": [
+    11,
+    22,
+    33,
+    44,
+    55
+  ],
+  "stems": [
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\standalone_runs\\best_sacplain_seed11",
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\standalone_runs\\best_sacplain_seed22",
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\standalone_runs\\best_sacplain_seed33",
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\standalone_runs\\best_sacplain_seed44",
+    "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\standalone_runs\\best_sacplain_seed55"
+  ],
+  "checkpoints": [
+    {
+      "zip_sha256": "85bf367cca4cefa1b047393c21b6223b72a186312425948f930e22e6d6369b94",
+      "vecnorm_sha256": "a8092d3b5d93951f6006a8df7b9dace9409fdcf9c1588bf29778749008f6bbb9"
+    },
+    {
+      "zip_sha256": "e4cce9849c41815b261680a08598bc1b650df1a140b544b4a32a41df078c7757",
+      "vecnorm_sha256": "8f487ef10f25916607be8b462c7e77fd550c21ec3f8c0c44d098727787d20bed"
+    },
+    {
+      "zip_sha256": "e8f19dfd3741cc03dbe5cecb44d89c38ef6e7036c20144be2009263e24622a6d",
+      "vecnorm_sha256": "dcbc4b99800cc8f829784d47cb80938816dc84fe45b00c1bf3d04b4f099e0a49"
+    },
+    {
+      "zip_sha256": "2430fcada86ff15513cb91be99d70c06226399f756b7e31ea366659269555074",
+      "vecnorm_sha256": "5919b63c457b98582b6f8ccee8d766296cdd1ccc8da5317fe9e0904b9211d809"
+    },
+    {
+      "zip_sha256": "7b5eea380a4c4022627d790b20d104bc0fed81391edeb19a2ffba2ef77f180c6",
+      "vecnorm_sha256": "3bf7b851846fd3e0a7aaa364d3ec4a3d351adf1deb944c4a2fe3edac56b335a6"
+    }
+  ],
+  "shared_ckpt": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\neural_mpc_multi13.pt",
+  "shared_ckpt_sha256": "03e0e8b0f15297fa4c7b28710e15b4ec46d374920393884b1c075114eed79907",
+  "seed0": 78000,
+  "episodes": 100,
+  "buckets": [
+    0,
+    1,
+    2
+  ],
+  "only": [
+    "healthy",
+    "dropout_imu_p0.3",
+    "dropout_imu_p0.5",
+    "intermittent_imu_burst20",
+    "stuck_phi_15deg"
+  ],
+  "iw": 1.0,
+  "observation": "ObservedFaultEnv._obs10 (10D) including corrupted measurements",
+  "action": "clip(policy(normalized_obs),-1,1)*TAU_MAX",
+  "metrics": "matched run() in evaluate_neural_residual_adaptive_100seeds_patched.py"
+}

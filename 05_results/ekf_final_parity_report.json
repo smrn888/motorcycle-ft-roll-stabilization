@@ -1,0 +1,70 @@
+{
+  "old_rows": 45,
+  "new_rows": 45,
+  "matched": 45,
+  "unmatched": 0,
+  "atol": 1e-06,
+  "metrics": {
+    "surv": {
+      "max_abs_diff": 1.0,
+      "mismatch_count": 1,
+      "invalid": 0,
+      "tolerance": 0
+    },
+    "steps": {
+      "max_abs_diff": 185.0,
+      "mismatch_count": 15,
+      "invalid": 0,
+      "tolerance": 0
+    },
+    "solver_failures": {
+      "max_abs_diff": 0.0,
+      "mismatch_count": 0,
+      "invalid": 0,
+      "tolerance": 0
+    },
+    "ekf_rejections": {
+      "max_abs_diff": 48.0,
+      "mismatch_count": 14,
+      "invalid": 0,
+      "tolerance": 0
+    },
+    "rmse": {
+      "max_abs_diff": 0.1444235095030114,
+      "mismatch_count": 45,
+      "invalid": 0,
+      "tolerance": 1e-06
+    },
+    "peak_phi": {
+      "max_abs_diff": 34.59745882733996,
+      "mismatch_count": 45,
+      "invalid": 0,
+      "tolerance": 1e-06
+    },
+    "u_rms": {
+      "max_abs_diff": 0.475900135199411,
+      "mismatch_count": 45,
+      "invalid": 0,
+      "tolerance": 1e-06
+    },
+    "du": {
+      "max_abs_diff": 0.08163245030929944,
+      "mismatch_count": 45,
+      "invalid": 0,
+      "tolerance": 1e-06
+    },
+    "sat": {
+      "max_abs_diff": 0.0,
+      "mismatch_count": 0,
+      "invalid": 0,
+      "tolerance": 1e-06
+    },
+    "ekf_roll_rmse": {
+      "max_abs_diff": 0.11159807494430209,
+      "mismatch_count": 30,
+      "invalid": 0,
+      "tolerance": 1e-06
+    }
+  },
+  "pass": false
+}

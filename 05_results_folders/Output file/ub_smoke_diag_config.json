@@ -1,0 +1,91 @@
+{
+ "args": {
+  "ckpt": "neural_mpc.pt",
+  "res": [
+   "res_main1m_best"
+  ],
+  "sac_root": "runs",
+  "seeds_sac": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "methods": [
+   "plain",
+   "hocbf"
+  ],
+  "sac_steps": 3000000,
+  "prefer": "final",
+  "cbf_alpha1": 2.0,
+  "cbf_alpha2": 2.0,
+  "lambda_slack": 10000.0,
+  "hocbf_state": "measured",
+  "mpc": false,
+  "iw": [
+   1.0
+  ],
+  "only": [
+   "healthy",
+   "bias_roll_5deg",
+   "noise_imu_3deg",
+   "scale_gimbal_0.5",
+   "act_stuck_zero",
+   "act_sat_30pct",
+   "param_iw_p50"
+  ],
+  "episodes": 5,
+  "seed0": 77000,
+  "bucket": 0,
+  "boot": 2000,
+  "smoke": true,
+  "preflight_only": false,
+  "shard": null,
+  "resume": false,
+  "aggregate": false,
+  "out": "ub_smoke_diag"
+ },
+ "file_sha256": {
+  "neural_mpc.pt": "d62bac77554622e5",
+  "res_main1m_best.zip": "38d7e7ed8304a794",
+  "res_main1m_best_vecnorm.pkl": "6dd754d114ad20fa",
+  "runs\\sacplain_seed0\\final_sacplain_seed0.zip": "b14cf8ed3050520f",
+  "runs\\sacplain_seed0\\vecnorm_final_sacplain_seed0.pkl": "f79b5cd227e4d45d",
+  "runs\\sacplain_seed1\\final_sacplain_seed1.zip": "9c2ca8dc248dc99d",
+  "runs\\sacplain_seed1\\vecnorm_final_sacplain_seed1.pkl": "faa76f5b969a40e3",
+  "runs\\sacplain_seed2\\final_sacplain_seed2.zip": "047f4f65820528a0",
+  "runs\\sacplain_seed2\\vecnorm_final_sacplain_seed2.pkl": "f18bb2c0c8275732",
+  "runs\\sacplain_seed3\\final_sacplain_seed3.zip": "83545ff62f134f58",
+  "runs\\sacplain_seed3\\vecnorm_final_sacplain_seed3.pkl": "99922bdfd44c8612",
+  "runs\\sacplain_seed4\\final_sacplain_seed4.zip": "d653c065a363af75",
+  "runs\\sacplain_seed4\\vecnorm_final_sacplain_seed4.pkl": "673df65c895cebe7",
+  "runs\\sachocbf_seed0\\final_sachocbf_seed0.zip": "b58eed8bae5173e3",
+  "runs\\sachocbf_seed0\\vecnorm_final_sachocbf_seed0.pkl": "ffeb6eb7afca0c0a",
+  "runs\\sachocbf_seed1\\final_sachocbf_seed1.zip": "d5995a04f99ca295",
+  "runs\\sachocbf_seed1\\vecnorm_final_sachocbf_seed1.pkl": "8d87f9125b5e8fef",
+  "runs\\sachocbf_seed2\\final_sachocbf_seed2.zip": "d37bb05203e37e90",
+  "runs\\sachocbf_seed2\\vecnorm_final_sachocbf_seed2.pkl": "0a91610d6ff9c1a1",
+  "runs\\sachocbf_seed3\\final_sachocbf_seed3.zip": "1ccd17abd26c2120",
+  "runs\\sachocbf_seed3\\vecnorm_final_sachocbf_seed3.pkl": "611329118e70a969",
+  "runs\\sachocbf_seed4\\final_sachocbf_seed4.zip": "6a620070447b5bd9",
+  "runs\\sachocbf_seed4\\vecnorm_final_sachocbf_seed4.pkl": "e95b906f8459b680"
+ },
+ "early_failure_seeds": [],
+ "warnings": [],
+ "sac_sources": {
+  "sac_plain_s0": "final",
+  "sac_plain_s1": "final",
+  "sac_plain_s2": "final",
+  "sac_plain_s3": "final",
+  "sac_plain_s4": "final",
+  "sac_hocbf_s0": "final",
+  "sac_hocbf_s1": "final",
+  "sac_hocbf_s2": "final",
+  "sac_hocbf_s3": "final",
+  "sac_hocbf_s4": "final"
+ },
+ "hocbf_state": "measured",
+ "decision_k": 1,
+ "max_steps": 500
+}

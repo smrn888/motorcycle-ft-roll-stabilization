@@ -1,0 +1,83 @@
+2026-10-14 20:49:46.122168: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'cudart64_110.dll'; dlerror: cudart64_110.dll not found
+2026-10-14 20:49:46.122438: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+baseline (residual=0, N=20 ≡ Neural MPC with fixed N=20) روی seedهای ارزیابی:
+  baseline   iw1.0: s=1.00 r=0.216 L=500 | iw0.8: s=0.97 r=0.247 L=485 | iw0.7: s=0.93 r=0.284 L=469 | iw0.6: s=0.37 r=0.442 L=257 | iw0.5: s=0.00 r=0.499 L=99 || score=0.4844
+[10000] 246s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.235 L=500 | iw0.8: s=0.97 r=0.254 L=485 | iw0.7: s=0.93 r=0.269 L=475 | iw0.6: s=0.80 r=0.329 L=427 | iw0.5: s=0.60 r=0.422 L=346 || score=0.7090
+  ↑ best saved (score=0.7090)
+[20000] 501s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.202 L=500 | iw0.8: s=1.00 r=0.216 L=500 | iw0.7: s=1.00 r=0.226 L=500 | iw0.6: s=0.93 r=0.272 L=470 | iw0.5: s=0.53 r=0.372 L=325 || score=0.7645
+  ↑ best saved (score=0.7645)
+[30000] 942s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.252 L=500 | iw0.8: s=0.90 r=0.319 L=459 | iw0.7: s=0.63 r=0.368 L=400 | iw0.6: s=0.40 r=0.397 L=315 | iw0.5: s=0.07 r=0.446 L=163 || score=0.4218
+[40000] 1253s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.205 L=500 | iw0.8: s=1.00 r=0.214 L=500 | iw0.7: s=1.00 r=0.222 L=500 | iw0.6: s=0.93 r=0.257 L=470 | iw0.5: s=0.90 r=0.297 L=455 || score=0.8471
+  ↑ best saved (score=0.8471)
+[50000] 1527s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.225 L=500 | iw0.8: s=1.00 r=0.235 L=500 | iw0.7: s=1.00 r=0.252 L=500 | iw0.6: s=0.90 r=0.294 L=470 | iw0.5: s=0.63 r=0.347 L=409 || score=0.7714
+[60000] 1807s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.193 L=500 | iw0.8: s=1.00 r=0.204 L=500 | iw0.7: s=1.00 r=0.211 L=500 | iw0.6: s=1.00 r=0.224 L=500 | iw0.5: s=0.97 r=0.264 L=485 || score=0.8837
+  ↑ best saved (score=0.8837)
+[70000] 2065s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.202 L=500 | iw0.8: s=0.97 r=0.227 L=485 | iw0.7: s=0.97 r=0.234 L=485 | iw0.6: s=0.97 r=0.244 L=485 | iw0.5: s=0.93 r=0.268 L=470 || score=0.8493
+[80000] 2371s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.200 L=500 | iw0.8: s=1.00 r=0.207 L=500 | iw0.7: s=1.00 r=0.214 L=500 | iw0.6: s=1.00 r=0.230 L=500 | iw0.5: s=0.93 r=0.284 L=470 || score=0.8731
+[90000] 2712s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.169 L=500 | iw0.8: s=1.00 r=0.180 L=500 | iw0.7: s=1.00 r=0.187 L=500 | iw0.6: s=0.97 r=0.222 L=485 | iw0.5: s=0.97 r=0.274 L=485 || score=0.8835
+[100000] 3059s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.181 L=500 | iw0.8: s=1.00 r=0.193 L=500 | iw0.7: s=1.00 r=0.206 L=500 | iw0.6: s=1.00 r=0.228 L=500 | iw0.5: s=0.97 r=0.267 L=485 || score=0.8860
+  ↑ best saved (score=0.8860)
+[110000] 3401s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.156 L=500 | iw0.8: s=1.00 r=0.163 L=500 | iw0.7: s=1.00 r=0.163 L=500 | iw0.6: s=1.00 r=0.170 L=500 | iw0.5: s=0.97 r=0.207 L=485 || score=0.9073
+  ↑ best saved (score=0.9073)
+[120000] 3696s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.167 L=500 | iw0.8: s=1.00 r=0.176 L=500 | iw0.7: s=1.00 r=0.178 L=500 | iw0.6: s=1.00 r=0.187 L=500 | iw0.5: s=0.97 r=0.222 L=485 || score=0.9003
+[130000] 3950s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.166 L=500 | iw0.8: s=1.00 r=0.176 L=500 | iw0.7: s=1.00 r=0.191 L=500 | iw0.6: s=1.00 r=0.206 L=500 | iw0.5: s=0.93 r=0.231 L=484 || score=0.8896
+[140000] 4214s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.138 L=500 | iw0.8: s=1.00 r=0.146 L=500 | iw0.7: s=1.00 r=0.151 L=500 | iw0.6: s=1.00 r=0.170 L=500 | iw0.5: s=0.93 r=0.198 L=475 || score=0.9064
+[150000] 4474s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.140 L=500 | iw0.8: s=1.00 r=0.152 L=500 | iw0.7: s=1.00 r=0.158 L=500 | iw0.6: s=0.97 r=0.166 L=488 | iw0.5: s=0.90 r=0.213 L=459 || score=0.8905
+[160000] 4738s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.150 L=500 | iw0.8: s=1.00 r=0.157 L=500 | iw0.7: s=0.97 r=0.166 L=488 | iw0.6: s=0.97 r=0.168 L=488 | iw0.5: s=0.93 r=0.200 L=473 || score=0.8892
+[170000] 5020s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.155 L=500 | iw0.8: s=1.00 r=0.159 L=500 | iw0.7: s=1.00 r=0.165 L=500 | iw0.6: s=1.00 r=0.170 L=500 | iw0.5: s=0.93 r=0.213 L=472 || score=0.9005
+[180000] 5296s  (baseline score=0.4844)
+  SAC        iw1.0: s=0.97 r=0.130 L=489 | iw0.8: s=0.97 r=0.137 L=488 | iw0.7: s=0.97 r=0.141 L=488 | iw0.6: s=0.93 r=0.153 L=476 | iw0.5: s=0.93 r=0.171 L=473 || score=0.8801
+[190000] 5577s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.138 L=500 | iw0.8: s=0.97 r=0.147 L=490 | iw0.7: s=0.97 r=0.146 L=490 | iw0.6: s=0.93 r=0.158 L=476 | iw0.5: s=0.93 r=0.170 L=474 || score=0.8842
+[200000] 5842s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.124 L=500 | iw0.8: s=1.00 r=0.138 L=500 | iw0.7: s=0.97 r=0.140 L=491 | iw0.6: s=0.93 r=0.155 L=478 | iw0.5: s=0.93 r=0.166 L=475 || score=0.8943
+[210000] 6107s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.127 L=500 | iw0.8: s=1.00 r=0.132 L=500 | iw0.7: s=0.97 r=0.136 L=489 | iw0.6: s=0.97 r=0.146 L=489 | iw0.5: s=0.97 r=0.163 L=487 || score=0.9095
+  ↑ best saved (score=0.9095)
+[220000] 6392s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.130 L=500 | iw0.8: s=1.00 r=0.146 L=500 | iw0.7: s=1.00 r=0.147 L=500 | iw0.6: s=1.00 r=0.156 L=500 | iw0.5: s=0.97 r=0.194 L=485 || score=0.9160
+  ↑ best saved (score=0.9160)
+[230000] 6679s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.134 L=500 | iw0.8: s=1.00 r=0.146 L=500 | iw0.7: s=1.00 r=0.150 L=500 | iw0.6: s=1.00 r=0.166 L=500 | iw0.5: s=0.97 r=0.182 L=495 || score=0.9156
+[240000] 6968s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.125 L=500 | iw0.8: s=1.00 r=0.128 L=500 | iw0.7: s=1.00 r=0.139 L=500 | iw0.6: s=1.00 r=0.142 L=500 | iw0.5: s=0.93 r=0.177 L=472 || score=0.9156
+[250000] 7239s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.124 L=500 | iw0.8: s=1.00 r=0.134 L=500 | iw0.7: s=1.00 r=0.141 L=500 | iw0.6: s=1.00 r=0.155 L=500 | iw0.5: s=0.93 r=0.188 L=473 || score=0.9124
+[260000] 7513s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.118 L=500 | iw0.8: s=1.00 r=0.121 L=500 | iw0.7: s=1.00 r=0.131 L=500 | iw0.6: s=1.00 r=0.150 L=500 | iw0.5: s=0.97 r=0.165 L=488 || score=0.9248
+  ↑ best saved (score=0.9248)
+[270000] 7805s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.113 L=500 | iw0.8: s=1.00 r=0.117 L=500 | iw0.7: s=1.00 r=0.123 L=500 | iw0.6: s=1.00 r=0.136 L=500 | iw0.5: s=1.00 r=0.156 L=500 || score=0.9354
+  ↑ best saved (score=0.9354)
+[280000] 8079s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.108 L=500 | iw0.8: s=1.00 r=0.118 L=500 | iw0.7: s=1.00 r=0.122 L=500 | iw0.6: s=1.00 r=0.132 L=500 | iw0.5: s=0.97 r=0.149 L=487 || score=0.9306
+[290000] 8367s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.104 L=500 | iw0.8: s=1.00 r=0.114 L=500 | iw0.7: s=1.00 r=0.125 L=500 | iw0.6: s=1.00 r=0.138 L=500 | iw0.5: s=0.97 r=0.160 L=487 || score=0.9293
+[300000] 8635s  (baseline score=0.4844)
+  SAC        iw1.0: s=1.00 r=0.115 L=500 | iw0.8: s=1.00 r=0.119 L=500 | iw0.7: s=1.00 r=0.127 L=500 | iw0.6: s=1.00 r=0.135 L=500 | iw0.5: s=0.93 r=0.156 L=476 || score=0.9214
+done → C:\Users\Moein\Desktop\Paper\RL-MPC\Three Models\sac_multiseed_300k\sac_seed303_300k_best.zip / C:\Users\Moein\Desktop\Paper\RL-MPC\Three Models\sac_multiseed_300k\sac_seed303_300k_final.zip

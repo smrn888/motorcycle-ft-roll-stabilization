@@ -1,0 +1,11 @@
+{
+  "pass_gate": true,
+  "checks": {
+    "episodes": 5,
+    "survival": 1.0,
+    "solver_failures": 0,
+    "solver_optimal_inaccurate": 27
+  },
+  "source_hash": "e1dda6ed8050fa08aebc2049924a7b159a5292099053a256769fa302850fe45b",
+  "ckpt_hash": "03e0e8b0f15297fa4c7b28710e15b4ec46d374920393884b1c075114eed79907"
+}

@@ -1,0 +1,19 @@
+
+=== START 2026-10-17 18:34:17 ===
+C:\Users\Moein\AppData\Local\Programs\Python\Python310\python.exe evaluate_online_mpc_ekf_ablation.py --ckpt .\neural_mpc_multi13.pt --horizon 20 --seed0 78000 --episodes 1 --buckets 0 --only healthy dropout_imu_p0.3 dropout_imu_p0.5 intermittent_imu_burst20 stuck_phi_15deg --modes combined --out ekf_confirm_78000_smoke_N20 --ekf_gate 9.21 --ekf_q 0.002 0.05 0.005 0.005 0.1 0.1 --ekf_r 0.01 0.1 0.005 0.005 0.05 0.05 --ekf_p0 0.05 0.5 0.05 0.05 0.5 0.5 --stale_phi_tol 1e-10 --stale_rate_tol 1e-10 --stale_run 2 --recovery_run 5 --recovery_factor 4.0 --recovery_cap 1.0
+2026-10-17 18:34:20.828900: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'cudart64_110.dll'; dlerror: cudart64_110.dll not found
+2026-10-17 18:34:20.828937: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+[MPCSolver] DPP-compliant: True
+PREFLIGHT PASS | fixed N= 20 weights= [70.71067812  7.07106781 22.36067977  0.31622777] modes= ['combined']
+combined healthy bucket=0 seed=78000 surv=1 steps=500 reject=0 stale=0 recovery=0
+combined stuck_phi_15deg bucket=0 seed=78000 surv=1 steps=500 reject=400 stale=398 recovery=80
+C:\Users\Moein\AppData\Local\Programs\Python\Python310\lib\site-packages\cvxpy\problems\problem.py:1403: UserWarning: Solution may be inaccurate. Try another solver, adjusting the solver settings, or solve with verbose=True for more information.
+  warnings.warn(
+combined dropout_imu_p0.3 bucket=0 seed=78000 surv=1 steps=500 reject=66 stale=50 recovery=2
+combined dropout_imu_p0.5 bucket=0 seed=78000 surv=1 steps=500 reject=145 stale=127 recovery=3
+combined intermittent_imu_burst20 bucket=0 seed=78000 surv=1 steps=500 reject=192 stale=189 recovery=32
+DONE 5 rows: ekf_confirm_78000_smoke_N20_episodes.csv ekf_confirm_78000_smoke_N20_summary.csv ekf_confirm_78000_smoke_N20_config.json
+=== RETURN CODE 0 ===

@@ -1,0 +1,27 @@
+{
+  "args": {
+    "ckpt": "neural_mpc_multi13.pt",
+    "pure_dir": "standalone_runs",
+    "pure_seed": 22,
+    "pure_variant": "final",
+    "res_stem": "sac_seed202_continued_1m_best",
+    "res_scale": 5.0,
+    "skip_pure": true,
+    "episodes": 5,
+    "seed0": 610000,
+    "buckets": [
+      0,
+      1,
+      2
+    ],
+    "iw": 1.0,
+    "only": null,
+    "out": "fault34_202_best_scale5"
+  },
+  "files": {
+    "pure_zip": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\standalone_runs\\final_sacplain_seed22.zip",
+    "pure_vn": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\standalone_runs\\vecnorm_final_sacplain_seed22.pkl",
+    "res_zip": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\sac_seed202_continued_1m_best.zip",
+    "res_vn": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\sac_seed202_continued_1m_best_vecnorm.pkl"
+  }
+}

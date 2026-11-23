@@ -1,0 +1,29 @@
+{
+  "seed0": 78000,
+  "episodes": 100,
+  "buckets": [
+    0,
+    1,
+    2
+  ],
+  "only": [
+    "healthy",
+    "dropout_imu_p0.3",
+    "dropout_imu_p0.5",
+    "intermittent_imu_burst20",
+    "stuck_phi_15deg"
+  ],
+  "horizon": 20,
+  "iw": 1.0,
+  "oracle": false,
+  "ckpt": "E:\\Razavi\\Three Models\\neural_mpc_multi13.pt",
+  "weights": [
+    70.71067811865471,
+    7.071067811865475,
+    22.360679774997894,
+    0.316227766016838
+  ],
+  "controller": "online_mpc_measured",
+  "fallback": "zero",
+  "caveat": "Exploratory fixed-weight, fixed-horizon MPC; not proven exact distillation teacher"
+}

@@ -1,0 +1,333 @@
+{
+  "root": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models",
+  "python": {
+    "version": "3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]",
+    "executable": "C:\\Users\\Moein\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+    "platform": "Windows-10-10.0.26100-SP0"
+  },
+  "packages": {
+    "numpy": "1.26.4",
+    "scipy": "1.15.3",
+    "cvxpy": "1.4.3",
+    "osqp": "0.6.6",
+    "torch": "2.6.0+cu124",
+    "stable_baselines3": "2.3.2",
+    "gymnasium": "0.29.1",
+    "pandas": "2.2.3"
+  },
+  "files": {
+    "compare_online_mpc_vs_neural_vs_residual.py": {
+      "exists": true,
+      "sha256": "3238608c69898e9339d5f4260133e2292ef0b80243752a38f360b7a0ef3bf911"
+    },
+    "evaluate_online_mpc_100seeds.py": {
+      "exists": true,
+      "sha256": "a2f94efbe1d6c98c2d368d636ce907ab17a03ecfd8f8c4b6035f9593c8f27c3e"
+    },
+    "evaluate_online_mpc_ekf_100seeds.py": {
+      "exists": true,
+      "sha256": "92241970b4fdd131a8532cc2d91bc6d87ccee4aaf6c53e04c64e89f6b91e67ad"
+    },
+    "evaluate_online_mpc_ekf_ablation.py": {
+      "exists": true,
+      "sha256": "e1dda6ed8050fa08aebc2049924a7b159a5292099053a256769fa302850fe45b"
+    },
+    "motorcycle_env_mpc17.py": {
+      "exists": true,
+      "sha256": "0e1cccd05dad490cc1e8941b4d9c370075700bd0df2c062124baff62d65039fe"
+    },
+    "motorcycle_dynamics.py": {
+      "exists": true,
+      "sha256": "194e07442e4b2e4d0361647d61d914a7db5e6033589456ff1315e36a5bccca8b"
+    },
+    "mj_traces_full_raw.zip": {
+      "exists": true,
+      "size_bytes": 52888,
+      "sha256": "fbcdfd9da1d77e6456d8ff54991e517d3924d854770fd1de8d1e4bdf2bd1fd2e"
+    },
+    "neural_mpc.pt": {
+      "exists": true,
+      "size_bytes": 411957,
+      "sha256": "d62bac77554622e5085792488f1e3f00c02d2c06f23fe9cc733177ca28c76786"
+    },
+    "neural_mpc_multi13.pt": {
+      "exists": true,
+      "size_bytes": 414866,
+      "sha256": "03e0e8b0f15297fa4c7b28710e15b4ec46d374920393884b1c075114eed79907"
+    },
+    "res_main1m_best.zip": {
+      "exists": true,
+      "size_bytes": 3126620,
+      "sha256": "38d7e7ed8304a794515fd8fb24882ced277c84d246db5d3d93856bf06c4be47f"
+    },
+    "res_main1m_best_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2092,
+      "sha256": "6dd754d114ad20fa94eba8563c0dc39396f6045d450c780fed96a010058dbd49"
+    },
+    "res_main1m_final.zip": {
+      "exists": true,
+      "size_bytes": 3126601,
+      "sha256": "20284b3e098e7cce0a5134a70e8ec32774f4a976e8c266fb84dde1bc417aa3e9"
+    },
+    "res_main1m_final_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2092,
+      "sha256": "2a23e52010a47cffb94b1666ad97ccfcaf01360751977e67bc5772a89a00ce20"
+    },
+    "res_pilot5_best.zip": {
+      "exists": true,
+      "size_bytes": 3123414,
+      "sha256": "2247c6073003938501c5d9570282445e1fb31ab8cb5d2f4b6307e3a4dfb1092f"
+    },
+    "res_pilot5_best_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2092,
+      "sha256": "d8f33f5afcc566d4b496869017d16652f6f43917d54b2d963efcac3b97bc00fa"
+    },
+    "res_pilot5_final.zip": {
+      "exists": true,
+      "size_bytes": 3126597,
+      "sha256": "60ac04cc9ef5e35c5eadad0cc346c283df20dddcc6dcdb84963666ecd7f416e6"
+    },
+    "res_pilot5_final_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2092,
+      "sha256": "76b1d54888ab9eb3e0361835d7184b53c896de02481a37a6525bf7b51e8fd727"
+    },
+    "residual_main300k_best.zip": {
+      "exists": true,
+      "size_bytes": 3174801,
+      "sha256": "2bbc210004625c9194eb0ba4941e894827e9f3c643a01957604be4649f9b7bf1"
+    },
+    "residual_main300k_best_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2070,
+      "sha256": "9c5968279fdd768a19b684951f29befc477cce4d29bb507c4f98e013d496ac53"
+    },
+    "residual_main300k_final.zip": {
+      "exists": true,
+      "size_bytes": 3174793,
+      "sha256": "51386e83ccb91b21d9afa2cb7ffd4922b1da14cd821ce57738e4284058782efa"
+    },
+    "residual_main300k_final_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2070,
+      "sha256": "5ca00d55681de7dbb986a2102a5306ecee52e3500229c88cc7586bc6e9c42667"
+    },
+    "residual_pilot30k_best.zip": {
+      "exists": true,
+      "size_bytes": 3172380,
+      "sha256": "50b983ddc9549e63aacfbea8971cfe55d264d2eb7e490710f820daf2c7160ca1"
+    },
+    "residual_pilot30k_best_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2002,
+      "sha256": "fe372e1142947419dadaa1cfe1e81f7d531158ada85f9a22b64932b356710ad2"
+    },
+    "residual_pilot30k_final.zip": {
+      "exists": true,
+      "size_bytes": 3173273,
+      "sha256": "31a7a691662b44b80c98f5f18353f06197ae7633001d3cbaf7a66d54570f8a00"
+    },
+    "residual_pilot30k_final_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2002,
+      "sha256": "e152a60cb1c52667094d186d8d4b5ff6f46205e8eef726bd2729757ce4d79cfa"
+    },
+    "sac_compatibility_check.zip": {
+      "exists": true,
+      "size_bytes": 3393,
+      "sha256": "f3a3638f0372c1f743b27c6196c922a62f4fb7de3296b85a7ac370af22a41ff7"
+    },
+    "sac_seed101_continued_1m_best.zip": {
+      "exists": true,
+      "size_bytes": 3174814,
+      "sha256": "69bd5c0a8dfa1be14265a7411d9acf9671b43128b0d30e3672ecb2ce3d2b64fb"
+    },
+    "sac_seed101_continued_1m_best_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2072,
+      "sha256": "7ec88e3cd2454adcf99e5bb60a91c347b85885de6e01282e91edd8d546053e78"
+    },
+    "sac_seed101_continued_1m_final.zip": {
+      "exists": true,
+      "size_bytes": 3174799,
+      "sha256": "1cd8304c928d18833a704043b608a2efc199cd465cf7ae992deff1d50c31d5e2"
+    },
+    "sac_seed101_continued_1m_final_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2072,
+      "sha256": "480ea666b4dfb30869be8065f6661285ff800d37d57da4389d1aa702d15b6121"
+    },
+    "sac_seed202_continued_1m_best.zip": {
+      "exists": true,
+      "size_bytes": 3174814,
+      "sha256": "eece90662a03d7fe3f7c744a96696c60f555dcb98e627b4caa45c189944d3bb9"
+    },
+    "sac_seed202_continued_1m_best_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2071,
+      "sha256": "a10baaec1d1f1cb6b167889d16067d7198923d3991fbd7473bb6d948ff69682f"
+    },
+    "sac_seed202_continued_1m_final.zip": {
+      "exists": true,
+      "size_bytes": 3174795,
+      "sha256": "c53248102de331ec6e403ea50418bd0f33de167d286f60a103d8c23d5845ce68"
+    },
+    "sac_seed202_continued_1m_final_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2071,
+      "sha256": "ff46ada4b21adfd498c3a7161ba842400d1cccecb263f58c40d3ffac31eb35f0"
+    },
+    "sac_seed303_continued_1m_best.zip": {
+      "exists": true,
+      "size_bytes": 3174811,
+      "sha256": "ee0d07ecc1bc6e2a9a349c921a62d478a03919247969903cca504cb1a023e6ac"
+    },
+    "sac_seed303_continued_1m_best_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2071,
+      "sha256": "5d3f6b108297bef3d42a6718f100e1c10d7aca76f42da5786e09373c31f232e3"
+    },
+    "sac_seed303_continued_1m_final.zip": {
+      "exists": true,
+      "size_bytes": 3174795,
+      "sha256": "02502683e9b50de8d3ce0f59268f0a5aabb09696bea8628a51ad2393dd7d701e"
+    },
+    "sac_seed303_continued_1m_final_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2071,
+      "sha256": "82914155ff3779c47251b1f1e1e7b1720ebc85c8b25a5ded17496266e1db62c9"
+    },
+    "sac_seed404_fromscratch_1m_best.zip": {
+      "exists": true,
+      "size_bytes": 3174954,
+      "sha256": "b09559becf412184fad817d72400100a3d181745c2183ac4a69e4de446f07d97"
+    },
+    "sac_seed404_fromscratch_1m_best_compat.zip": {
+      "exists": true,
+      "size_bytes": 3168732,
+      "sha256": "0b01aa5a0c36c511245a4ea20044c80e3fb9c96efffb29b3b525bfead4deb307"
+    },
+    "sac_seed404_fromscratch_1m_best_eval.zip": {
+      "exists": true,
+      "size_bytes": 3168480,
+      "sha256": "9b94c0964045b1b2c8b804f025ab91cf389fd15feb48144fd661709caa51d99a"
+    },
+    "sac_seed404_fromscratch_1m_best_eval_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 1722,
+      "sha256": "00345b57a207628f55d8c00f38b3aca99436226188e3a222620488fb6e177832"
+    },
+    "sac_seed404_fromscratch_1m_best_numpy1.zip": {
+      "exists": true,
+      "size_bytes": 3166309,
+      "sha256": "6f8233c4acdb749e811d2b01ea672aab66b99e4b4f800142dfd766b3b97ca3a9"
+    },
+    "sac_seed404_fromscratch_1m_best_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2193,
+      "sha256": "d2296a1765a44ddf3bfc827123cde2e875240c23439f19b2a75f5411c55c9fea"
+    },
+    "sac_seed404_fromscratch_1m_best_vecnorm_numpy1.pkl": {
+      "exists": true,
+      "size_bytes": 1722,
+      "sha256": "00345b57a207628f55d8c00f38b3aca99436226188e3a222620488fb6e177832"
+    },
+    "sac_seed404_fromscratch_1m_final.zip": {
+      "exists": true,
+      "size_bytes": 3174939,
+      "sha256": "8643c6beb50b8233f19196364128be86d7f4fea385baf15bb62257ab4cc0c5fc"
+    },
+    "sac_seed404_fromscratch_1m_final_eval.zip": {
+      "exists": true,
+      "size_bytes": 3168465,
+      "sha256": "8720e90e44df15234cfcb72f709d237eb1a27b044876204d4c2b09ae13e51213"
+    },
+    "sac_seed404_fromscratch_1m_final_eval_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 1722,
+      "sha256": "0e66eafb6b22f05baf2d34364bf83eb62267f619ef555b36955d2c97202f6763"
+    },
+    "sac_seed404_fromscratch_1m_final_numpy1.zip": {
+      "exists": true,
+      "size_bytes": 3166294,
+      "sha256": "5e93e97ece6555d8c4bea317c30501b7b220f54e4b7794dfdc17f7fbb5b9aa03"
+    },
+    "sac_seed404_fromscratch_1m_final_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2193,
+      "sha256": "7db4480a9c67a7c4aacc6c4fc52b649b2c74f91406baec431209dbf51f0e7a7e"
+    },
+    "sac_seed505_fromscratch_1m_best.zip": {
+      "exists": true,
+      "size_bytes": 3174954,
+      "sha256": "f0fb10e5995e5d0a236aae81570a0168bee17a6f5cb0746ffbf1ec2169f5b440"
+    },
+    "sac_seed505_fromscratch_1m_best_eval.zip": {
+      "exists": true,
+      "size_bytes": 3168480,
+      "sha256": "343a578ca9b21a69cf8c307c5564c7e4da5d1b4fc6ea82061a72cb652a2259d4"
+    },
+    "sac_seed505_fromscratch_1m_best_eval_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 1722,
+      "sha256": "44e62af6c419e0eb4be2915dd65026487f2e39b8ff0291ffcffaaafd4b6025d8"
+    },
+    "sac_seed505_fromscratch_1m_best_numpy1.zip": {
+      "exists": true,
+      "size_bytes": 3166309,
+      "sha256": "898dbbb47781c50a8c4f4d5dabdb4cb7d61b134635cb234e8161fc3c6e9d6080"
+    },
+    "sac_seed505_fromscratch_1m_best_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2193,
+      "sha256": "a6c0bcc380b2b95bf7a6a0b60bc8636d39ad8b437ed37f1fc7c4d177ac73771c"
+    },
+    "sac_seed505_fromscratch_1m_final.zip": {
+      "exists": true,
+      "size_bytes": 3174939,
+      "sha256": "b9257c2372a82cdfb7ec90be688469497e9cfad13cf8b8ee13ed9d10d888ca03"
+    },
+    "sac_seed505_fromscratch_1m_final_eval.zip": {
+      "exists": true,
+      "size_bytes": 3168465,
+      "sha256": "9740785bd833cb647c7da7bbc0b76e9ab0290c43c2eea7c2d0899eaf125f2c57"
+    },
+    "sac_seed505_fromscratch_1m_final_eval_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 1722,
+      "sha256": "0c855cd160b8495a0c711ece4d3f118cf321c3394869861c86fcd26c2e8e8350"
+    },
+    "sac_seed505_fromscratch_1m_final_numpy1.zip": {
+      "exists": true,
+      "size_bytes": 3166294,
+      "sha256": "ec379a45f1280e27a9d9e051d48a89b80df02ecb005db7099f6e08843db4da4e"
+    },
+    "sac_seed505_fromscratch_1m_final_vecnorm.pkl": {
+      "exists": true,
+      "size_bytes": 2193,
+      "sha256": "93bbb51095e9e4e105ad9c0ad06485cb215ab110ac2db540c2a6bbcea1faa78e"
+    }
+  },
+  "static_audit": {
+    "comparison_script_exists": true,
+    "ekf_evaluator_exists": true,
+    "baseline_evaluator_exists": true,
+    "comparison_has_neural_policy_call": true,
+    "comparison_mentions_ekf": false,
+    "ekf_evaluator_defines_six_state_ekf": true,
+    "ekf_evaluator_corrects_from_faulted_observation": true,
+    "ekf_evaluator_uses_estimated_state": true,
+    "baseline_uses_measured_observation": true,
+    "comparison_uses_raw_observation_for_neural_input": true,
+    "direct_ekf_to_neural_path_visible": false
+  },
+  "limitations": [
+    "Static text checks cannot prove tensor shape compatibility, observation normalization semantics, causal correctness, or runtime control behavior.",
+    "Checkpoint hashes establish file identity only; they do not establish that a checkpoint was trained with a particular observation layout.",
+    "No training or long simulation was started by this audit."
+  ],
+  "pip_freeze_exit_code": 0
+}

@@ -1,0 +1,62 @@
+{
+  "seed0": 78000,
+  "episodes": 100,
+  "buckets": [
+    0,
+    1,
+    2
+  ],
+  "only": [
+    "healthy",
+    "dropout_imu_p0.3",
+    "dropout_imu_p0.5",
+    "intermittent_imu_burst20",
+    "stuck_phi_15deg"
+  ],
+  "modes": [
+    "combined"
+  ],
+  "horizon": 40,
+  "iw": 1.0,
+  "ckpt": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\neural_mpc_multi13.pt",
+  "weights": [
+    70.71067811865471,
+    7.071067811865475,
+    22.360679774997894,
+    0.316227766016838
+  ],
+  "ekf": {
+    "process_std": [
+      0.002,
+      0.05,
+      0.005,
+      0.005,
+      0.1,
+      0.1
+    ],
+    "measure_std": [
+      0.01,
+      0.1,
+      0.005,
+      0.005,
+      0.05,
+      0.05
+    ],
+    "initial_std": [
+      0.05,
+      0.5,
+      0.05,
+      0.05,
+      0.5,
+      0.5
+    ],
+    "gate": 9.21,
+    "stale_phi_tol": 1e-10,
+    "stale_rate_tol": 1e-10,
+    "stale_run": 2,
+    "recovery_run": 5,
+    "recovery_factor": 4.0,
+    "recovery_cap": 1.0
+  },
+  "note": "Experimental ablations; no oracle information provided to EKF"
+}

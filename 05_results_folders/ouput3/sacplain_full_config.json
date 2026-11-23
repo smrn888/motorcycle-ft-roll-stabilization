@@ -1,0 +1,66 @@
+{
+ "args": {
+  "ckpt": "neural_mpc.pt",
+  "res": [],
+  "sac_root": "./standalone_runs",
+  "seeds_sac": [
+   11,
+   22,
+   33,
+   44,
+   55
+  ],
+  "methods": [
+   "plain"
+  ],
+  "sac_steps": 1000000,
+  "prefer": "best",
+  "cbf_alpha1": 2.0,
+  "cbf_alpha2": 2.0,
+  "lambda_slack": 10000.0,
+  "hocbf_state": "measured",
+  "mpc": false,
+  "iw": [
+   1.0
+  ],
+  "only": null,
+  "episodes": 100,
+  "seed0": 77000,
+  "bucket": 0,
+  "boot": 2000,
+  "smoke": false,
+  "preflight_only": false,
+  "shard": null,
+  "resume": false,
+  "aggregate": false,
+  "out": "sacplain_full"
+ },
+ "file_sha256": {
+  "neural_mpc.pt": "d62bac77554622e5",
+  "./standalone_runs\\best_sacplain_seed11.zip": "85bf367cca4cefa1",
+  "./standalone_runs\\vecnorm_best_sacplain_seed11.pkl": "a8092d3b5d93951f",
+  "./standalone_runs\\best_sacplain_seed22.zip": "e4cce9849c41815b",
+  "./standalone_runs\\vecnorm_best_sacplain_seed22.pkl": "8f487ef10f259166",
+  "./standalone_runs\\best_sacplain_seed33.zip": "e8f19dfd3741cc03",
+  "./standalone_runs\\vecnorm_best_sacplain_seed33.pkl": "dcbc4b99800cc8f8",
+  "./standalone_runs\\best_sacplain_seed44.zip": "2430fcada86ff155",
+  "./standalone_runs\\vecnorm_best_sacplain_seed44.pkl": "5919b63c457b9858",
+  "./standalone_runs\\best_sacplain_seed55.zip": "7b5eea380a4c4022",
+  "./standalone_runs\\vecnorm_best_sacplain_seed55.pkl": "3bf7b851846fd3e0"
+ },
+ "early_failure_seeds": [
+  77074,
+  77076
+ ],
+ "warnings": [],
+ "sac_sources": {
+  "sac_plain_s11": "best",
+  "sac_plain_s22": "best",
+  "sac_plain_s33": "best",
+  "sac_plain_s44": "best",
+  "sac_plain_s55": "best"
+ },
+ "hocbf_state": "measured",
+ "decision_k": 1,
+ "max_steps": 500
+}

@@ -1,0 +1,50 @@
+{
+  "comparison": "fresh_original_vs_fresh_ablation_baseline",
+  "matched_rows": 45,
+  "unique_keys": 45,
+  "tolerance": 1e-06,
+  "metrics": {
+    "surv": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    },
+    "steps": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    },
+    "rmse": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    },
+    "peak_phi": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    },
+    "u_rms": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    },
+    "du": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    },
+    "sat": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    },
+    "ekf_roll_rmse": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    },
+    "ekf_rejections": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    },
+    "solver_failures": {
+      "mismatch_count": 0,
+      "max_abs_diff": 0.0
+    }
+  },
+  "parity_pass": true,
+  "caveat": "This proves parity for this paired fresh run, not run-to-run determinism; prior run differs from fresh."
+}

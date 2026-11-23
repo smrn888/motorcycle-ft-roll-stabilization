@@ -1,0 +1,57 @@
+{
+ "args": {
+  "ckpt": "neural_mpc.pt",
+  "res": [
+   "res_main1m_best@7.5"
+  ],
+  "sac_root": "runs",
+  "seeds_sac": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "methods": [],
+  "sac_steps": 3000000,
+  "prefer": "final",
+  "cbf_alpha1": 2.0,
+  "cbf_alpha2": 2.0,
+  "lambda_slack": 10000.0,
+  "hocbf_state": "measured",
+  "mpc": false,
+  "iw": [
+   1.0
+  ],
+  "only": [
+   "healthy",
+   "act_sat_30pct",
+   "act_delay_3",
+   "dropout_imu_p0.5"
+  ],
+  "episodes": 100,
+  "seed0": 77000,
+  "bucket": 0,
+  "boot": 500,
+  "smoke": false,
+  "preflight_only": false,
+  "shard": null,
+  "resume": false,
+  "aggregate": false,
+  "out": "ablation_fault_7p5"
+ },
+ "file_sha256": {
+  "neural_mpc.pt": "d62bac77554622e5",
+  "res_main1m_best.zip": "38d7e7ed8304a794",
+  "res_main1m_best_vecnorm.pkl": "6dd754d114ad20fa"
+ },
+ "early_failure_seeds": [
+  77074,
+  77076
+ ],
+ "warnings": [],
+ "sac_sources": {},
+ "hocbf_state": "measured",
+ "decision_k": 1,
+ "max_steps": 500
+}

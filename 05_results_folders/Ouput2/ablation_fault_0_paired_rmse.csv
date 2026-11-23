@@ -1,0 +1,5 @@
+iw,scenario,A,B,n_both_alive,d_rmse,ci_lo,ci_hi,d_rmse_pct
+1.0,act_delay_3,residual,nmpc,94,0.0,0.0,0.0,0.0
+1.0,act_sat_30pct,residual,nmpc,98,0.0,0.0,0.0,0.0
+1.0,dropout_imu_p0.5,residual,nmpc,90,0.0,0.0,0.0,0.0
+1.0,healthy,residual,nmpc,98,0.0,0.0,0.0,0.0

@@ -1,0 +1,17 @@
+{
+  "case": "healthy",
+  "fault_type": "none",
+  "bucket": 0,
+  "seed": 500000,
+  "configuration": "A",
+  "controller": "residual",
+  "physics": "full",
+  "dt": 0.01,
+  "intervention": {},
+  "limitations": "no tyre-ground contact; idealized wheel spin",
+  "survived": 0,
+  "steps": 194,
+  "rmse": 0.12611351319990782,
+  "max_roll_deg": 46.97348769429265,
+  "max_gimbal_rad": 1.5707963267948966
+}

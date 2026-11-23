@@ -1,0 +1,178 @@
+{
+  "args": {
+    "episodes": 5,
+    "seed0": 10000,
+    "horizons": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "levels": [
+      8
+    ],
+    "out": "multi_sanity_13.npz"
+  },
+  "episodes": [
+    {
+      "seed": 10000,
+      "bucket": 0,
+      "level": 8,
+      "N": 10,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10000,
+      "bucket": 0,
+      "level": 8,
+      "N": 20,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10000,
+      "bucket": 0,
+      "level": 8,
+      "N": 30,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10000,
+      "bucket": 0,
+      "level": 8,
+      "N": 40,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10001,
+      "bucket": 1,
+      "level": 8,
+      "N": 10,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10001,
+      "bucket": 1,
+      "level": 8,
+      "N": 20,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10001,
+      "bucket": 1,
+      "level": 8,
+      "N": 30,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10001,
+      "bucket": 1,
+      "level": 8,
+      "N": 40,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10002,
+      "bucket": 2,
+      "level": 8,
+      "N": 10,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10002,
+      "bucket": 2,
+      "level": 8,
+      "N": 20,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10002,
+      "bucket": 2,
+      "level": 8,
+      "N": 30,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10002,
+      "bucket": 2,
+      "level": 8,
+      "N": 40,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10003,
+      "bucket": 0,
+      "level": 8,
+      "N": 10,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10003,
+      "bucket": 0,
+      "level": 8,
+      "N": 20,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10003,
+      "bucket": 0,
+      "level": 8,
+      "N": 30,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10003,
+      "bucket": 0,
+      "level": 8,
+      "N": 40,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10004,
+      "bucket": 1,
+      "level": 8,
+      "N": 10,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10004,
+      "bucket": 1,
+      "level": 8,
+      "N": 20,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10004,
+      "bucket": 1,
+      "level": 8,
+      "N": 30,
+      "steps": 500,
+      "crashed": false
+    },
+    {
+      "seed": 10004,
+      "bucket": 1,
+      "level": 8,
+      "N": 40,
+      "steps": 500,
+      "crashed": false
+    }
+  ]
+}

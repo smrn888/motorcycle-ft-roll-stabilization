@@ -1,0 +1,62 @@
+{
+ "args": {
+  "ckpt": "multiseed_runs\\pair_01_seed11\\neural_mpc.pt",
+  "res": [
+   "multiseed_runs\\pair_01_seed11\\residual_sac_best@5"
+  ],
+  "sac_root": "runs",
+  "seeds_sac": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "methods": [],
+  "sac_steps": 3000000,
+  "prefer": "best",
+  "cbf_alpha1": 2.0,
+  "cbf_alpha2": 2.0,
+  "lambda_slack": 10000.0,
+  "hocbf_state": "measured",
+  "mpc": false,
+  "iw": [
+   1.0
+  ],
+  "only": [
+   "scale_gimbal_0.5",
+   "scale_gimbal_0.7",
+   "scale_gimbal_1.3",
+   "act_bias_pos",
+   "act_bias_neg",
+   "EXTRA_act_bias_diff_0.5",
+   "act_sat_50pct",
+   "act_sat_30pct",
+   "act_stuck_zero",
+   "act_stuck_15Nm",
+   "act_delay_3",
+   "act_delay_8"
+  ],
+  "episodes": 20,
+  "seed0": 77000,
+  "bucket": 0,
+  "boot": 50,
+  "smoke": false,
+  "preflight_only": false,
+  "shard": null,
+  "resume": false,
+  "aggregate": false,
+  "out": "torque_probe_actuator"
+ },
+ "file_sha256": {
+  "multiseed_runs\\pair_01_seed11\\neural_mpc.pt": "5efece916390c091",
+  "multiseed_runs\\pair_01_seed11\\residual_sac_best.zip": "bf652a61ca25af17",
+  "multiseed_runs\\pair_01_seed11\\residual_sac_best_vecnorm.pkl": "1a3044b01d91eb91"
+ },
+ "early_failure_seeds": [],
+ "warnings": [],
+ "sac_sources": {},
+ "hocbf_state": "measured",
+ "decision_k": 1,
+ "max_steps": 500
+}

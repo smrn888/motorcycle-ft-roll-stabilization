@@ -1,0 +1,3009 @@
+
+==========================================================================================
+FILE: analyze_extended_residual_ablation.py
+
+20:     d=pd.read_csv(f)
+21:     required=['iw','bucket','seed','surv','rmse','steps']
+22:     missing=[c for c in required if c not in d]
+23:     if missing: raise ValueError(f'{f}: missing {missing}')
+24:     d['training_seed']=train;d['res_scale']=scale
+25:     d['iw']=pd.to_numeric(d['iw']);d['bucket']=pd.to_numeric(d['bucket']);d['seed']=pd.to_numeric(d['seed']);d['surv']=pd.to_numeric(d['surv'])
+26:     d['rmse']=pd.to_numeric(d['rmse']);d['steps']=pd.to_numeric(d['steps'])
+27:     if d.duplicated(['iw','bucket','seed']).any():raise ValueError(f'{f}: duplicated episode keys')
+28:     allrows.append(d)
+29: data=pd.concat(allrows,ignore_index=True)
+30: # Check paired episode sets across scales within each training checkpoint
+31: for tr,g in data.groupby('training_seed'):
+32:     sets={scale:set(zip(d.iw,d.bucket,d.seed)) for scale,d in g.groupby('res_scale')}
+33:     if len({frozenset(s) for s in sets.values()})!=1:raise ValueError(f'Train {tr}: mismatched episode keys between scales')
+34: # Only survivor RMSE is interpretable as conditional tracking error; failed RMSE is not pooled.
+35: data['survivor_rmse']=data['rmse'].where(data['surv']==1)
+36: summ=(data.groupby(['training_seed','res_scale'],as_index=False)
+37:       .agg(episodes=('surv','size'),survival=('surv','mean'),survivor_rmse=('survivor_rmse','mean'),avg_steps=('steps','mean')))
+38: by_inertia=(data.groupby(['training_seed','res_scale','iw'],as_index=False)
+39:       .agg(episodes=('surv','size'),survival=('surv','mean'),survivor_rmse=('survivor_rmse','mean')))
+40: # Pool descriptive estimates; don't treat correlated rollouts as independent training repetitions.
+41: pooled=(data.groupby('res_scale',as_index=False)
+42:       .agg(episodes=('surv','size'),survival=('surv','mean'),survivor_rmse=('survivor_rmse','mean')))
+43: # Matched comparisons against scale=0 and original scale=5, within each trained checkpoint.
+44: basecols=['training_seed','iw','bucket','seed']
+45: comparisons=[]
+46: for baseline in [0.0,5.0]:
+47:     ref=data[np.isclose(data.res_scale,baseline)][basecols+['surv','rmse']].rename(columns={'surv':'ref_surv','rmse':'ref_rmse'})
+48:     if ref.empty:continue
+49:     joined=data.merge(ref,on=basecols,validate='many_to_one')
+50:     for (tr,sc),g in joined.groupby(['training_seed','res_scale']):
+51:         joint=g[(g.surv==1)&(g.ref_surv==1)]
+52:         comparisons.append(dict(training_seed=tr,reference_scale=baseline,res_scale=sc,n=len(g),survival_diff_pp=100*(g.surv-g.ref_surv).mean(),joint_survivors=len(joint),matched_rmse_diff=(joint.rmse-joint.ref_rmse).mean() if len(joint) else np.nan))
+53: for name,frame in [('all_episodes.csv',data),('by_checkpoint.csv',summ),('by_inertia.csv',by_inertia),('pooled_descriptive.csv',pooled),('paired_vs_baselines.csv',pd.DataFrame(comparisons))]:
+54:     dest=root/name;frame.to_csv(dest,index=False);print('Saved',dest)
+55: print('\nPER CHECKPOINT\n',summ.to_string(index=False))
+56: print('\nPOOLED (DESCRIPTIVE ONLY)\n',pooled.to_string(index=False))
+57: print('\nNote: use checkpoint-aware hierarchical bootstrap for confidence intervals; not implemented here.')
+--------------------------------------------------
+
+==========================================================================================
+FILE: audit_ekf_mpc_parity.py
+
+80: check('numerical_dynamics',numerical_model_audit)
+81: 
+82: def mpc_solver_audit():
+83:     # Import setup and inspect resulting solver; no CVXPY solve needed here.
+84:     from compare_34faults_res_scale import ObservedFaultEnv
+85:     from compare_online_mpc_vs_neural_vs_residual import setup_online
+86:     checkpoint=ROOT/'neural_mpc_multi13.pt'
+87:     if not checkpoint.exists():return {'status':'MISSING_CHECKPOINT','file':str(checkpoint)}
+88:     env=ObservedFaultEnv(ckpt=str(checkpoint),decision_k=1,iw_list=(1.,),res_scale=5.)
+89:     weights,alpha,decoded=setup_online(env,20)
+90:     solver=env._solvers[20]
+91:     env.reset(seed=78000,options={'bucket':0,'iw':1.})
+92:     A,B,bias=env.dyn.linearise(float(env.state[0]))
+93:     solver.update_model(A,B,bias)
+--------------------------------------------------
+
+==========================================================================================
+FILE: baseline4_sac_cbf_train.py
+
+37: 
+38:     QP:
+39:         min  ‖τ − τ_rl‖²
+40:         s.t. Lf_ψ₁ + Lg_ψ₁·τ + α₂·ψ₁ ≥ 0
+41:              ‖τ‖_∞ ≤ TAU_MAX
+42: 
+43: [FIX-2]  norm_obs=True, norm_reward=False
+44:     ─────────────────────────────────────────────────────────────
+45:     observation شامل مقیاس‌های بسیار متفاوت است:
+46:         phi       ~ 0.5 rad
+47:         phi_dot   ~ 10 rad/s
+48:         v         ~ 8 m/s
+49:         err       ~ 0.5 rad
+50:     VecNormalize با norm_obs=True این‌ها را نرمال می‌کند → یادگیری SAC بهتر.
+51:     norm_reward=False: reward خام حفظ می‌شود تا مقایسه با RL-MPC منصفانه باشد.
+52: 
+53: [FIX-3]  متریک‌های انرژی کنترل
+54:     ─────────────────────────────────────────────────────────────
+55:     در evaluate اضافه شد:
+--------------------------------------------------
+65: 
+66:         min  ‖τ − τ_rl‖² + λ·s²
+67:         s.t. Lf_ψ₁ + Lg_ψ₁·τ + α₂·ψ₁ + s ≥ 0
+68:              s ≥ 0
+69:              ‖τ‖_∞ ≤ TAU_MAX
+70: 
+71:     QP همیشه feasible است. s* ≈ 0 در حالت عادی،
+72:     s* > 0 فقط وقتی قید اصلی غیرقابل‌ارضاست.
+73:     λ (--lambda_slack): بزرگ‌تر → قید سخت‌تر. پیشنهاد: 1e3 ~ 1e5.
+74: 
+--------------------------------------------------
+76: Observation (10-بُعدی — همان RL-TVL-MPC v17):
+77:     [φ, φ̇, δ_f, δ_r, δ̇_f, δ̇_r, v, α, φ_d, err]
+78: 
+79: Action (2-بُعدی — نرمالایز):
+80:     a ∈ [-1,1]²  →  τ = a × TAU_MAX  [N·m]
+81: 
+82: Reward (همان mpc17):
+83:     −10·err² + 5·exp(−50·err²) − 0.5·|φ̇| − 0.01·Σ|τ|
+84:     − 40·(|φ|/(π/4))⁶ + 1.5
+85: 
+--------------------------------------------------
+118: 
+119: sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+120: 
+121: from motorcycle_dynamics import (
+122:     MotorcycleDynamics, TAU_MAX, DELTA_MAX, MAX_DELTA_DOT, Ts
+123: )
+124: 
+125: # ═══════════════════════════════════════════════════════════════════════════
+126: # ثابت‌های مشترک
+127: # ═══════════════════════════════════════════════════════════════════════════
+--------------------------------------------------
+180: 
+181:     QP:
+182:         min  ‖τ − τ_rl‖²
+183:         s.t. Lf_ψ₁ + Lg_ψ₁·τ + α₂·ψ₁ ≥ 0
+184:              ‖τ‖_∞ ≤ TAU_MAX
+185:     """
+186: 
+187:     def __init__(self, dyn: MotorcycleDynamics,
+188:                  alpha1: float = 2.0,
+189:                  alpha2: float = 2.0,
+--------------------------------------------------
+212:         # ── QP با Slack Variable (always feasible) ──────────────────────
+213:         # min  ‖τ − τ_rl‖² + λ·s²
+214:         # s.t. Lf_ψ₁ + Lg_ψ₁·τ + α₂·ψ₁ + s ≥ 0
+215:         #      s ≥ 0
+216:         #      ‖τ‖_∞ ≤ TAU_MAX
+217:         #
+218:         # وقتی QP feasible باشد → s ≈ 0  (قید CBF به‌طور عملی برقرار)
+219:         # وقتی infeasible باشد  → s > 0  (slack جبران می‌کند، سقوط نمی‌دهد)
+220:         self._tau    = _cp.Variable(2)
+221:         self._slack  = _cp.Variable(1, nonneg=True)   # s ≥ 0
+--------------------------------------------------
+237:             >= 0
+238:         )
+239:         self._qp = _cp.Problem(
+240:             _cp.Minimize(cost),
+241:             [hocbf_c, _cp.norm_inf(self._tau) <= TAU_MAX]
+242:             # قید s ≥ 0 از طریق nonneg=True در Variable تعریف شده
+243:         )
+244: 
+245:         self.n_filtered   = 0
+246:         self.n_total      = 0
+--------------------------------------------------
+304: 
+305:         # بررسی ایمنی
+306:         cbf_val = Lf_psi1 + Lg_psi1 @ tau_rl + self.alpha2 * psi1
+307:         if cbf_val >= 0 and psi1 >= 0:
+308:             return np.clip(tau_rl, -TAU_MAX, TAU_MAX)
+309: 
+310:         # QP با slack
+311:         self._tau_rl.value  = tau_rl
+312:         self._Lf_p.value    = np.array([Lf_psi1])
+313:         self._Lg_p.value    = Lg_psi1
+--------------------------------------------------
+327:                 # ردیابی: آیا slack فعال شد؟
+328:                 s_val = float(self._slack.value[0]) if self._slack.value is not None else 0.0
+329:                 if s_val > 1e-3:
+330:                     self.n_slack_used += 1
+331:                 return np.clip(self._tau.value, -TAU_MAX, TAU_MAX)
+332:         except Exception:
+333:             pass
+334: 
+335:         # fallback اضطراری: با slack QP نباید به اینجا برسد،
+336:         # ولی برای هر احتمالی tau_rl clip‌شده برمی‌گردانیم.
+337:         self.n_filtered += 1
+338:         return np.clip(tau_rl, -TAU_MAX, TAU_MAX)
+339: 
+340:     def reset_stats(self):
+341:         self.n_filtered   = 0
+342:         self.n_total      = 0
+343:         self.n_slack_used = 0
+--------------------------------------------------
+360:     """
+361:     محیط SAC (با یا بدون HOCBF).
+362: 
+363:     Obs  (10): [φ, φ̇, δ_f, δ_r, δ̇_f, δ̇_r, v, α, φ_d, err]
+364:     Act   (2): τ_norm ∈ [-1,1]²  →  τ = a·TAU_MAX  [N·m]
+365:     Reward   : همان mpc17 (raw، بدون normalization)
+366:     """
+367: 
+368:     metadata = {"render_modes": []}
+369: 
+--------------------------------------------------
+394:             20.0, 20.0,
+395:             20.0, np.pi / 3,
+396:             np.pi / 2, np.pi,
+397:         ], dtype=np.float32)
+398:         self.observation_space = spaces.Box(
+399:             -obs_high, obs_high, dtype=np.float32)
+400: 
+401:         # ── Action Space: normalized torque ─────────────────────────────
+402:         self.action_space = spaces.Box(
+403:             np.full(2, -1.0, np.float32),
+--------------------------------------------------
+455:     def step(self, rl_action: np.ndarray):
+456:         self._steps += 1
+457: 
+458:         # denormalize
+459:         tau_rl = np.clip(rl_action, -1.0, 1.0).astype(np.float64) * TAU_MAX
+460: 
+461:         # HOCBF filter
+462:         if self.hocbf is not None:
+463:             tau_applied    = self.hocbf.filter(self.state, tau_rl)
+464:             cbf_intervened = bool(np.linalg.norm(tau_applied - tau_rl) > 1e-3)
+--------------------------------------------------
+584:     try:
+585:         from stable_baselines3 import SAC
+586:         from stable_baselines3.common.env_util import make_vec_env
+587:         from stable_baselines3.common.vec_env import (
+588:             SubprocVecEnv, VecNormalize, DummyVecEnv)
+589:         from stable_baselines3.common.callbacks import (
+590:             EvalCallback, CheckpointCallback)
+591:         from stable_baselines3.common.monitor import Monitor
+592:     except ImportError:
+593:         raise ImportError(
+--------------------------------------------------
+635:     )
+636: 
+637:     # [FIX-4] norm_obs=True — مقیاس‌های observation بسیار متفاوت‌اند:
+638:     # phi ~ 0.5 rad، phi_dot ~ 10 rad/s، v ~ 8 m/s، err ~ 0.5 rad
+639:     # VecNormalize با norm_obs=True این‌ها را همگن می‌کند و یادگیری SAC را
+640:     # بهبود می‌دهد. norm_reward=False حفظ می‌شود تا مقایسه با RL-MPC منصفانه باشد.
+641:     env = VecNormalize(
+642:         raw_env,
+643:         norm_obs=True,
+644:         norm_reward=False,   # ← raw reward، نه normalized
+645:         clip_obs=10.0,
+646:         clip_reward=10.0,
+--------------------------------------------------
+654:                          cbf_alpha2=cbf_alpha2,
+655:                          lambda_slack=lambda_slack)
+656:     )])
+657:     eval_raw.envs[0].set_curriculum_level(4)
+658:     eval_env = VecNormalize(
+659:         eval_raw,
+660:         norm_obs=True, norm_reward=False,
+661:         clip_obs=10.0, clip_reward=10.0, gamma=0.99, training=False,
+662:     )
+663: 
+--------------------------------------------------
+748: ) -> dict:
+749:     """ارزیابی SAC Plain یا SAC+HOCBF."""
+750:     try:
+751:         from stable_baselines3 import SAC as _SAC
+752:         from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+753:         from stable_baselines3.common.monitor import Monitor
+754:     except ImportError:
+755:         _SAC = None
+756: 
+757:     label = "SAC + HOCBF" if use_cbf else "SAC Plain"
+--------------------------------------------------
+762:     clean = model_path.replace(".zip", "")
+763: 
+764:     # ── ساخت محیط ارزیابی ──────────────────────────────────────────────────
+765:     # باید همان pipeline ای که در train بود داشته باشیم:
+766:     # MotorcycleSACEnv → Monitor → DummyVecEnv → VecNormalize
+767:     # تا observation normalization دقیقاً مثل train باشد.
+768:     raw_env = MotorcycleSACEnv(
+769:         use_cbf=use_cbf, cbf_alpha1=cbf_alpha1, cbf_alpha2=cbf_alpha2,
+770:         lambda_slack=lambda_slack)
+771:     raw_env.set_curriculum_level(curriculum_level)
+--------------------------------------------------
+776:     vecnorm_loaded = False
+777:     if _SAC is not None and os.path.exists(vecnorm_path):
+778:         # آمار میانگین/واریانس که در train یاد گرفته را load می‌کنیم.
+779:         # training=False: آمار در eval به‌روزرسانی نمی‌شود.
+780:         env = VecNormalize.load(vecnorm_path, vec_raw)
+781:         env.training = False
+782:         env.norm_reward = False
+783:         vecnorm_loaded = True
+784:         print(f"  VecNormalize stats → {vecnorm_path}")
+785:     else:
+786:         # اگر فایل آمار پیدا نشد، بدون normalization ادامه می‌دهیم
+787:         # و هشدار می‌دهیم.
+788:         env = VecNormalize(
+789:             vec_raw,
+790:             norm_obs=False, norm_reward=False,
+791:             training=False,
+792:         )
+793:         if _SAC is not None:
+--------------------------------------------------
+973: # ═══════════════════════════════════════════════════════════════════════════
+974: # main
+975: # ═══════════════════════════════════════════════════════════════════════════
+976: 
+977: def main():
+978:     parser = argparse.ArgumentParser()
+979:     parser.add_argument("--mode",
+980:                         choices=["train", "eval", "both"],
+981:                         default="train")
+982:     parser.add_argument("--model",
+--------------------------------------------------
+
+==========================================================================================
+FILE: compare_ekf_confirmatory_subset.py
+
+12:     with Path(path).open(encoding='utf-8-sig',newline='') as f:
+13:         return list(csv.DictReader(f))
+14: 
+15: 
+16: def main():
+17:     p=argparse.ArgumentParser()
+18:     p.add_argument('--old', default='ekf_confirm_78000_N20_episodes.csv')
+19:     p.add_argument('--new', default='ekf_reproduce_N20_78000_10seeds_episodes.csv')
+20:     p.add_argument('--seed0',type=int,default=78000)
+21:     p.add_argument('--nseeds',type=int,default=10)
+--------------------------------------------------
+
+==========================================================================================
+FILE: compare_online_mpc_vs_neural_vs_residual.py
+
+9: import json
+10: import time
+11: from pathlib import Path
+12: import numpy as np
+13: from motorcycle_dynamics import TAU_MAX
+14: from compare_34faults_res_scale import ObservedFaultEnv, Policy
+15: from final_fault_benchmark import SCENARIOS
+16: 
+17: FIELDS = ['controller','scenario','fault_type','bucket','seed','iw','surv','rmse','steps',
+18:           'u_rms','u2_sum','du','sat','peak_phi','wall_s','solve_calls',
+19:           'solve_failures','solve_ms_total','solve_ms_mean','solve_statuses']
+--------------------------------------------------
+37:         raise RuntimeError('Missing LP_ALPHA; cannot reproduce online weight smoothing')
+38:     return weights, float(lp_alpha), int(decoded_n)
+39: 
+40: 
+41: def rollout(env, kind, seed, bucket, iw, policy, horizon, weights, lp_alpha):
+42:     env.reset(seed=seed, options={'bucket':bucket, 'iw':iw})
+43:     env._u_last = np.zeros(2, dtype=float)
+44:     env._horizon = horizon
+45:     solver = None
+46:     w = weights.copy()
+--------------------------------------------------
+57:     start = time.perf_counter()
+58:     for _ in range(env.MAX_STEPS):
+59:         if kind == 'online_mpc':
+60:             # Use the SAME faulted sensor stream used by the neural controllers.
+61:             x0 = env._obs10()[:6].astype(float)
+62:             xd = np.zeros(6)
+63:             xd[0] = env._desired_roll()
+64:             w = (1.0 - lp_alpha)*w + lp_alpha*weights
+65:             qd = np.array([w[0],w[1],w[2],w[2],0.1*w[2],0.1*w[2]])
+66:             rd = np.array([w[3],w[3]])
+--------------------------------------------------
+69:             pc = env._dare_chol(A,B,Q_diag=qd,R_diag=rd)
+70:             # The MPCSolver maintains its own previous-control penalty state.
+71:             solver.u_prev.value = env._u_last.copy()
+72:             t0 = time.perf_counter()
+73:             u = np.clip(solver.solve(x0=x0,xd=xd,Q_diag=qd,R_diag=rd,P_chol=pc),-TAU_MAX,TAU_MAX)
+74:             solve_total += time.perf_counter()-t0
+75:             calls += 1
+76:             status = str(solver.last_solve_status)
+77:             statuses[status] = statuses.get(status,0)+1
+78:             if status not in ('optimal','optimal_inaccurate'):
+79:                 failures += 1
+80:         elif kind == 'neural_mpc':
+81:             xx = np.concatenate([env._obs10(),env._u_last,[horizon]]).astype(np.float32)
+82:             u = np.clip(env._nn_u(xx),-TAU_MAX,TAU_MAX)
+83:         elif kind == 'residual_adaptive':
+84:             obs = env._make_obs()
+85:             action = np.asarray(policy(obs),float)
+86:             assert action.shape == (3,)
+87:             k = min(int((np.clip(action[2],-1,1)+1)*0.5*len(env.HORIZONS)),len(env.HORIZONS)-1)
+88:             env._horizon = env.HORIZONS[k]
+89:             xx = np.concatenate([env._obs10(),env._u_last,[env._horizon]]).astype(np.float32)
+90:             u = np.clip(env._nn_u(xx)+env.res_scale*np.clip(action[:2],-1,1),-TAU_MAX,TAU_MAX)
+91:         else:
+92:             raise ValueError(kind)
+93:         env._steps += 1
+94:         env.state = env._plant_dyn.step(env.state,u)
+95:         env.v = float(np.clip(env.v+env.np_random.normal(0.,env.V_NOISE),1.,8.))
+--------------------------------------------------
+106:     ua = np.asarray(applied,float)
+107:     return dict(surv=int(not crashed),rmse=float(np.sqrt(err_sq/len(ua))),steps=len(ua),
+108:                 u_rms=float(np.sqrt(np.mean(ua**2))),u2_sum=float(np.sum(ua**2)),
+109:                 du=float(np.linalg.norm(np.diff(ua,axis=0),axis=1).mean()) if len(ua)>1 else 0.,
+110:                 sat=float(np.mean(np.any(np.abs(ua)>=.99*TAU_MAX,axis=1))),
+111:                 peak_phi=float(np.rad2deg(peak)),wall_s=time.perf_counter()-start,
+112:                 solve_calls=calls,solve_failures=failures,solve_ms_total=solve_total*1000,
+113:                 solve_ms_mean=solve_total*1000/calls if calls else 0.,
+114:                 solve_statuses=json.dumps(statuses,sort_keys=True))
+115: 
+116: 
+117: def main():
+118:     p=argparse.ArgumentParser()
+119:     p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+120:     p.add_argument('--res_stem',default='sac_seed404_fromscratch_1m_best_eval')
+121:     p.add_argument('--res_scale',type=float,default=5.)
+122:     p.add_argument('--horizon',type=int,default=20)
+123:     p.add_argument('--episodes',type=int,default=1)
+124:     p.add_argument('--seed0',type=int,default=610000)
+125:     p.add_argument('--buckets',type=int,nargs='+',default=[0])
+126:     p.add_argument('--iw',type=float,default=1.)
+--------------------------------------------------
+130:     a=p.parse_args()
+131:     if a.episodes<1 or not set(a.buckets).issubset({0,1,2}):p.error('invalid episodes/buckets')
+132:     for f in [a.ckpt,a.res_stem+'.zip',a.res_stem+'_vecnorm.pkl']:
+133:         if not Path(f).is_file():p.error('Missing: '+f)
+134:     env=ObservedFaultEnv(ckpt=a.ckpt,decision_k=1,iw_list=(1.,),res_scale=a.res_scale)
+135:     weights,lp_alpha,decoded_n=setup_online(env,a.horizon)
+136:     residual=Policy(Path(a.res_stem+'.zip'),Path(a.res_stem+'_vecnorm.pkl'),15,3)
+137:     print('PREFLIGHT: online N=',a.horizon,'zero-action decoded N=',decoded_n,
+138:           'weights=',weights,'LP_ALPHA=',lp_alpha,'residual_steps=',residual.steps,flush=True)
+139:     if decoded_n!=a.horizon:
+140:         print('WARNING: zero-action MPC horizon differs from selected N; explicit fixed-N ablation',flush=True)
+141:     for bucket in a.buckets:
+--------------------------------------------------
+
+==========================================================================================
+FILE: diagnose_online_mpc_ekf_trace.py
+
+8: import json
+9: from pathlib import Path
+10: from collections import Counter
+11: import numpy as np
+12: from motorcycle_dynamics import TAU_MAX
+13: from compare_34faults_res_scale import ObservedFaultEnv
+14: from compare_online_mpc_vs_neural_vs_residual import setup_online
+15: from final_fault_benchmark import SCENARIOS
+16: from evaluate_online_mpc_ekf_100seeds import SixStateEKF
+17: 
+18: class TracedEKF(SixStateEKF):
+--------------------------------------------------
+36:     if a.horizon not in (10, 15, 20, 30, 40):
+37:         raise ValueError('Requested horizon not supported by default MPC pool')
+38:     if any(v <= 0 for v in a.q + a.r + a.p0) or a.gate <= 0:
+39:         raise ValueError('EKF standard deviations and gate must be positive')
+40:     env = ObservedFaultEnv(ckpt=a.ckpt, decision_k=1, iw_list=(1.0,), res_scale=5.0)
+41:     weights, alpha, decoded = setup_online(env, a.horizon)
+42:     env.scenario = cases[a.scenario]
+43:     env.reset(seed=a.seed, options={'bucket': a.bucket, 'iw': a.iw})
+44:     env._u_last = np.zeros(2, dtype=float)
+45:     env._horizon = a.horizon
+--------------------------------------------------
+47:     solver.reset_warm_start()
+48:     qmpc = np.array([weights[0], weights[1], weights[2], weights[2], .1*weights[2], .1*weights[2]], float)
+49:     rmpc = np.array([weights[3], weights[3]], float)
+50:     ekf = TracedEKF(env.dyn, a.q, a.r, a.p0, a.gate)
+51:     # IMPORTANT: ObservedFaultEnv._obs10() may be stateful; sample only once per time step.
+52:     y0 = np.asarray(env._obs10()[:6], float).copy()
+53:     ekf.reset(y0)
+54:     rows = []
+55:     statuses = Counter()
+56:     for k in range(env.MAX_STEPS):
+57:         if k == 0:
+58:             y = y0
+59:             nis, rejected = float('nan'), 0
+60:             innov = np.array([float('nan'), float('nan')])
+61:         else:
+62:             y = np.asarray(env._obs10()[:6], float).copy()
+63:             nis, rejected, innov = ekf.correct_with_trace(y)
+64:         xhat = ekf.x.copy()
+65:         xtrue = np.asarray(env.state[:6], float).copy()  # DIAGNOSTICS ONLY
+66:         xd = np.zeros(6); xd[0] = env._desired_roll()
+67:         try:
+68:             A, B, bias = env.dyn.linearise(float(xhat[0]))
+69:             solver.update_model(A, B, bias)
+--------------------------------------------------
+75:             u = np.zeros(2); status = 'pre_solve_exception:' + type(exc).__name__
+76:         valid = status in ('optimal', 'optimal_inaccurate') and u.shape == (2,) and np.isfinite(u).all()
+77:         if not valid:
+78:             u = np.zeros(2)
+79:         u = np.clip(u, -TAU_MAX, TAU_MAX)
+80:         statuses[status] += 1
+81:         row = dict(step=k, time_s=k*env.dyn.Ts,
+82:                    phi_true_rad=xtrue[0], phi_measured_rad=y[0], phi_ekf_rad=xhat[0],
+83:                    phi_true_deg=np.degrees(xtrue[0]), phi_measured_deg=np.degrees(y[0]),
+84:                    phi_ekf_deg=np.degrees(xhat[0]),
+--------------------------------------------------
+89:                    p_roll=ekf.P[0,0], p_roll_rate=ekf.P[1,1],
+90:                    torque_front=u[0], torque_rear=u[1], solver_status=status,
+91:                    solver_valid=int(valid), horizon=a.horizon)
+92:         rows.append(row)
+93:         ekf.predict(u)
+94:         env._steps += 1
+95:         env.state = env._plant_dyn.step(env.state, u)
+96:         env.v = float(np.clip(env.v + env.np_random.normal(0., env.V_NOISE), 1., 8.))
+97:         env.alpha = float(np.clip(env.alpha + env.np_random.normal(0., env.ALPHA_NOISE), -.20, .20))
+98:         env._u_last = u.copy()
+--------------------------------------------------
+142:     print('JSON:',str(prefix) + '_summary.json')
+143: 
+144: if __name__=='__main__':
+145:     p=argparse.ArgumentParser(description=__doc__)
+146:     p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+147:     p.add_argument('--scenario',default='dropout_imu_p0.5')
+148:     p.add_argument('--seed',type=int,default=77000)
+149:     p.add_argument('--bucket',type=int,choices=[0,1,2],default=0)
+150:     p.add_argument('--horizon',type=int,default=20)
+151:     p.add_argument('--iw',type=float,default=1.0)
+--------------------------------------------------
+
+==========================================================================================
+FILE: ekf_benchmark_plan.py
+
+14:         'recovery_run':5,'recovery_factor':4.,'recovery_cap':1.}
+15: 
+16: def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+17: 
+18: def main():
+19:     p=argparse.ArgumentParser()
+20:     p.add_argument('--original',default='ekf_pilot_N20_episodes.csv')
+21:     p.add_argument('--ablation',default='ekf_ablation_pilot_N20_episodes.csv')
+22:     p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+23:     p.add_argument('--seed0',type=int,default=78000,help='Independent holdout, not 77000-77004 pilot')
+24:     p.add_argument('--episodes',type=int,default=100)
+25:     p.add_argument('--out',default='ekf_frozen_benchmark')
+26:     p.add_argument('--prepare_only',action='store_true',help='Create frozen manifest but no run script')
+27:     a=p.parse_args()
+--------------------------------------------------
+
+==========================================================================================
+FILE: ekf_parity_gate.py
+
+9: KEY = ['scenario','bucket','seed']
+10: EXACT = ['surv','steps','solver_failures','ekf_rejections']
+11: FLOAT = ['rmse','peak_phi','u_rms','du','sat','ekf_roll_rmse']
+12: 
+13: def main():
+14:     p=argparse.ArgumentParser()
+15:     p.add_argument('--original',default='ekf_pilot_N20_episodes.csv')
+16:     p.add_argument('--ablation',default='ekf_ablation_pilot_N20_episodes.csv')
+17:     p.add_argument('--atol',type=float,default=1e-6)
+18:     p.add_argument('--out',default='ekf_parity_report')
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_four_residual_models.py
+
+39:             device="cpu",
+40:             custom_objects={
+41:                 "lr_schedule": lambda _: 0.0,
+42:                 "train_freq": (1, "step"),
+43:                 "observation_space": spaces.Box(
+44:                     -np.inf, np.inf, shape=(15,), dtype=np.float32
+45:                 ),
+46:                 "action_space": spaces.Box(
+47:                     -1.0, 1.0, shape=(3,), dtype=np.float32
+48:                 ),
+--------------------------------------------------
+66: def export_stats(stem):
+67:     with open(ROOT / (stem + "_vecnorm.pkl"), "rb") as f:
+68:         vn = pickle.load(f)
+69: 
+70:     assert vn.obs_rms.mean.shape == (15,)
+71:     assert vn.obs_rms.var.shape == (15,)
+72: 
+73:     np.savez(
+74:         ROOT / (stem + "_stats.npz"),
+75:         obs_mean=vn.obs_rms.mean,
+76:         obs_var=vn.obs_rms.var,
+77:         obs_count=np.asarray(vn.obs_rms.count),
+78:         ret_mean=vn.ret_rms.mean,
+79:         ret_var=vn.ret_rms.var,
+80:         ret_count=np.asarray(vn.ret_rms.count),
+81:         clip_obs=np.asarray(vn.clip_obs),
+82:         clip_reward=np.asarray(vn.clip_reward),
+--------------------------------------------------
+119:                 dst.writestr(item, payload)
+120: 
+121: def rebuild_vecnorm(stem):
+122:     from gymnasium import Env, spaces
+123:     from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+124: 
+125:     data = np.load(ROOT / (stem + "_stats.npz"), allow_pickle=False)
+126: 
+127:     class DummyEnv(Env):
+128:         def __init__(self):
+129:             super().__init__()
+130:             self.observation_space = spaces.Box(
+131:                 -np.inf, np.inf, shape=(15,), dtype=np.float32
+132:             )
+133:             self.action_space = spaces.Box(
+134:                 -1.0, 1.0, shape=(3,), dtype=np.float32
+135:             )
+--------------------------------------------------
+142:             return np.zeros(15, dtype=np.float32), 0.0, False, False, {}
+143: 
+144:     env = DummyVecEnv([lambda: DummyEnv()])
+145: 
+146:     vn = VecNormalize(
+147:         env,
+148:         training=False,
+149:         norm_obs=bool(data["norm_obs"].item()),
+150:         norm_reward=bool(data["norm_reward"].item()),
+151:         clip_obs=float(data["clip_obs"].item()),
+--------------------------------------------------
+159:         ("var", "obs_var"),
+160:         ("count", "obs_count"),
+161:     ]:
+162:         setattr(
+163:             vn.obs_rms,
+164:             name,
+165:             float(data[key].item()) if name == "count" else data[key].copy(),
+166:         )
+167: 
+168:     for name, key in [
+--------------------------------------------------
+201: 
+202:     print("EPISODE ROWS:", len(rows), flush=True)
+203:     assert len(rows) == 510, f"Expected 510 rows, got {len(rows)}"
+204: 
+205: def main():
+206:     if not PY2.exists():
+207:         raise FileNotFoundError(PY2)
+208: 
+209:     if len(sys.argv) > 1 and sys.argv[1] == "py2":
+210:         stem, task = sys.argv[2], sys.argv[3]
+--------------------------------------------------
+245:         verify(stem)
+246:         print("COMPATIBILITY VERIFIED", flush=True)
+247: 
+248:         run([
+249:             PY1, "-u", ROOT / "compare_34faults_res_scale.py",
+250:             "--ckpt", "neural_mpc_multi13.pt",
+251:             "--pure_dir", "standalone_runs",
+252:             "--pure_seed", "22",
+253:             "--pure_variant", "final",
+254:             "--res_stem", stem + "_eval",
+255:             "--res_scale", "5",
+256:             "--skip_pure",
+257:             "--episodes", "5",
+258:             "--seed0", "610000",
+259:             "--buckets", "0", "1", "2",
+260:             "--out", out,
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_legacy_residual_5seeds_heldout.py
+
+4: import argparse, csv, json, time
+5: from pathlib import Path
+6: import numpy as np
+7: from stable_baselines3 import SAC
+8: from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+9: from motorcycle_env_residual import MotorcycleEnvResidual
+10: from motorcycle_env_standalone import MotorcycleEnvStandalone
+11: 
+12: FIELDS=['controller','train_seed','variant','iw','bucket','seed','surv','rmse','steps','mean_abs_u','mean_abs_delta_u','control_energy','wall_s']
+13: 
+--------------------------------------------------
+28:                     n+=1
+29:         print(f'COMPATIBILITY PASS: {n} initial conditions and physical plant transitions',flush=True)
+30:     finally: stand.close()
+31: 
+32: def main():
+33:     p=argparse.ArgumentParser()
+34:     p.add_argument('--model_dir',default='multiseed_runs')
+35:     p.add_argument('--train_seeds',type=int,nargs='+',default=[11,22,33,44,55])
+36:     p.add_argument('--variants',nargs='+',choices=['best','final'],default=['best'])
+37:     p.add_argument('--seeds',type=int,default=50)
+38:     p.add_argument('--seed0',type=int,default=400000)
+39:     p.add_argument('--iw',type=float,nargs='+',default=[1.0,.8,.7,.6,.5])
+40:     p.add_argument('--buckets',type=int,nargs='+',default=[0,1,2])
+41:     p.add_argument('--res_scale',type=float,default=5.0)
+42:     p.add_argument('--out',default='heldout_legacy_residual_5seeds_400000')
+43:     p.add_argument('--gate_only',action='store_true')
+44:     a=p.parse_args()
+45:     if a.seeds<1 or a.seed0<0 or len(set(a.train_seeds))!=len(a.train_seeds): p.error('Invalid seeds')
+46:     if any(iw<=0 for iw in a.iw) or any(b not in (0,1,2) for b in a.buckets): p.error('Invalid iw/buckets')
+--------------------------------------------------
+54:             if not all(x.is_file() for x in (ckpt,model,norm)):
+55:                 p.error(f'Missing paired artifacts for seed={seed}, {variant}: {ckpt}, {model}, {norm}')
+56:             paths[(seed,variant)]=(ckpt,model,norm)
+57:     first_ckpt=next(iter(paths.values()))[0]
+58:     env=MotorcycleEnvResidual(ckpt=str(first_ckpt),res_scale=a.res_scale,decision_k=1,iw_list=(1.,))
+59:     try: gate(env,a.iw,a.buckets,a.seed0)
+60:     finally: env.close()
+61:     if a.gate_only:
+62:         print('Gate-only completed; no evaluation run.');return
+63:     config={k:v for k,v in vars(a).items() if k!='gate_only'}
+--------------------------------------------------
+83:         if f.tell()==0:w.writeheader();f.flush()
+84:         for (seed,variant),(ckpt,mp,vp) in paths.items():
+85:             if all((seed,variant,float(iw),bucket,ss) in done for iw in a.iw for bucket in a.buckets for ss in range(a.seed0,a.seed0+a.seeds)):
+86:                 print('SKIP complete',seed,variant,flush=True);continue
+87:             kw=dict(ckpt=str(ckpt),res_scale=a.res_scale,decision_k=1,iw_list=(1.,))
+88:             dummy=DummyVecEnv([lambda kw=kw:MotorcycleEnvResidual(**kw)])
+89:             norm=VecNormalize.load(str(vp),dummy);norm.training=False;norm.norm_reward=False
+90:             model=SAC.load(str(mp),device='cpu')
+91:             if model.observation_space.shape!=(12,) or model.action_space.shape!=(2,):
+92:                 raise RuntimeError(f'Unexpected policy spaces {mp}: {model.observation_space}, {model.action_space}')
+93:             env=MotorcycleEnvResidual(**kw)
+94:             try:
+95:                 print('Evaluating',seed,variant,'with',ckpt,flush=True)
+96:                 for iw in a.iw:
+97:                     for bucket in a.buckets:
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_neural_residual_adaptive_100seeds_patched.py
+
+1: """Matched adaptive-horizon evaluation: fixed-N Neural MPC and 5 residual SAC training seeds.
+2: Run from the project root, with compare_34faults_res_scale.py available.
+3: Never retrains or edits project modules. Resume-safe CSV and config.
+4: """
+5: import argparse, csv, json, time, hashlib
+6: from pathlib import Path
+7: import numpy as np
+8: from motorcycle_dynamics import TAU_MAX
+9: from compare_34faults_res_scale import ObservedFaultEnv, Policy
+10: from final_fault_benchmark import SCENARIOS
+11: 
+12: DEFAULT_ONLY=['healthy','dropout_imu_p0.3','dropout_imu_p0.5','intermittent_imu_burst20','stuck_phi_15deg']
+13: FIELDS=['controller','training_seed','checkpoint_stem','scenario','fault_type','bucket','seed','iw','horizon','surv','steps','rmse','u_rms','du','sat','peak_phi','mean_horizon','horizon_switches','wall_s']
+14: 
+--------------------------------------------------
+32:     env._u_last=np.zeros(2,dtype=float)
+33:     e2=0.;applied=[];hs=[];peak=0.;crashed=False;start=time.perf_counter()
+34:     for _ in range(env.MAX_STEPS):
+35:         if pol is None:
+36:             xx=np.concatenate([env._obs10(),env._u_last,[horizon]]).astype(np.float32)
+37:             u=np.clip(env._nn_u(xx),-TAU_MAX,TAU_MAX)
+38:         else:
+39:             obs=env._make_obs()
+40:             action=np.asarray(pol(obs),float)
+41:             if action.shape!=(3,):raise RuntimeError(f'Expected residual action (3,), got {action.shape}')
+42:             if adaptive:
+43:                 k=min(int((np.clip(action[2],-1,1)+1.)*.5*len(env.HORIZONS)),len(env.HORIZONS)-1)
+44:                 env._horizon=env.HORIZONS[k]
+45:             hz=env._horizon if adaptive else horizon
+46:             hs.append(hz)
+47:             xx=np.concatenate([env._obs10(),env._u_last,[hz]]).astype(np.float32)
+48:             base=env._nn_u(xx)
+49:             u=np.clip(base+env.res_scale*np.clip(action[:2],-1,1),-TAU_MAX,TAU_MAX)
+50:         env._steps+=1
+51:         env.state=env._plant_dyn.step(env.state,u)
+52:         env.v=float(np.clip(env.v+env.np_random.normal(0.,env.V_NOISE),1.,8.))
+53:         env.alpha=float(np.clip(env.alpha+env.np_random.normal(0.,env.ALPHA_NOISE),-.20,.20))
+54:         phi=float(env.state[0]);err=phi-env._desired_roll()
+--------------------------------------------------
+59:     ua=np.asarray(applied,float);n=len(ua)
+60:     return dict(surv=int(not crashed),steps=n,rmse=float(np.sqrt(e2/n)),
+61:         u_rms=float(np.sqrt(np.mean(ua**2))),
+62:         du=float(np.linalg.norm(np.diff(ua,axis=0),axis=1).mean()) if n>1 else 0.,
+63:         sat=float(np.mean(np.any(np.abs(ua)>=.99*TAU_MAX,axis=1))),
+64:         peak_phi=float(np.rad2deg(peak)),mean_horizon=float(np.mean(hs)) if hs else float(horizon),
+65:         horizon_switches=int(np.count_nonzero(np.diff(hs))) if len(hs)>1 else 0,
+66:         wall_s=time.perf_counter()-start)
+67: 
+68: def main():
+69:     p=argparse.ArgumentParser(description=__doc__)
+70:     p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+71:     p.add_argument('--res_stems',nargs=5,help='Exactly 5 checkpoint stems in order of training seeds 101 202 303 404 505 (no extensions)')
+72:     p.add_argument('--training_seeds',nargs=5,type=int,default=[101,202,303,404,505])
+73:     p.add_argument('--seed0',type=int,default=77000)
+74:     p.add_argument('--episodes',type=int,default=100)
+75:     p.add_argument('--buckets',nargs='+',type=int,default=[0,1,2])
+76:     p.add_argument('--only',nargs='+',default=DEFAULT_ONLY)
+77:     p.add_argument('--horizon',type=int,default=20)
+78:     p.add_argument('--iw',type=float,default=1.)
+79:     p.add_argument('--res_scale',type=float,default=5.)
+80:     p.add_argument('--out',default='neural_residual_adaptive_77000_100seeds')
+81:     p.add_argument('--preflight_only',action='store_true')
+82:     p.add_argument('--adaptive',action='store_true',help='Enable SAC action[2] to select horizon; neural_mpc stays fixed N')
+83:     a=p.parse_args()
+84:     if a.horizon not in (10,20,30,40):p.error('Horizon must be in 10 20 30 40')
+--------------------------------------------------
+90:         for suffix in ('.zip','_vecnorm.pkl'):
+91:             if not Path(stem+suffix).is_file():p.error('Missing: '+stem+suffix)
+92:     scenarios=[s for s in SCENARIOS if s[0] in a.only]
+93:     if set(a.only)!={s[0] for s in scenarios}:p.error('Unknown scenario name(s)')
+94:     policies={str(s):Policy(Path(stem+'.zip'),Path(stem+'_vecnorm.pkl'),15,3)
+95:               for s,stem in zip(a.training_seeds,stems)}
+96:     env=ObservedFaultEnv(ckpt=a.ckpt,decision_k=1,iw_list=(1.,),res_scale=a.res_scale)
+97:     for b in a.buckets:
+98:         env.scenario=('none',{})
+99:         env.reset(seed=a.seed0,options={'bucket':b,'iw':a.iw})
+100:         old=(env.state.copy(),env.v,env.alpha,env._desired_roll())
+101:         env.reset(seed=a.seed0,options={'bucket':b,'iw':a.iw})
+102:         np.testing.assert_array_equal(old[0],env.state)
+103:         assert old[1:]==(env.v,env.alpha,env._desired_roll())
+104:     print('PREFLIGHT OK; INITIAL STATE GATE PASS; N=',a.horizon,'res_scale=',a.res_scale,flush=True)
+105:     print('CHECKPOINTS:',list(zip(a.training_seeds,stems)),flush=True)
+106:     if a.preflight_only:return
+107:     ep=Path(a.out+'_episodes.csv');cfgp=Path(a.out+'_config.json');summ=Path(a.out+'_summary.csv')
+108:     cfg=dict(ckpt=str(Path(a.ckpt).resolve()),training_seeds=a.training_seeds,
+109:         stems=[str(Path(s).resolve()) for s in stems],seed0=a.seed0,episodes=a.episodes,
+110:         buckets=a.buckets,only=a.only,horizon=a.horizon,iw=a.iw,res_scale=a.res_scale,
+111:         adaptive=a.adaptive,method=('frozen residual policy, adaptive horizon from action[2]; neural_mpc fixed N' if a.adaptive else 'frozen residual policy, horizon forced to N; residual action[2] ignored'))
+112:     if cfgp.exists():
+113:         if json.loads(cfgp.read_text(encoding='utf-8'))!=cfg:p.error('Existing config mismatch; choose a new --out')
+114:     elif ep.exists():p.error('Episode CSV exists without config; choose new --out')
+115:     else:cfgp.write_text(json.dumps(cfg,ensure_ascii=False,indent=2),encoding='utf-8')
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_neural_residual_fixedN20_100seeds.py
+
+1: """Matched fixed-N evaluation: Neural MPC and 5 residual SAC training seeds.
+2: Run from the project root, with compare_34faults_res_scale.py available.
+3: Never retrains or edits project modules. Resume-safe CSV and config.
+4: """
+5: import argparse, csv, json, time, hashlib
+6: from pathlib import Path
+7: import numpy as np
+8: from motorcycle_dynamics import TAU_MAX
+9: from compare_34faults_res_scale import ObservedFaultEnv, Policy
+10: from final_fault_benchmark import SCENARIOS
+11: 
+12: DEFAULT_ONLY=['healthy','dropout_imu_p0.3','dropout_imu_p0.5','intermittent_imu_burst20','stuck_phi_15deg']
+13: FIELDS=['controller','training_seed','checkpoint_stem','scenario','fault_type','bucket','seed','iw','horizon','surv','steps','rmse','u_rms','du','sat','peak_phi','wall_s']
+14: 
+--------------------------------------------------
+32:     env._u_last=np.zeros(2,dtype=float)
+33:     e2=0.;applied=[];peak=0.;crashed=False;start=time.perf_counter()
+34:     for _ in range(env.MAX_STEPS):
+35:         if pol is None:
+36:             xx=np.concatenate([env._obs10(),env._u_last,[horizon]]).astype(np.float32)
+37:             u=np.clip(env._nn_u(xx),-TAU_MAX,TAU_MAX)
+38:         else:
+39:             obs=env._make_obs()
+40:             action=np.asarray(pol(obs),float)
+41:             if action.shape!=(3,):raise RuntimeError(f'Expected residual action (3,), got {action.shape}')
+42:             # Intentionally ignore action[2] (adaptive horizon), preserve torque correction.
+43:             xx=np.concatenate([env._obs10(),env._u_last,[horizon]]).astype(np.float32)
+44:             base=env._nn_u(xx)
+45:             u=np.clip(base+env.res_scale*np.clip(action[:2],-1,1),-TAU_MAX,TAU_MAX)
+46:         env._steps+=1
+47:         env.state=env._plant_dyn.step(env.state,u)
+48:         env.v=float(np.clip(env.v+env.np_random.normal(0.,env.V_NOISE),1.,8.))
+49:         env.alpha=float(np.clip(env.alpha+env.np_random.normal(0.,env.ALPHA_NOISE),-.20,.20))
+50:         phi=float(env.state[0]);err=phi-env._desired_roll()
+--------------------------------------------------
+55:     ua=np.asarray(applied,float);n=len(ua)
+56:     return dict(surv=int(not crashed),steps=n,rmse=float(np.sqrt(e2/n)),
+57:         u_rms=float(np.sqrt(np.mean(ua**2))),
+58:         du=float(np.linalg.norm(np.diff(ua,axis=0),axis=1).mean()) if n>1 else 0.,
+59:         sat=float(np.mean(np.any(np.abs(ua)>=.99*TAU_MAX,axis=1))),
+60:         peak_phi=float(np.rad2deg(peak)),wall_s=time.perf_counter()-start)
+61: 
+62: def main():
+63:     p=argparse.ArgumentParser(description=__doc__)
+64:     p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+65:     p.add_argument('--res_stems',nargs=5,help='Exactly 5 checkpoint stems in order of training seeds 101 202 303 404 505 (no extensions)')
+66:     p.add_argument('--training_seeds',nargs=5,type=int,default=[101,202,303,404,505])
+67:     p.add_argument('--seed0',type=int,default=77000)
+68:     p.add_argument('--episodes',type=int,default=100)
+69:     p.add_argument('--buckets',nargs='+',type=int,default=[0,1,2])
+70:     p.add_argument('--only',nargs='+',default=DEFAULT_ONLY)
+71:     p.add_argument('--horizon',type=int,default=20)
+72:     p.add_argument('--iw',type=float,default=1.)
+73:     p.add_argument('--res_scale',type=float,default=5.)
+74:     p.add_argument('--out',default='neural_residual_fixedN20_77000_100seeds')
+75:     p.add_argument('--preflight_only',action='store_true')
+76:     a=p.parse_args()
+77:     if a.horizon not in (10,20,30,40):p.error('Horizon must be in 10 20 30 40')
+78:     if a.episodes<1 or len(set(a.buckets))!=len(a.buckets) or not set(a.buckets).issubset({0,1,2}):p.error('Invalid episodes/buckets')
+--------------------------------------------------
+83:         for suffix in ('.zip','_vecnorm.pkl'):
+84:             if not Path(stem+suffix).is_file():p.error('Missing: '+stem+suffix)
+85:     scenarios=[s for s in SCENARIOS if s[0] in a.only]
+86:     if set(a.only)!={s[0] for s in scenarios}:p.error('Unknown scenario name(s)')
+87:     policies={str(s):Policy(Path(stem+'.zip'),Path(stem+'_vecnorm.pkl'),15,3)
+88:               for s,stem in zip(a.training_seeds,stems)}
+89:     env=ObservedFaultEnv(ckpt=a.ckpt,decision_k=1,iw_list=(1.,),res_scale=a.res_scale)
+90:     for b in a.buckets:
+91:         env.scenario=('none',{})
+92:         env.reset(seed=a.seed0,options={'bucket':b,'iw':a.iw})
+93:         old=(env.state.copy(),env.v,env.alpha,env._desired_roll())
+94:         env.reset(seed=a.seed0,options={'bucket':b,'iw':a.iw})
+95:         np.testing.assert_array_equal(old[0],env.state)
+96:         assert old[1:]==(env.v,env.alpha,env._desired_roll())
+97:     print('PREFLIGHT OK; INITIAL STATE GATE PASS; N=',a.horizon,'res_scale=',a.res_scale,flush=True)
+98:     print('CHECKPOINTS:',list(zip(a.training_seeds,stems)),flush=True)
+99:     if a.preflight_only:return
+100:     ep=Path(a.out+'_episodes.csv');cfgp=Path(a.out+'_config.json');summ=Path(a.out+'_summary.csv')
+101:     cfg=dict(ckpt=str(Path(a.ckpt).resolve()),training_seeds=a.training_seeds,
+102:         stems=[str(Path(s).resolve()) for s in stems],seed0=a.seed0,episodes=a.episodes,
+103:         buckets=a.buckets,only=a.only,horizon=a.horizon,iw=a.iw,res_scale=a.res_scale,
+104:         method='frozen residual policy, horizon forced to N; residual action[2] ignored')
+105:     if cfgp.exists():
+106:         if json.loads(cfgp.read_text(encoding='utf-8'))!=cfg:p.error('Existing config mismatch; choose a new --out')
+107:     elif ep.exists():p.error('Episode CSV exists without config; choose new --out')
+108:     else:cfgp.write_text(json.dumps(cfg,ensure_ascii=False,indent=2),encoding='utf-8')
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_online_mpc_100seeds.py
+
+1: """Online measured-state MPC on matched fault scenarios, evaluation seeds 77000..77099.
+2: 
+3: Run from Three Models root alongside compare_34faults_res_scale.py and
+4: compare_online_mpc_vs_neural_vs_residual.py. No training or source modification.
+5: Fixed-weight/fixed-horizon exploratory online MPC, NOT certified distillation teacher.
+6: Outputs resumable episode CSV, summary CSV, and immutable config JSON.
+7: """
+8: import argparse, csv, json, time, hashlib
+9: from collections import Counter
+10: from pathlib import Path
+11: import numpy as np
+12: from motorcycle_dynamics import TAU_MAX
+13: from compare_34faults_res_scale import ObservedFaultEnv
+14: from compare_online_mpc_vs_neural_vs_residual import setup_online
+15: from final_fault_benchmark import SCENARIOS
+16: 
+17: DEFAULT_SCENARIOS=['healthy','dropout_imu_p0.3','dropout_imu_p0.5','intermittent_imu_burst20','stuck_phi_15deg']
+18: FIELDS=['controller','scenario','fault_type','bucket','seed','iw','surv','steps','rmse','u_rms','du','sat','peak_phi','solver_calls','solver_failures','solver_statuses','solver_ms_mean','wall_s']
+19: 
+20: def rollout(env,seed,bucket,iw,horizon,weights,oracle=False):
+21:     env.reset(seed=seed,options={'bucket':bucket,'iw':iw})
+22:     env._u_last=np.zeros(2,dtype=float)
+23:     env._horizon=horizon
+24:     solver=env._solvers[horizon]
+25:     solver.reset_warm_start()
+--------------------------------------------------
+27:     r=np.array([weights[3],weights[3]],float)
+28:     statuses=Counter();fail=0;ms_sum=0.;applied=[];e2=0.;peak=0.;crashed=False
+29:     start=time.perf_counter()
+30:     for _ in range(env.MAX_STEPS):
+31:         x=np.asarray(env.state[:6] if oracle else env._obs10()[:6],float).copy()
+32:         xd=np.zeros(6);xd[0]=env._desired_roll()
+33:         t0=time.perf_counter()
+34:         try:
+35:             A,B,bias=env.dyn.linearise(float(x[0]))
+36:             solver.update_model(A,B,bias)
+--------------------------------------------------
+45:         statuses[status]+=1
+46:         if not valid:
+47:             fail+=1
+48:             u=np.zeros(2)
+49:         u=np.clip(u,-TAU_MAX,TAU_MAX)
+50:         env._steps+=1
+51:         env.state=env._plant_dyn.step(env.state,u)
+52:         env.v=float(np.clip(env.v+env.np_random.normal(0.,env.V_NOISE),1.,8.))
+53:         env.alpha=float(np.clip(env.alpha+env.np_random.normal(0.,env.ALPHA_NOISE),-.20,.20))
+54:         phi=float(env.state[0]);err=phi-env._desired_roll();e2+=err*err
+--------------------------------------------------
+59:     ua=np.asarray(applied,float);calls=len(ua)
+60:     return dict(surv=int(not crashed),steps=calls,rmse=float(np.sqrt(e2/calls)),
+61:         u_rms=float(np.sqrt(np.mean(ua**2))),
+62:         du=float(np.linalg.norm(np.diff(ua,axis=0),axis=1).mean()) if calls>1 else 0.,
+63:         sat=float(np.mean(np.any(np.abs(ua)>=.99*TAU_MAX,axis=1))),
+64:         peak_phi=float(np.rad2deg(peak)),solver_calls=calls,solver_failures=fail,
+65:         solver_statuses=json.dumps(statuses,sort_keys=True),solver_ms_mean=ms_sum/calls,
+66:         wall_s=time.perf_counter()-start)
+67: 
+68: def main():
+69:     p=argparse.ArgumentParser(description=__doc__)
+70:     p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+71:     p.add_argument('--seed0',type=int,default=77000)
+72:     p.add_argument('--episodes',type=int,default=100)
+73:     p.add_argument('--buckets',type=int,nargs='+',default=[0,1,2])
+74:     p.add_argument('--only',nargs='+',default=DEFAULT_SCENARIOS)
+75:     p.add_argument('--horizon',type=int,default=20)
+--------------------------------------------------
+82:     if not Path(a.ckpt).is_file():p.error('Missing neural checkpoint: '+a.ckpt)
+83:     scenarios=[s for s in SCENARIOS if s[0] in a.only]
+84:     missing=set(a.only)-{s[0] for s in scenarios}
+85:     if missing:p.error('Unknown scenario(s): '+str(sorted(missing)))
+86:     env=ObservedFaultEnv(ckpt=a.ckpt,decision_k=1,iw_list=(1.,),res_scale=5.)
+87:     weights,alpha,decoded=setup_online(env,a.horizon)
+88:     print('PREFLIGHT OK; weights=',weights,'fixed N=',a.horizon,'zero-action decoded N=',decoded,'LP_ALPHA=',alpha,flush=True)
+89:     for b in a.buckets:
+90:         env.scenario=('none',{})
+91:         env.reset(seed=a.seed0,options={'bucket':b,'iw':a.iw})
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_online_mpc_ekf_100seeds.py
+
+1: """Online MPC with nominal-model EKF on matched fault scenarios, evaluation seeds 77000..77099.
+2: 
+3: Run from Three Models root alongside compare_34faults_res_scale.py and
+4: compare_online_mpc_vs_neural_vs_residual.py. No training or modification to the existing baselines.
+5: Experimental EKF+fixed-weight/fixed-horizon MPC, NOT certified distillation teacher.
+6: Outputs resumable episode CSV, summary CSV, and immutable config JSON.
+7: """
+8: import argparse, csv, json, time, hashlib
+9: from collections import Counter
+10: from pathlib import Path
+11: import numpy as np
+12: from motorcycle_dynamics import TAU_MAX
+13: from compare_34faults_res_scale import ObservedFaultEnv
+14: from compare_online_mpc_vs_neural_vs_residual import setup_online
+15: from final_fault_benchmark import SCENARIOS
+16: 
+17: DEFAULT_SCENARIOS=['healthy','dropout_imu_p0.3','dropout_imu_p0.5','intermittent_imu_burst20','stuck_phi_15deg']
+18: FIELDS=['controller','scenario','fault_type','bucket','seed','iw','surv','steps','rmse','u_rms','du','sat','peak_phi','solver_calls','solver_failures','solver_statuses','solver_ms_mean','wall_s','ekf_ms_mean','ekf_rejections','ekf_roll_rmse']
+19: 
+20: class SixStateEKF:
+21:     """Causal, nominal-model EKF. No plant-state access or fault oracle.
+22: 
+23:     x: [phi, phi_dot, delta_f, delta_r, delta_dot_f, delta_dot_r].
+24:     Sensors are the six channels returned by ObservedFaultEnv._obs10().
+25:     Roll-pair innovation gating is a declared, non-oracle robustness option.
+26:     """
+27:     def __init__(self, dyn, process_std, measure_std, initial_std, gate):
+28:         self.dyn = dyn
+29:         self.Q = np.diag(np.square(np.asarray(process_std,float)))
+--------------------------------------------------
+85:         self.P = 0.5 * (self.P + self.P.T)
+86:         self.updates += 1
+87: 
+88: 
+89: def rollout(env,seed,bucket,iw,horizon,weights,ekf_cfg):
+90:     env.reset(seed=seed,options={'bucket':bucket,'iw':iw})
+91:     env._u_last=np.zeros(2,dtype=float)
+92:     env._horizon=horizon
+93:     solver=env._solvers[horizon]
+94:     solver.reset_warm_start()
+95:     q=np.array([weights[0],weights[1],weights[2],weights[2],0.1*weights[2],0.1*weights[2]],float)
+96:     r=np.array([weights[3],weights[3]],float)
+97:     ekf=SixStateEKF(env.dyn,ekf_cfg['process_std'],ekf_cfg['measure_std'],ekf_cfg['initial_std'],ekf_cfg['gate'])
+98:     # Deliberately uses the faulted observation path; no truth-state initialization.
+99:     ekf.reset(np.asarray(env._obs10()[:6],float))
+100:     statuses=Counter();fail=0;ms_sum=0.;applied=[];e2=0.;peak=0.;crashed=False
+101:     ekf_ms_sum=0.;esterr2=0.
+102:     start=time.perf_counter()
+103:     for k in range(env.MAX_STEPS):
+104:         if k:
+105:             t_ekf=time.perf_counter()
+106:             ekf.correct(np.asarray(env._obs10()[:6],float))
+107:             ekf_ms_sum+=(time.perf_counter()-t_ekf)*1000.
+108:         x=ekf.x.copy()
+109:         # Ground-truth comparison below is diagnostic ONLY, never given to controller.
+110:         esterr2+=float((x[0]-env.state[0])**2)
+111:         xd=np.zeros(6);xd[0]=env._desired_roll()
+112:         t0=time.perf_counter()
+113:         try:
+--------------------------------------------------
+124:         statuses[status]+=1
+125:         if not valid:
+126:             fail+=1
+127:             u=np.zeros(2)
+128:         u=np.clip(u,-TAU_MAX,TAU_MAX)
+129:         t_ekf=time.perf_counter()
+130:         ekf.predict(u)
+131:         ekf_ms_sum+=(time.perf_counter()-t_ekf)*1000.
+132:         env._steps+=1
+133:         env.state=env._plant_dyn.step(env.state,u)
+134:         env.v=float(np.clip(env.v+env.np_random.normal(0.,env.V_NOISE),1.,8.))
+135:         env.alpha=float(np.clip(env.alpha+env.np_random.normal(0.,env.ALPHA_NOISE),-.20,.20))
+--------------------------------------------------
+141:     ua=np.asarray(applied,float);calls=len(ua)
+142:     return dict(surv=int(not crashed),steps=calls,rmse=float(np.sqrt(e2/calls)),
+143:         u_rms=float(np.sqrt(np.mean(ua**2))),
+144:         du=float(np.linalg.norm(np.diff(ua,axis=0),axis=1).mean()) if calls>1 else 0.,
+145:         sat=float(np.mean(np.any(np.abs(ua)>=.99*TAU_MAX,axis=1))),
+146:         peak_phi=float(np.rad2deg(peak)),solver_calls=calls,solver_failures=fail,
+147:         solver_statuses=json.dumps(statuses,sort_keys=True),solver_ms_mean=ms_sum/calls,
+148:         ekf_ms_mean=ekf_ms_sum/calls, ekf_rejections=ekf.rejected,
+149:         ekf_roll_rmse=float(np.sqrt(esterr2/calls)),
+150:         wall_s=time.perf_counter()-start)
+151: 
+152: def main():
+153:     p=argparse.ArgumentParser(description=__doc__)
+154:     p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+155:     p.add_argument('--seed0',type=int,default=77000)
+156:     p.add_argument('--episodes',type=int,default=100)
+157:     p.add_argument('--buckets',type=int,nargs='+',default=[0,1,2])
+158:     p.add_argument('--only',nargs='+',default=DEFAULT_SCENARIOS)
+159:     p.add_argument('--horizon',type=int,default=20)
+--------------------------------------------------
+172:     if not Path(a.ckpt).is_file():p.error('Missing neural checkpoint: '+a.ckpt)
+173:     scenarios=[s for s in SCENARIOS if s[0] in a.only]
+174:     missing=set(a.only)-{s[0] for s in scenarios}
+175:     if missing:p.error('Unknown scenario(s): '+str(sorted(missing)))
+176:     env=ObservedFaultEnv(ckpt=a.ckpt,decision_k=1,iw_list=(1.,),res_scale=5.)
+177:     weights,alpha,decoded=setup_online(env,a.horizon)
+178:     print('PREFLIGHT OK; weights=',weights,'fixed N=',a.horizon,'zero-action decoded N=',decoded,'LP_ALPHA=',alpha,flush=True)
+179:     for b in a.buckets:
+180:         env.scenario=('none',{})
+181:         env.reset(seed=a.seed0,options={'bucket':b,'iw':a.iw})
+--------------------------------------------------
+187:     # Basic standalone EKF predict/correct shape, finite value and covariance checks.
+188:     test=SixStateEKF(env.dyn,**ekf_cfg)
+189:     env.scenario=('none',{})
+190:     env.reset(seed=a.seed0,options={'bucket':a.buckets[0],'iw':a.iw})
+191:     test.reset(np.asarray(env._obs10()[:6],float))
+192:     test.predict(np.zeros(2))
+193:     test.correct(np.asarray(env._obs10()[:6],float))
+194:     assert np.all(np.isfinite(test.x)) and np.all(np.linalg.eigvalsh(test.P)>-1e-10)
+195:     print('EKF PREFLIGHT PASS; no true state used in EKF initialization or corrections',flush=True)
+196:     if a.preflight_only:return
+197:     path=Path(a.out+'_episodes.csv');summary=Path(a.out+'_summary.csv');cfg_path=Path(a.out+'_config.json')
+198:     cfg=dict(seed0=a.seed0,episodes=a.episodes,buckets=a.buckets,only=a.only,horizon=a.horizon,
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_online_mpc_ekf_ablation.py
+
+11: from collections import Counter
+12: from pathlib import Path
+13: import numpy as np
+14: 
+15: from motorcycle_dynamics import TAU_MAX
+16: from compare_34faults_res_scale import ObservedFaultEnv
+17: from compare_online_mpc_vs_neural_vs_residual import setup_online
+18: from final_fault_benchmark import SCENARIOS
+19: from evaluate_online_mpc_ekf_100seeds import SixStateEKF
+20: 
+21: MODES = ('baseline', 'stale', 'recovery', 'combined')
+--------------------------------------------------
+25:           'solver_failures','solver_statuses','solver_ms_mean','wall_s',
+26:           'ekf_ms_mean','ekf_rejections','ekf_roll_rmse',
+27:           'stale_detections','recovery_events','max_reject_streak']
+28: 
+29: class RobustEKF(SixStateEKF):
+30:     def __init__(self, dyn, process_std, measure_std, initial_std, gate,
+31:                  mode='baseline', stale_phi_tol=1e-10, stale_rate_tol=1e-10,
+32:                  stale_run=2, recovery_run=5, recovery_factor=4.0, recovery_cap=1.0):
+33:         super().__init__(dyn, process_std, measure_std, initial_std, gate)
+34:         self.mode = mode
+--------------------------------------------------
+124:         self.P = (self.P + self.P.T) / 2
+125:         self.updates += 1
+126: 
+127: 
+128: def rollout(env, seed, bucket, iw, horizon, weights, cfg, mode):
+129:     env.reset(seed=seed, options={'bucket':bucket, 'iw':iw})
+130:     env._u_last = np.zeros(2)
+131:     env._horizon = horizon
+132:     solver = env._solvers[horizon]
+133:     solver.reset_warm_start()
+134:     q = np.array([weights[0],weights[1],weights[2],weights[2],.1*weights[2],.1*weights[2]])
+135:     r = np.array([weights[3],weights[3]])
+136:     ekf = RobustEKF(env.dyn, mode=mode, **cfg)
+137:     ekf.reset(np.asarray(env._obs10()[:6],float))
+138:     statuses=Counter(); fail=0; ms_sum=0.; ekf_ms=0.; applied=[]; e2=0.; est_e2=0.; peak=0.; crashed=False
+139:     start=time.perf_counter()
+140:     for k in range(env.MAX_STEPS):
+141:         if k:
+142:             t=time.perf_counter()
+143:             ekf.correct(np.asarray(env._obs10()[:6],float))
+144:             ekf_ms += (time.perf_counter()-t)*1000.
+145:         x = ekf.x.copy()
+146:         est_e2 += float((x[0]-env.state[0])**2) # metrics ONLY
+147:         xd = np.zeros(6); xd[0]=env._desired_roll()
+148:         t=time.perf_counter()
+149:         try:
+150:             A,B,bias=env.dyn.linearise(float(x[0]))
+--------------------------------------------------
+159:         valid=status in ('optimal','optimal_inaccurate') and u.shape==(2,) and np.all(np.isfinite(u))
+160:         statuses[status]+=1
+161:         if not valid:
+162:             fail+=1;u=np.zeros(2)
+163:         u=np.clip(u,-TAU_MAX,TAU_MAX)
+164:         t=time.perf_counter();ekf.predict(u);ekf_ms+=(time.perf_counter()-t)*1000.
+165:         env._steps+=1
+166:         env.state=env._plant_dyn.step(env.state,u)
+167:         env.v=float(np.clip(env.v+env.np_random.normal(0.,env.V_NOISE),1.,8.))
+168:         env.alpha=float(np.clip(env.alpha+env.np_random.normal(0.,env.ALPHA_NOISE),-.20,.20))
+169:         phi=float(env.state[0]); err=phi-env._desired_roll();e2+=err*err
+--------------------------------------------------
+174:     ua=np.asarray(applied,float);calls=len(ua)
+175:     return dict(surv=int(not crashed),steps=calls,rmse=float(np.sqrt(e2/calls)),
+176:         u_rms=float(np.sqrt(np.mean(ua**2))),
+177:         du=float(np.linalg.norm(np.diff(ua,axis=0),axis=1).mean()) if calls>1 else 0.,
+178:         sat=float(np.mean(np.any(np.abs(ua)>=.99*TAU_MAX,axis=1))),
+179:         peak_phi=float(np.rad2deg(peak)),solver_calls=calls,solver_failures=fail,
+180:         solver_statuses=json.dumps(statuses,sort_keys=True),solver_ms_mean=ms_sum/calls,
+181:         ekf_ms_mean=ekf_ms/calls,ekf_rejections=ekf.rejected,
+182:         ekf_roll_rmse=float(np.sqrt(est_e2/calls)),wall_s=time.perf_counter()-start,
+183:         stale_detections=ekf.stale_detections,recovery_events=ekf.recovery_events,
+184:         max_reject_streak=ekf.max_reject_streak)
+185: 
+186: def main():
+187:     p=argparse.ArgumentParser(description=__doc__)
+188:     p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+189:     p.add_argument('--seed0',type=int,default=77000)
+190:     p.add_argument('--episodes',type=int,default=5)
+191:     p.add_argument('--buckets',nargs='+',type=int,default=[0,1,2])
+192:     p.add_argument('--only',nargs='+',default=DEFAULT_ONLY)
+193:     p.add_argument('--modes',nargs='+',choices=MODES,default=list(MODES))
+--------------------------------------------------
+219:     cfg=dict(process_std=a.ekf_q,measure_std=a.ekf_r,initial_std=a.ekf_p0,gate=a.ekf_gate,
+220:              stale_phi_tol=a.stale_phi_tol,stale_rate_tol=a.stale_rate_tol,
+221:              stale_run=a.stale_run,recovery_run=a.recovery_run,
+222:              recovery_factor=a.recovery_factor,recovery_cap=a.recovery_cap)
+223:     env=ObservedFaultEnv(ckpt=a.ckpt,decision_k=1,iw_list=(1.,),res_scale=5.)
+224:     weights,alpha,decoded=setup_online(env,a.horizon)
+225:     # Offline unit gates; this must not access the true state in EKF.
+226:     t=RobustEKF(env.dyn,mode='combined',**cfg)
+227:     sample=np.zeros(6)
+228:     t.reset(sample)
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_pure_sac_78000.py
+
+1: """Matched 100-seed Pure SAC evaluation (5 independent training checkpoints).
+2: 
+3: Execute in project root with compare_34faults_res_scale.py and final_fault_benchmark.py.
+4: Does not train or modify project files. Uses the same ObservedFaultEnv measurement
+5: and plant stepping as evaluate_neural_residual_adaptive_100seeds_patched.py.
+6: 
+7: Pure SAC observations: env._obs10() (10); policy actions: (2,) normalized,
+8: torque command: TAU_MAX * clip(action, -1, 1).
+9: """
+10: import argparse
+11: import csv
+12: import hashlib
+13: import json
+14: import time
+15: from pathlib import Path
+16: 
+17: import numpy as np
+18: from motorcycle_dynamics import TAU_MAX
+19: from compare_34faults_res_scale import ObservedFaultEnv, Policy
+20: from final_fault_benchmark import SCENARIOS
+21: 
+22: DEFAULT_ONLY = ['healthy','dropout_imu_p0.3','dropout_imu_p0.5','intermittent_imu_burst20','stuck_phi_15deg']
+23: FIELDS = ['controller','training_seed','checkpoint_stem','scenario','fault_type','bucket','seed','iw','horizon',
+24:           'surv','steps','rmse','u_rms','du','sat','peak_phi','mean_horizon','horizon_switches','wall_s']
+--------------------------------------------------
+31:             h.update(chunk)
+32:     return h.hexdigest()
+33: 
+34: 
+35: def rollout(env, policy, seed, bucket, iw):
+36:     env.reset(seed=seed, options={'bucket':bucket,'iw':iw})
+37:     env._u_last = np.zeros(2, dtype=float)
+38:     e2 = 0.0; applied = []; peak = 0.0; crashed = False
+39:     start = time.perf_counter()
+40:     for _ in range(env.MAX_STEPS):
+41:         obs = np.asarray(env._obs10(), dtype=np.float32).copy()
+42:         if obs.shape != (10,) or not np.all(np.isfinite(obs)):
+43:             raise RuntimeError(f'Invalid Pure SAC observation {obs.shape}')
+44:         action = np.asarray(policy(obs), dtype=float).reshape(-1)
+45:         if action.shape != (2,) or not np.all(np.isfinite(action)):
+46:             raise RuntimeError(f'Invalid Pure SAC action {action}')
+47:         u = TAU_MAX * np.clip(action, -1., 1.)
+48:         env._steps += 1
+49:         env.state = env._plant_dyn.step(env.state, u)
+50:         env.v = float(np.clip(env.v + env.np_random.normal(0., env.V_NOISE), 1., 8.))
+51:         env.alpha = float(np.clip(env.alpha + env.np_random.normal(0., env.ALPHA_NOISE), -.20, .20))
+52:         phi = float(env.state[0]); err = phi - env._desired_roll()
+--------------------------------------------------
+59:     ua = np.asarray(applied, float); n = len(ua)
+60:     return dict(surv=int(not crashed), steps=n, rmse=float(np.sqrt(e2 / n)),
+61:         u_rms=float(np.sqrt(np.mean(ua**2))),
+62:         du=float(np.linalg.norm(np.diff(ua,axis=0),axis=1).mean()) if n > 1 else 0.,
+63:         sat=float(np.mean(np.any(np.abs(ua) >= .99 * TAU_MAX,axis=1))),
+64:         peak_phi=float(np.rad2deg(peak)),mean_horizon=float('nan'),horizon_switches=0,
+65:         wall_s=time.perf_counter()-start)
+66: 
+67: 
+68: def main():
+69:     p = argparse.ArgumentParser(description=__doc__)
+70:     p.add_argument('--ckpt', default='neural_mpc_multi13.pt', help='Shared env initializer; Pure SAC never calls NN')
+71:     p.add_argument('--pure_stems', nargs=5, required=True,
+72:         help='Exactly five Pure SAC checkpoint stems without .zip, in --training_seeds order')
+73:     p.add_argument('--training_seeds', nargs=5, type=int, default=[11,22,33,44,55])
+74:     p.add_argument('--seed0', type=int, default=78000)
+75:     p.add_argument('--episodes', type=int, default=100)
+--------------------------------------------------
+88:         for path in pair:
+89:             if not path.is_file(): p.error('Missing checkpoint component: '+str(path))
+90:     scenarios = [s for s in SCENARIOS if s[0] in a.only]
+91:     if set(a.only) != {s[0] for s in scenarios}: p.error('Unknown scenario(s)')
+92:     policies = [Policy(zipf, normf, 10, 2) for zipf,normf in pairs]
+93:     # Intentionally use the same observation/fault wrapper as Neural & Residual
+94:     # The frozen neural reference is initialized but NEVER used to generate Pure actions.
+95:     env = ObservedFaultEnv(ckpt=a.ckpt, decision_k=1, iw_list=(1.,), res_scale=5.)
+96:     for b in a.buckets:
+97:         env.scenario = ('none', {})
+98:         env.reset(seed=a.seed0, options={'bucket':b,'iw':a.iw})
+99:         x1=(env.state.copy(),env.v,env.alpha,env._desired_roll())
+100:         env.reset(seed=a.seed0, options={'bucket':b,'iw':a.iw})
+101:         np.testing.assert_array_equal(x1[0], env.state)
+102:         assert x1[1:] == (env.v,env.alpha,env._desired_roll())
+103:         obs=np.asarray(env._obs10(),dtype=np.float32)
+104:         assert obs.shape==(10,)
+105:         for pol in policies:
+106:             act=np.asarray(pol(obs))
+107:             if act.shape != (2,) or not np.all(np.isfinite(act)):
+108:                 raise RuntimeError(f'Pure SAC policy did not return finite (2,) action: {act}')
+--------------------------------------------------
+115:         checkpoints=[dict(zip_sha256=sha(x),vecnorm_sha256=sha(y)) for x,y in pairs],
+116:         shared_ckpt=str(Path(a.ckpt).resolve()), shared_ckpt_sha256=sha(a.ckpt),
+117:         seed0=a.seed0,episodes=a.episodes,buckets=a.buckets,only=a.only,iw=a.iw,
+118:         observation='ObservedFaultEnv._obs10 (10D) including corrupted measurements',
+119:         action='clip(policy(normalized_obs),-1,1)*TAU_MAX',
+120:         metrics='matched run() in evaluate_neural_residual_adaptive_100seeds_patched.py')
+121:     if cfgp.exists():
+122:         if json.loads(cfgp.read_text(encoding='utf-8')) != cfg:
+123:             p.error('Config mismatch; use a new --out')
+124:     elif ep.exists(): p.error('Episodes exist without config; use a new --out')
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_pure_sac_78000_standalone.py
+
+1: """Matched 100-seed Pure SAC evaluation (5 independent training checkpoints).
+2: 
+3: Execute in project root with compare_34faults_res_scale.py and final_fault_benchmark.py.
+4: Does not train or modify project files. Uses the same ObservedFaultEnv measurement
+5: and plant stepping as evaluate_neural_residual_adaptive_100seeds_patched.py.
+6: 
+7: Pure SAC observations: env._obs10() (10); policy actions: (2,) normalized,
+8: torque command: TAU_MAX * clip(action, -1, 1).
+9: """
+10: import argparse
+11: import csv
+12: import hashlib
+13: import json
+14: import time
+15: from pathlib import Path
+16: 
+17: import numpy as np
+18: from motorcycle_dynamics import TAU_MAX
+19: from compare_34faults_res_scale import ObservedFaultEnv, Policy
+20: from final_fault_benchmark import SCENARIOS
+21: 
+22: DEFAULT_ONLY = ['healthy','dropout_imu_p0.3','dropout_imu_p0.5','intermittent_imu_burst20','stuck_phi_15deg']
+23: FIELDS = ['controller','training_seed','checkpoint_stem','scenario','fault_type','bucket','seed','iw','horizon',
+24:           'surv','steps','rmse','u_rms','du','sat','peak_phi','mean_horizon','horizon_switches','wall_s']
+--------------------------------------------------
+31:             h.update(chunk)
+32:     return h.hexdigest()
+33: 
+34: 
+35: def rollout(env, policy, seed, bucket, iw):
+36:     env.reset(seed=seed, options={'bucket':bucket,'iw':iw})
+37:     env._u_last = np.zeros(2, dtype=float)
+38:     e2 = 0.0; applied = []; peak = 0.0; crashed = False
+39:     start = time.perf_counter()
+40:     for _ in range(env.MAX_STEPS):
+41:         obs = np.asarray(env._obs10(), dtype=np.float32).copy()
+42:         if obs.shape != (10,) or not np.all(np.isfinite(obs)):
+43:             raise RuntimeError(f'Invalid Pure SAC observation {obs.shape}')
+44:         action = np.asarray(policy(obs), dtype=float).reshape(-1)
+45:         if action.shape != (2,) or not np.all(np.isfinite(action)):
+46:             raise RuntimeError(f'Invalid Pure SAC action {action}')
+47:         u = TAU_MAX * np.clip(action, -1., 1.)
+48:         env._steps += 1
+49:         env.state = env._plant_dyn.step(env.state, u)
+50:         env.v = float(np.clip(env.v + env.np_random.normal(0., env.V_NOISE), 1., 8.))
+51:         env.alpha = float(np.clip(env.alpha + env.np_random.normal(0., env.ALPHA_NOISE), -.20, .20))
+52:         phi = float(env.state[0]); err = phi - env._desired_roll()
+--------------------------------------------------
+59:     ua = np.asarray(applied, float); n = len(ua)
+60:     return dict(surv=int(not crashed), steps=n, rmse=float(np.sqrt(e2 / n)),
+61:         u_rms=float(np.sqrt(np.mean(ua**2))),
+62:         du=float(np.linalg.norm(np.diff(ua,axis=0),axis=1).mean()) if n > 1 else 0.,
+63:         sat=float(np.mean(np.any(np.abs(ua) >= .99 * TAU_MAX,axis=1))),
+64:         peak_phi=float(np.rad2deg(peak)),mean_horizon=float('nan'),horizon_switches=0,
+65:         wall_s=time.perf_counter()-start)
+66: 
+67: 
+68: def main():
+69:     p = argparse.ArgumentParser(description=__doc__)
+70:     p.add_argument('--ckpt', default='neural_mpc_multi13.pt', help='Shared env initializer; Pure SAC never calls NN')
+71:     p.add_argument('--pure_stems', nargs=5,
+72:         help='Optional 5 Pure SAC checkpoint stems; requires stem_vecnorm.pkl naming')
+73:     p.add_argument('--pure_dir', default='standalone_runs',
+74:         help='Directory containing best_sacplain_seedXX.zip and vecnorm_best_sacplain_seedXX.pkl')
+75:     p.add_argument('--pure_variant', choices=['best','final'], default='best')
+--------------------------------------------------
+101:         for path in pair:
+102:             if not path.is_file(): p.error('Missing checkpoint component: '+str(path))
+103:     scenarios = [s for s in SCENARIOS if s[0] in a.only]
+104:     if set(a.only) != {s[0] for s in scenarios}: p.error('Unknown scenario(s)')
+105:     policies = [Policy(zipf, normf, 10, 2) for zipf,normf in pairs]
+106:     # Intentionally use the same observation/fault wrapper as Neural & Residual
+107:     # The frozen neural reference is initialized but NEVER used to generate Pure actions.
+108:     env = ObservedFaultEnv(ckpt=a.ckpt, decision_k=1, iw_list=(1.,), res_scale=5.)
+109:     for b in a.buckets:
+110:         env.scenario = ('none', {})
+111:         env.reset(seed=a.seed0, options={'bucket':b,'iw':a.iw})
+112:         x1=(env.state.copy(),env.v,env.alpha,env._desired_roll())
+113:         env.reset(seed=a.seed0, options={'bucket':b,'iw':a.iw})
+114:         np.testing.assert_array_equal(x1[0], env.state)
+115:         assert x1[1:] == (env.v,env.alpha,env._desired_roll())
+116:         obs=np.asarray(env._obs10(),dtype=np.float32)
+117:         assert obs.shape==(10,)
+118:         for pol in policies:
+119:             act=np.asarray(pol(obs))
+120:             if act.shape != (2,) or not np.all(np.isfinite(act)):
+121:                 raise RuntimeError(f'Pure SAC policy did not return finite (2,) action: {act}')
+--------------------------------------------------
+128:         checkpoints=[dict(zip_sha256=sha(x),vecnorm_sha256=sha(y)) for x,y in pairs],
+129:         shared_ckpt=str(Path(a.ckpt).resolve()), shared_ckpt_sha256=sha(a.ckpt),
+130:         seed0=a.seed0,episodes=a.episodes,buckets=a.buckets,only=a.only,iw=a.iw,
+131:         observation='ObservedFaultEnv._obs10 (10D) including corrupted measurements',
+132:         action='clip(policy(normalized_obs),-1,1)*TAU_MAX',
+133:         metrics='matched run() in evaluate_neural_residual_adaptive_100seeds_patched.py')
+134:     if cfgp.exists():
+135:         if json.loads(cfgp.read_text(encoding='utf-8')) != cfg:
+136:             p.error('Config mismatch; use a new --out')
+137:     elif ep.exists(): p.error('Episodes exist without config; use a new --out')
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_res_scale_sac_only.py
+
+3: """
+4: import argparse, csv, json, time
+5: import numpy as np
+6: from stable_baselines3 import SAC
+7: from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+8: from motorcycle_env_residual_multi13 import MotorcycleEnvResidual
+9: 
+10: p=argparse.ArgumentParser()
+11: p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+12: p.add_argument('--model',default='residual_pilot30k_best.zip')
+13: p.add_argument('--vecnorm',default='residual_pilot30k_best_vecnorm.pkl')
+14: p.add_argument('--seeds',type=int,default=50)
+15: p.add_argument('--seed0',type=int,default=160000)
+16: p.add_argument('--iw',type=float,nargs='+',default=[1.0,.8,.7,.6,.5])
+17: p.add_argument('--buckets',type=int,nargs='+',default=[0,1,2])
+18: p.add_argument('--res_scale',type=float,default=5.)
+19: p.add_argument('--decision_k',type=int,default=1)
+20: p.add_argument('--out',default='residual_independent')
+21: a=p.parse_args()
+22: KW=dict(ckpt=a.ckpt,res_scale=a.res_scale,decision_k=a.decision_k)
+23: # Load saved training observation statistics; never update them during evaluation.
+24: dummy=DummyVecEnv([lambda: MotorcycleEnvResidual(iw_list=[1.0],**KW)])
+25: normalizer=VecNormalize.load(a.vecnorm,dummy)
+26: normalizer.training=False
+27: normalizer.norm_reward=False
+28: model=SAC.load(a.model,device='cpu')
+29: assert model.observation_space.shape==(15,)
+30: env=MotorcycleEnvResidual(iw_list=[1.0],**KW)
+31: fixed=np.array([0.,0.,-.25],dtype=np.float32) # fixed N=20
+32: 
+33: def action_for(name,obs):
+34:     if name=='neural_N20':return fixed
+--------------------------------------------------
+
+==========================================================================================
+FILE: evaluate_residual_independent_multi13.py
+
+3: """
+4: import argparse, csv, json, time
+5: import numpy as np
+6: from stable_baselines3 import SAC
+7: from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+8: from motorcycle_env_residual_multi13 import MotorcycleEnvResidual
+9: 
+10: p=argparse.ArgumentParser()
+11: p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+12: p.add_argument('--model',default='residual_pilot30k_best.zip')
+13: p.add_argument('--vecnorm',default='residual_pilot30k_best_vecnorm.pkl')
+14: p.add_argument('--seeds',type=int,default=50)
+15: p.add_argument('--seed0',type=int,default=160000)
+16: p.add_argument('--iw',type=float,nargs='+',default=[1.0,.8,.7,.6,.5])
+17: p.add_argument('--buckets',type=int,nargs='+',default=[0,1,2])
+18: p.add_argument('--res_scale',type=float,default=5.)
+19: p.add_argument('--decision_k',type=int,default=1)
+20: p.add_argument('--out',default='residual_independent')
+21: a=p.parse_args()
+22: KW=dict(ckpt=a.ckpt,res_scale=a.res_scale,decision_k=a.decision_k)
+23: # Load saved training observation statistics; never update them during evaluation.
+24: dummy=DummyVecEnv([lambda: MotorcycleEnvResidual(iw_list=[1.0],**KW)])
+25: normalizer=VecNormalize.load(a.vecnorm,dummy)
+26: normalizer.training=False
+27: normalizer.norm_reward=False
+28: model=SAC.load(a.model,device='cpu')
+29: assert model.observation_space.shape==(15,)
+30: env=MotorcycleEnvResidual(iw_list=[1.0],**KW)
+31: fixed=np.array([0.,0.,-.25],dtype=np.float32) # fixed N=20
+32: 
+33: def action_for(name,obs):
+34:     if name=='neural_N20':return fixed
+--------------------------------------------------
+
+==========================================================================================
+FILE: export_404_vecnorm.py
+
+6: with open(stem + "_vecnorm.pkl", "rb") as f:
+7:     vn = pickle.load(f)
+8: 
+9: assert vn.norm_obs is True
+10: assert vn.obs_rms.mean.shape == (15,)
+11: assert vn.obs_rms.var.shape == (15,)
+12: 
+13: np.savez(
+14:     stem + "_vecnorm_stats.npz",
+15:     obs_mean=vn.obs_rms.mean,
+16:     obs_var=vn.obs_rms.var,
+17:     obs_count=np.asarray(vn.obs_rms.count),
+18:     ret_mean=vn.ret_rms.mean,
+19:     ret_var=vn.ret_rms.var,
+20:     ret_count=np.asarray(vn.ret_rms.count),
+21:     clip_obs=np.asarray(vn.clip_obs),
+22:     clip_reward=np.asarray(vn.clip_reward),
+--------------------------------------------------
+26:     norm_reward=np.asarray(vn.norm_reward),
+27: )
+28: 
+29: print("EXPORTED SUCCESSFULLY")
+30: print("Obs mean:", vn.obs_rms.mean)
+31: print("Obs var:", vn.obs_rms.var)
+32: print("Obs count:", vn.obs_rms.count)
+--------------------------------------------------
+
+==========================================================================================
+FILE: legacy_residual_eval_fixed_v2.py
+
+4: import argparse, csv, json, time
+5: from pathlib import Path
+6: import numpy as np
+7: from stable_baselines3 import SAC
+8: from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+9: from motorcycle_env_residual import MotorcycleEnvResidual
+10: from motorcycle_env_standalone import MotorcycleEnvStandalone
+11: 
+12: # Legacy NumPy pickles may refer to a PCG64 class from a different NumPy build.
+13: # Resolve by class name only for the known NumPy BitGenerator types.
+--------------------------------------------------
+43:                     n+=1
+44:         print(f'COMPATIBILITY PASS: {n} initial conditions and physical plant transitions',flush=True)
+45:     finally: stand.close()
+46: 
+47: def main():
+48:     p=argparse.ArgumentParser()
+49:     p.add_argument('--model_dir',default='multiseed_runs')
+50:     p.add_argument('--train_seeds',type=int,nargs='+',default=[11,22,33,44,55])
+51:     p.add_argument('--variants',nargs='+',choices=['best','final'],default=['best'])
+52:     p.add_argument('--seeds',type=int,default=50)
+53:     p.add_argument('--seed0',type=int,default=400000)
+54:     p.add_argument('--iw',type=float,nargs='+',default=[1.0,.8,.7,.6,.5])
+55:     p.add_argument('--buckets',type=int,nargs='+',default=[0,1,2])
+56:     p.add_argument('--res_scale',type=float,default=5.0)
+57:     p.add_argument('--out',default='heldout_legacy_residual_5seeds_400000')
+58:     p.add_argument('--gate_only',action='store_true')
+59:     a=p.parse_args()
+60:     if a.seeds<1 or a.seed0<0 or len(set(a.train_seeds))!=len(a.train_seeds): p.error('Invalid seeds')
+61:     if any(iw<=0 for iw in a.iw) or any(b not in (0,1,2) for b in a.buckets): p.error('Invalid iw/buckets')
+--------------------------------------------------
+69:             if not all(x.is_file() for x in (ckpt,model,norm)):
+70:                 p.error(f'Missing paired artifacts for seed={seed}, {variant}: {ckpt}, {model}, {norm}')
+71:             paths[(seed,variant)]=(ckpt,model,norm)
+72:     first_ckpt=next(iter(paths.values()))[0]
+73:     env=MotorcycleEnvResidual(ckpt=str(first_ckpt),res_scale=a.res_scale,decision_k=1,iw_list=(1.,))
+74:     try: gate(env,a.iw,a.buckets,a.seed0)
+75:     finally: env.close()
+76:     if a.gate_only:
+77:         print('Gate-only completed; no evaluation run.');return
+78:     config={k:v for k,v in vars(a).items() if k!='gate_only'}
+--------------------------------------------------
+98:         if f.tell()==0:w.writeheader();f.flush()
+99:         for (seed,variant),(ckpt,mp,vp) in paths.items():
+100:             if all((seed,variant,float(iw),bucket,ss) in done for iw in a.iw for bucket in a.buckets for ss in range(a.seed0,a.seed0+a.seeds)):
+101:                 print('SKIP complete',seed,variant,flush=True);continue
+102:             kw=dict(ckpt=str(ckpt),res_scale=a.res_scale,decision_k=1,iw_list=(1.,))
+103:             dummy=DummyVecEnv([lambda kw=kw:MotorcycleEnvResidual(**kw)])
+104:             norm=VecNormalize.load(str(vp),dummy);norm.training=False;norm.norm_reward=False
+105:             model=SAC.load(str(mp),device='cpu')
+106:             if model.observation_space.shape!=(12,) or model.action_space.shape!=(2,):
+107:                 raise RuntimeError(f'Unexpected policy spaces {mp}: {model.observation_space}, {model.action_space}')
+108:             env=MotorcycleEnvResidual(**kw)
+109:             try:
+110:                 print('Evaluating',seed,variant,'with',ckpt,flush=True)
+111:                 for iw in a.iw:
+112:                     for bucket in a.buckets:
+--------------------------------------------------
+
+==========================================================================================
+FILE: motorcycle_dynamics.py
+
+62: 
+63: # محدودیت‌های ساختاری (برای clamp در step)
+64: DELTA_MAX     = np.pi / 2       # [rad]
+65: MAX_DELTA_DOT = 20.0            # [rad/s]
+66: TAU_MAX       = 50.0            # [N·m]   — تورک حداکثر گیمبال
+67: GIMBAL_DAMP   = 2.0             # [s⁻¹]   — میرایی گیمبال
+68: Ts            = 0.01            # [s]      — زمان گام
+69: 
+70: 
+71: # ═══════════════════════════════════════════════════════════════════════════
+--------------------------------------------------
+180:             x_next : حالت بعدی (6,)   (limits اعمال‌شده اگر enforce_limits=True)
+181:         """
+182:         u = np.asarray(u, dtype=np.float64)
+183:         if clamp_u:
+184:             u = np.clip(u, -TAU_MAX, TAU_MAX)
+185: 
+186:         if self.use_rk4:
+187:             x_next = self.rk4_step(x, u)
+188:         else:
+189:             x_next = self.euler_step(x, u)
+--------------------------------------------------
+307:         شبیه‌سازی open/closed-loop از x0.
+308: 
+309:         پارامترها:
+310:             x0      : حالت اولیه (6,)
+311:             policy  : callable  u = policy(x)  → (2,)
+312:             n_steps : تعداد قدم‌ها
+313:             clamp_u : اعمال محدودیت TAU_MAX روی u
+314: 
+315:         خروجی:
+316:             X : (n_steps+1, 6)  — تاریخچه حالت
+317:             U : (n_steps,   2)  — تاریخچه کنترل
+318:         """
+--------------------------------------------------
+320:         U = np.zeros((n_steps,     2))
+321:         X[0] = np.asarray(x0, dtype=np.float64)
+322: 
+323:         for k in range(n_steps):
+324:             u = np.asarray(policy(X[k]), dtype=np.float64)
+325:             if clamp_u:
+326:                 u = np.clip(u, -TAU_MAX, TAU_MAX)
+327:             U[k]     = u
+328:             X[k + 1] = self.step(X[k], u)
+329: 
+330:         return X, U
+331: 
+--------------------------------------------------
+
+==========================================================================================
+FILE: motorcycle_env_mpc17.py
+
+27: import cvxpy as cp
+28: import gymnasium as gym
+29: from scipy.linalg import solve_discrete_are
+30: 
+31: from motorcycle_dynamics import MotorcycleDynamics, TAU_MAX, DELTA_MAX, MAX_DELTA_DOT
+32: 
+33: import os as _os
+34: # [diag] سوییچ‌های آزمایشی (پیش‌فرض = رفتار قبلی):
+35: #   MPC_MAX_ITER=20000          سقف تکرار OSQP (پیش‌فرض 4000)
+36: #   MPC_FALLBACK=iterate        اگر OSQP به max_iter رسید، iterate آخر را استفاده کن (پیش‌فرض: zero)
+--------------------------------------------------
+71:     [v15] A_param / B_param : ماتریس‌های مدل online آپدیت می‌شن
+72:           update_model(A_d, B_d, bias_d) رو هر step صدا بزن.
+73:     """
+74: 
+75:     def __init__(self, A, B, N=20, u_max=TAU_MAX, delta_max=DELTA_MAX):
+76:         self.N   = N
+77:         self.n_x = A.shape[0]
+78:         self.n_u = B.shape[1]
+79:         self.u_max     = u_max
+80:         self.delta_max = delta_max
+--------------------------------------------------
+281:             20.0, 20.0, 20.0, np.pi/3,
+282:             np.pi/2, np.pi,                      # phi_d و err بزرگ‌تر
+283:         ], dtype=np.float32)
+284: 
+285:         self.observation_space = gym.spaces.Box(
+286:             -obs_high, obs_high, dtype=np.float32)
+287: 
+288:         self.action_space = gym.spaces.Box(
+289:             low  = np.full(4, -1.0, dtype=np.float32),
+290:             high = np.full(4,  1.0, dtype=np.float32),
+--------------------------------------------------
+442:         u_opt = self.mpc.solve(
+443:             x0=self.state, xd=x_d,
+444:             Q_diag=Q_diag, R_diag=R_diag, P_chol=P_chol,
+445:         )
+446:         u_opt = np.clip(u_opt, -TAU_MAX, TAU_MAX)
+447: 
+448:         # ── Plant: nonlinear RK4 ─────────────────────────────────────────
+449:         self.state = self.dyn.step(self.state, u_opt)
+450: 
+451:         # ── noise محیطی (v, alpha) ────────────────────────────────────────
+--------------------------------------------------
+502: 
+503:         # ── diagnostics برای explode detection ──────────────────────────
+504:         u_norm     = float(np.linalg.norm(u_opt))
+505:         state_norm = float(np.linalg.norm(self.state))
+506:         u_sat      = bool(np.any(np.abs(u_opt) >= TAU_MAX * 0.99))
+507: 
+508:         _EXPLODE_STATE = 50.0
+509:         _EXPLODE_U     = TAU_MAX * 1.5
+510:         if state_norm > _EXPLODE_STATE or u_norm > _EXPLODE_U:
+511:             print(
+512:                 f"[EXPLODE] step={self._steps}  phi={np.rad2deg(phi):+.1f}°  "
+513:                 f"state_norm={state_norm:.2f}  u_norm={u_norm:.2f}  "
+514:                 f"curriculum={self.curriculum_level}"
+--------------------------------------------------
+
+==========================================================================================
+FILE: motorcycle_env_mpc18.py
+
+31: import numpy as np
+32: import gymnasium as gym
+33: 
+34: from motorcycle_env_mpc17 import MotorcycleEnvMPC
+35: from motorcycle_dynamics import TAU_MAX
+36: 
+37: 
+38: class MotorcycleEnvMPC18(MotorcycleEnvMPC):
+39: 
+40:     HORIZONS     = (10, 15, 20, 30, 40)   # solver pool (هر کدام یک‌بار ساخته می‌شود)
+--------------------------------------------------
+62:         self._mid4 = self._denorm_action(np.zeros(4))   # [Qphi, Qphidot, Qjoint, R] میانه
+63:         self._N_idx = self.HORIZONS.index(self.MPC_N)
+64: 
+65:         self.action_space = gym.spaces.Box(-1.0, 1.0, shape=(3,), dtype=np.float32)
+66:         hi = self.observation_space.high
+67:         self.observation_space = gym.spaces.Box(
+68:             np.concatenate([-hi, -np.ones(3, np.float32)]),
+69:             np.concatenate([hi,   np.ones(3, np.float32)]),
+70:             dtype=np.float32)
+71: 
+72:     # ─────────────────────────────────────────────────────────────────────
+73:     # action <-> پارامترهای MPC
+74:     # ─────────────────────────────────────────────────────────────────────
+--------------------------------------------------
+98:         self.mpc = self._solvers[self.MPC_N]
+99:         self.mpc.reset_warm_start()
+100:         self._N_idx = self.HORIZONS.index(self.MPC_N)
+101:         self._prev_rl = self._mid4[:2].copy()
+102:         return np.concatenate([obs, self._extra_obs()]).astype(np.float32), info
+103: 
+104:     def step(self, rl_action):
+105:         Qphi, Qphid, N_new = self.decode_action(rl_action)
+106:         target = np.array([Qphi, Qphid, self._mid4[2], self._mid4[3]])
+107: 
+--------------------------------------------------
+147:             P_chol = self._dare_chol(A_d, B_d, Q_diag=Q_diag, R_diag=R_diag)
+148: 
+149:             u_opt = self.mpc.solve(x0=self.state, xd=x_d, Q_diag=Q_diag,
+150:                                    R_diag=R_diag, P_chol=P_chol)
+151:             u_opt = np.clip(u_opt, -TAU_MAX, TAU_MAX)
+152:             self.state = self.dyn.step(self.state, u_opt)
+153: 
+154:             self.v = float(np.clip(self.v + self.np_random.normal(0.0, self.V_NOISE), 1.0, 8.0))
+155:             self.alpha = float(np.clip(
+156:                 self.alpha + self.np_random.normal(0.0, self.ALPHA_NOISE), -0.20, 0.20))
+--------------------------------------------------
+166:             u_norms.append(float(np.linalg.norm(u_opt)))
+167:             st_norms.append(float(np.linalg.norm(self.state)))
+168:             solve_ms.append(self.mpc.last_solve_time * 1000.0)
+169:             statuses[self.mpc.last_solve_status] = statuses.get(self.mpc.last_solve_status, 0) + 1
+170:             sat_any |= bool(np.any(np.abs(u_opt) >= TAU_MAX * 0.99))
+171:             track_t.append(track); dphi_t.append(dphi); ctrl_t.append(ctrl)
+172:             err_sq.append(float(err) ** 2)
+173:             last_info_phi = float(phi)
+174: 
+175:             if abs(phi) > np.pi / 4:
+--------------------------------------------------
+185:         obs10 = np.array([
+186:             self.state[0], self.state[1], self.state[2], self.state[3],
+187:             self.state[4], self.state[5], self.v, self.alpha, phi_d, err,
+188:         ], dtype=np.float32)
+189:         obs = np.concatenate([obs10, self._extra_obs()]).astype(np.float32)
+190: 
+191:         total_r = float(total_r)
+192:         info = {
+193:             "phi": last_info_phi, "phi_d": float(phi_d), "err": float(err),
+194:             "v": float(self.v), "alpha": float(self.alpha),
+--------------------------------------------------
+
+==========================================================================================
+FILE: motorcycle_env_mpc19.py
+
+23: import numpy as np
+24: import gymnasium as gym
+25: 
+26: from motorcycle_env_mpc18 import MotorcycleEnvMPC18
+27: from motorcycle_dynamics import TAU_MAX, MotorcycleDynamics
+28: 
+29: 
+30: class MotorcycleEnvMPC19(MotorcycleEnvMPC18):
+31: 
+32:     W_U  = 0.0     # ضریب ‖u‖²   (u/TAU_MAX، بی‌بعد)
+33:     W_DU = 0.0     # ضریب ‖Δu‖²  (Δu/(2·TAU_MAX)، بی‌بعد)
+34:     W_N  = 0.0     # ضریب N/Nmax (هزینه‌ی محاسباتی، مستقل از سخت‌افزار)
+35:     CLIP = True    # False ⇒ reward بدون clip (برای آنکه کالیبره‌ی آفلاین دقیق بماند)
+36:     _R_LOW  = float(MotorcycleEnvMPC18._A_LOW[3])
+37:     _R_HIGH = float(MotorcycleEnvMPC18._A_HIGH[3])
+38: 
+--------------------------------------------------
+42:         if w_du is not None: self.W_DU = float(w_du)
+43:         if w_n  is not None: self.W_N  = float(w_n)
+44:         if clip is not None: self.CLIP = bool(clip)
+45:         self.action_space = gym.spaces.Box(-1.0, 1.0, shape=(4,), dtype=np.float32)
+46:         hi = np.asarray(self.observation_space.high)[:10]
+47:         self.observation_space = gym.spaces.Box(
+48:             np.concatenate([-hi, -np.ones(4, np.float32)]),
+49:             np.concatenate([hi,   np.ones(4, np.float32)]), dtype=np.float32)
+50:         self._u_prev_act = np.zeros(2)
+51:         self.set_fault(**(fault or {}))
+52: 
+53:     # ── fault روی plant (MPC و مدل داخلی آن دست‌نخورده‌اند ⇒ mismatch) ─────
+54:     def set_fault(self, eff=(1.0, 1.0), iw_scale=1.0, rate_max=None):
+--------------------------------------------------
+82:         hi = np.log(np.array([self._RL_HIGH[0], self._RL_HIGH[1], self._R_HIGH]))
+83:         w = np.log(np.maximum(self._smoothed_weights[[0, 1, 3]], 1e-9))
+84:         wn = 2.0 * (w - lo) / (hi - lo) - 1.0
+85:         nn = 2.0 * self._N_idx / max(len(self.HORIZONS) - 1, 1) - 1.0
+86:         return np.clip(np.concatenate([wn, [nn]]).astype(np.float32), -1.0, 1.0)
+87: 
+88:     def reset(self, seed=None, options=None):
+89:         obs, info = super().reset(seed=seed, options=options)   # v18: obs10 + _extra_obs() (۴ تایی)
+90:         self._u_prev_act = np.zeros(2)
+91:         return obs, info
+--------------------------------------------------
+129:             P_chol = self._dare_chol(A_d, B_d, Q_diag=Q_diag, R_diag=R_diag)
+130: 
+131:             u_opt = self.mpc.solve(x0=self.state, xd=x_d, Q_diag=Q_diag,
+132:                                    R_diag=R_diag, P_chol=P_chol)
+133:             u_opt = np.clip(u_opt, -TAU_MAX, TAU_MAX)
+134:             self.state = self._plant_dyn.step(self.state, self._fault_eff * u_opt)
+135:             if self._fault_rate is not None:
+136:                 self.state[4:6] = np.clip(self.state[4:6], -self._fault_rate, self._fault_rate)
+137: 
+138:             self.v = float(np.clip(self.v + self.np_random.normal(0.0, self.V_NOISE), 1.0, 8.0))
+--------------------------------------------------
+146:             du = u_opt - self._u_prev_act
+147:             self._u_prev_act = u_opt.copy()
+148:             track = float(np.exp(-20.0 * err ** 2))
+149:             dphi  = 0.05 * abs(self.state[1])
+150:             u2    = float(np.sum((u_opt / TAU_MAX) ** 2))            # بی‌بعد
+151:             du2   = float(np.sum((du / (2.0 * TAU_MAX)) ** 2))   # بی‌بعد
+152:             raw   = 1.0 + track - dphi - self.W_U * u2 - self.W_DU * du2 - self.W_N * nfrac
+153:             r     = float(np.clip(raw, 0.0, 2.0)) if self.CLIP else float(raw)
+154:             n_clip += int(raw < 0.0 or raw > 2.0)
+155: 
+156:             u_norms.append(float(np.linalg.norm(u_opt)))
+157:             st_norms.append(float(np.linalg.norm(self.state)))
+158:             solve_ms.append(self.mpc.last_solve_time * 1000.0)
+159:             statuses[self.mpc.last_solve_status] = statuses.get(self.mpc.last_solve_status, 0) + 1
+160:             sat_any |= bool(np.any(np.abs(u_opt) >= TAU_MAX * 0.99))
+161:             err_sq.append(float(err) ** 2)
+162:             last_phi = float(phi)
+163: 
+164:             if abs(phi) > np.pi / 4:
+165:                 r = -self.CRASH_PEN
+--------------------------------------------------
+177:         obs10 = np.array([
+178:             self.state[0], self.state[1], self.state[2], self.state[3],
+179:             self.state[4], self.state[5], self.v, self.alpha, phi_d, err,
+180:         ], dtype=np.float32)
+181:         obs = np.concatenate([obs10, self._extra_obs()]).astype(np.float32)
+182: 
+183:         total_r = float(total_r)
+184:         info = {
+185:             "phi": last_phi, "phi_d": float(phi_d), "err": float(err),
+186:             "v": float(self.v), "alpha": float(self.alpha),
+--------------------------------------------------
+
+==========================================================================================
+FILE: motorcycle_env_mpc19_old1.py
+
+23: import numpy as np
+24: import gymnasium as gym
+25: 
+26: from motorcycle_env_mpc18 import MotorcycleEnvMPC18
+27: from motorcycle_dynamics import TAU_MAX
+28: 
+29: 
+30: class MotorcycleEnvMPC19(MotorcycleEnvMPC18):
+31: 
+32:     W_U  = 0.0     # ضریب ‖u‖²   (u بر حسب N·m)
+--------------------------------------------------
+40:         if w_u  is not None: self.W_U  = float(w_u)
+41:         if w_du is not None: self.W_DU = float(w_du)
+42:         if w_n  is not None: self.W_N  = float(w_n)
+43:         self.action_space = gym.spaces.Box(-1.0, 1.0, shape=(4,), dtype=np.float32)
+44:         hi = np.asarray(self.observation_space.high)[:10]
+45:         self.observation_space = gym.spaces.Box(
+46:             np.concatenate([-hi, -np.ones(4, np.float32)]),
+47:             np.concatenate([hi,   np.ones(4, np.float32)]), dtype=np.float32)
+48:         self._u_prev_act = np.zeros(2)
+49: 
+50:     # ── action <-> پارامترهای MPC ───────────────────────────────────────
+51:     @classmethod
+52:     def decode_action(cls, a):
+--------------------------------------------------
+64:         hi = np.log(np.array([self._RL_HIGH[0], self._RL_HIGH[1], self._R_HIGH]))
+65:         w = np.log(np.maximum(self._smoothed_weights[[0, 1, 3]], 1e-9))
+66:         wn = 2.0 * (w - lo) / (hi - lo) - 1.0
+67:         nn = 2.0 * self._N_idx / max(len(self.HORIZONS) - 1, 1) - 1.0
+68:         return np.clip(np.concatenate([wn, [nn]]).astype(np.float32), -1.0, 1.0)
+69: 
+70:     def reset(self, seed=None, options=None):
+71:         obs, info = super().reset(seed=seed, options=options)   # v18: obs10 + _extra_obs() (۴ تایی)
+72:         self._u_prev_act = np.zeros(2)
+73:         return obs, info
+--------------------------------------------------
+111:             P_chol = self._dare_chol(A_d, B_d, Q_diag=Q_diag, R_diag=R_diag)
+112: 
+113:             u_opt = self.mpc.solve(x0=self.state, xd=x_d, Q_diag=Q_diag,
+114:                                    R_diag=R_diag, P_chol=P_chol)
+115:             u_opt = np.clip(u_opt, -TAU_MAX, TAU_MAX)
+116:             self.state = self.dyn.step(self.state, u_opt)
+117: 
+118:             self.v = float(np.clip(self.v + self.np_random.normal(0.0, self.V_NOISE), 1.0, 8.0))
+119:             self.alpha = float(np.clip(
+120:                 self.alpha + self.np_random.normal(0.0, self.ALPHA_NOISE), -0.20, 0.20))
+--------------------------------------------------
+136:             u_norms.append(float(np.linalg.norm(u_opt)))
+137:             st_norms.append(float(np.linalg.norm(self.state)))
+138:             solve_ms.append(self.mpc.last_solve_time * 1000.0)
+139:             statuses[self.mpc.last_solve_status] = statuses.get(self.mpc.last_solve_status, 0) + 1
+140:             sat_any |= bool(np.any(np.abs(u_opt) >= TAU_MAX * 0.99))
+141:             err_sq.append(float(err) ** 2)
+142:             last_phi = float(phi)
+143: 
+144:             if abs(phi) > np.pi / 4:
+145:                 r = -self.CRASH_PEN
+--------------------------------------------------
+157:         obs10 = np.array([
+158:             self.state[0], self.state[1], self.state[2], self.state[3],
+159:             self.state[4], self.state[5], self.v, self.alpha, phi_d, err,
+160:         ], dtype=np.float32)
+161:         obs = np.concatenate([obs10, self._extra_obs()]).astype(np.float32)
+162: 
+163:         total_r = float(total_r)
+164:         info = {
+165:             "phi": last_phi, "phi_d": float(phi_d), "err": float(err),
+166:             "v": float(self.v), "alpha": float(self.alpha),
+--------------------------------------------------
+
+==========================================================================================
+FILE: motorcycle_env_mpc19_old2.py
+
+23: import numpy as np
+24: import gymnasium as gym
+25: 
+26: from motorcycle_env_mpc18 import MotorcycleEnvMPC18
+27: from motorcycle_dynamics import TAU_MAX
+28: 
+29: 
+30: class MotorcycleEnvMPC19(MotorcycleEnvMPC18):
+31: 
+32:     W_U  = 0.0     # ضریب ‖u‖²   (u/TAU_MAX، بی‌بعد)
+33:     W_DU = 0.0     # ضریب ‖Δu‖²  (Δu/(2·TAU_MAX)، بی‌بعد)
+34:     W_N  = 0.0     # ضریب N/Nmax (هزینه‌ی محاسباتی، مستقل از سخت‌افزار)
+35:     CLIP = True    # False ⇒ reward بدون clip (برای آنکه کالیبره‌ی آفلاین دقیق بماند)
+36:     _R_LOW  = float(MotorcycleEnvMPC18._A_LOW[3])
+37:     _R_HIGH = float(MotorcycleEnvMPC18._A_HIGH[3])
+38: 
+--------------------------------------------------
+42:         if w_du is not None: self.W_DU = float(w_du)
+43:         if w_n  is not None: self.W_N  = float(w_n)
+44:         if clip is not None: self.CLIP = bool(clip)
+45:         self.action_space = gym.spaces.Box(-1.0, 1.0, shape=(4,), dtype=np.float32)
+46:         hi = np.asarray(self.observation_space.high)[:10]
+47:         self.observation_space = gym.spaces.Box(
+48:             np.concatenate([-hi, -np.ones(4, np.float32)]),
+49:             np.concatenate([hi,   np.ones(4, np.float32)]), dtype=np.float32)
+50:         self._u_prev_act = np.zeros(2)
+51: 
+52:     # ── action <-> پارامترهای MPC ───────────────────────────────────────
+53:     @classmethod
+54:     def decode_action(cls, a):
+--------------------------------------------------
+66:         hi = np.log(np.array([self._RL_HIGH[0], self._RL_HIGH[1], self._R_HIGH]))
+67:         w = np.log(np.maximum(self._smoothed_weights[[0, 1, 3]], 1e-9))
+68:         wn = 2.0 * (w - lo) / (hi - lo) - 1.0
+69:         nn = 2.0 * self._N_idx / max(len(self.HORIZONS) - 1, 1) - 1.0
+70:         return np.clip(np.concatenate([wn, [nn]]).astype(np.float32), -1.0, 1.0)
+71: 
+72:     def reset(self, seed=None, options=None):
+73:         obs, info = super().reset(seed=seed, options=options)   # v18: obs10 + _extra_obs() (۴ تایی)
+74:         self._u_prev_act = np.zeros(2)
+75:         return obs, info
+--------------------------------------------------
+113:             P_chol = self._dare_chol(A_d, B_d, Q_diag=Q_diag, R_diag=R_diag)
+114: 
+115:             u_opt = self.mpc.solve(x0=self.state, xd=x_d, Q_diag=Q_diag,
+116:                                    R_diag=R_diag, P_chol=P_chol)
+117:             u_opt = np.clip(u_opt, -TAU_MAX, TAU_MAX)
+118:             self.state = self.dyn.step(self.state, u_opt)
+119: 
+120:             self.v = float(np.clip(self.v + self.np_random.normal(0.0, self.V_NOISE), 1.0, 8.0))
+121:             self.alpha = float(np.clip(
+122:                 self.alpha + self.np_random.normal(0.0, self.ALPHA_NOISE), -0.20, 0.20))
+--------------------------------------------------
+128:             du = u_opt - self._u_prev_act
+129:             self._u_prev_act = u_opt.copy()
+130:             track = float(np.exp(-20.0 * err ** 2))
+131:             dphi  = 0.05 * abs(self.state[1])
+132:             u2    = float(np.sum((u_opt / TAU_MAX) ** 2))            # بی‌بعد
+133:             du2   = float(np.sum((du / (2.0 * TAU_MAX)) ** 2))   # بی‌بعد
+134:             raw   = 1.0 + track - dphi - self.W_U * u2 - self.W_DU * du2 - self.W_N * nfrac
+135:             r     = float(np.clip(raw, 0.0, 2.0)) if self.CLIP else float(raw)
+136:             n_clip += int(raw < 0.0 or raw > 2.0)
+137: 
+138:             u_norms.append(float(np.linalg.norm(u_opt)))
+139:             st_norms.append(float(np.linalg.norm(self.state)))
+140:             solve_ms.append(self.mpc.last_solve_time * 1000.0)
+141:             statuses[self.mpc.last_solve_status] = statuses.get(self.mpc.last_solve_status, 0) + 1
+142:             sat_any |= bool(np.any(np.abs(u_opt) >= TAU_MAX * 0.99))
+143:             err_sq.append(float(err) ** 2)
+144:             last_phi = float(phi)
+145: 
+146:             if abs(phi) > np.pi / 4:
+147:                 r = -self.CRASH_PEN
+--------------------------------------------------
+159:         obs10 = np.array([
+160:             self.state[0], self.state[1], self.state[2], self.state[3],
+161:             self.state[4], self.state[5], self.v, self.alpha, phi_d, err,
+162:         ], dtype=np.float32)
+163:         obs = np.concatenate([obs10, self._extra_obs()]).astype(np.float32)
+164: 
+165:         total_r = float(total_r)
+166:         info = {
+167:             "phi": last_phi, "phi_d": float(phi_d), "err": float(err),
+168:             "v": float(self.v), "alpha": float(self.alpha),
+--------------------------------------------------
+
+==========================================================================================
+FILE: motorcycle_env_residual.py
+
+1: """
+2: motorcycle_env_residual.py — Phase 5: Residual SAC روی Neural MPC فریزشده.
+3: 
+4:     u_final = clip( u_NN(x) + res_scale · a ,  -TAU_MAX, TAU_MAX ),   a ∈ [-1,1]^2
+5: 
+6: - Neural MPC (neural_mpc.pt) فقط inference می‌شود؛ هیچ MPC/solver در حلقه اجرا نمی‌شود.
+7: - از MotorcycleEnvMPC19 فقط برای reset/سناریو/مرجع/نویز/plant ارث می‌برد (مثل closed_loop_validation).
+8: - با residual=0 و (bucket, iw) یکسان، trajectory دقیقاً همان Neural MPC در closed_loop_validation است
+9:   (Gate: test_residual_env.py).
+10: - Fault: Iw_scale از iw_list (هر اپیزود)؛ plant معیوب، Neural MPC و مدل نامی دست‌نخورده.
+11: - Observation (12): [φ, φ̇, δf, δr, δ̇f, δ̇r, v, α, φd, err] + u_NN/U_REF (۲ عدد).
+12:   (خام؛ در آموزش از VecNormalize استفاده کن.)
+13: - Reward هر گام plant: clip(1 + track − dphi − rw_u‖u/τmax‖² − rw_du‖Δu/2τmax‖² − rw_res·mean(a²), 0, 2)؛
+14:   سقوط: −CRASH_PEN. جمع جمله‌ها در info برای کالیبره‌ی آفلاین.
+15: """
+16: import numpy as np
+17: import gymnasium as gym
+18: import torch
+19: 
+20: from motorcycle_env_mpc19 import MotorcycleEnvMPC19
+21: from motorcycle_dynamics import TAU_MAX, MotorcycleDynamics
+22: from train_neural_mpc import load_neural_mpc
+23: 
+24: torch.set_num_threads(1)
+25: 
+26: 
+--------------------------------------------------
+28:     U_REF = 5.0
+29:     PHI_MAX_IC = 0.60
+30:     IC_RANGE = {1: (0.20, 0.50), 2: (0.50, 1.20)}
+31: 
+32:     def __init__(self, ckpt="neural_mpc.pt", res_scale=5.0, decision_k=1, level=8,
+33:                  iw_list=(1.0,), iw_probs=None, bucket_probs=(0.4, 0.3, 0.3),
+34:                  rw_u=0.0, rw_du=0.0, rw_res=0.0, master_seed=0, **kw):
+35:         super().__init__(**kw)                      # (MPC solverها ساخته می‌شوند ولی استفاده نمی‌شوند)
+36:         self.nn = load_neural_mpc(ckpt, "cpu")
+37:         self.res_scale = float(res_scale)
+38:         self.decision_k = int(decision_k)
+39:         self.level = int(level)
+40:         self.iw_list = np.asarray(iw_list, float)
+41:         self.iw_probs = None if iw_probs is None else np.asarray(iw_probs, float) / np.sum(iw_probs)
+42:         self.bucket_probs = np.asarray(bucket_probs, float) / np.sum(bucket_probs)
+43:         self.rw_u, self.rw_du, self.rw_res = float(rw_u), float(rw_du), float(rw_res)
+44:         self._master = np.random.default_rng(master_seed)
+45:         self._dyn_cache = {}
+46:         self.action_space = gym.spaces.Box(-1.0, 1.0, shape=(2,), dtype=np.float32)
+47:         self.observation_space = gym.spaces.Box(-np.inf, np.inf, shape=(12,), dtype=np.float32)
+48:         self._u_nn = np.zeros(2); self._u_last = np.zeros(2)
+49:         self._iw, self._bucket = 1.0, 0
+50: 
+51:     # ── helpers ─────────────────────────────────────────────────────────
+52:     def _apply_iw(self, iw):
+--------------------------------------------------
+59:             self._plant_dyn = self._dyn_cache[iw]
+60:         self._fault_cfg = dict(eff=(1.0, 1.0), iw_scale=float(iw), rate_max=None)
+61:         self._iw = float(iw)
+62: 
+63:     def _obs10(self):
+64:         phi_d = self._desired_roll()
+65:         return np.array([*self.state[:6], self.v, self.alpha, phi_d, self.state[0] - phi_d], np.float32)
+66: 
+67:     def _nn_u(self, x):
+68:         with torch.no_grad():
+69:             u = self.nn(torch.from_numpy(x)[None])[0].numpy().astype(np.float64)
+70:         return np.clip(u, -TAU_MAX, TAU_MAX)
+71: 
+72:     def _make_obs(self):
+73:         x = self._obs10()
+74:         self._u_nn = self._nn_u(x)
+75:         return np.concatenate([x, (self._u_nn / self.U_REF).astype(np.float32)]).astype(np.float32)
+76: 
+77:     # ── gym API ─────────────────────────────────────────────────────────
+78:     def reset(self, seed=None, options=None):
+79:         options = options or {}
+80:         if seed is None:
+--------------------------------------------------
+95:         return obs, dict(iw=self._iw, bucket=self._bucket, seed=int(seed))
+96: 
+97:     def step(self, action):
+98:         a = np.clip(np.asarray(action, dtype=np.float64).reshape(2), -1.0, 1.0)
+99:         du_rl = self.res_scale * a
+100:         total_r, terminated, truncated = 0.0, False, False
+101:         n_sub = n_alive = 0
+102:         s_track = s_dphi = s_res2 = 0.0
+103:         err_sq = 0.0
+104:         u = np.zeros(2)
+105:         for _ in range(self.decision_k):
+106:             self._steps += 1; n_sub += 1
+107:             u = np.clip(self._u_nn + du_rl, -TAU_MAX, TAU_MAX)
+108:             self.state = self._plant_dyn.step(self.state, self._fault_eff * u)
+109:             self.v = float(np.clip(self.v + self.np_random.normal(0.0, self.V_NOISE), 1.0, 8.0))
+110:             self.alpha = float(np.clip(self.alpha + self.np_random.normal(0.0, self.ALPHA_NOISE), -0.20, 0.20))
+111:             phi = float(self.state[0]); phi_d = self._desired_roll(); err = phi - phi_d
+112:             err_sq += err ** 2
+113:             du = u - self._u_last; self._u_last = u.copy()
+114:             track = float(np.exp(-20.0 * err ** 2)); dphi = 0.05 * abs(self.state[1])
+115:             res2 = float(np.mean(a ** 2))
+116:             raw = (1.0 + track - dphi - self.rw_u * float(np.sum((u / TAU_MAX) ** 2))
+117:                    - self.rw_du * float(np.sum((du / (2.0 * TAU_MAX)) ** 2)) - self.rw_res * res2)
+118:             r = float(np.clip(raw, 0.0, 2.0))
+119:             if abs(phi) > np.pi / 4:
+120:                 r = -self.CRASH_PEN; terminated = True
+121:             else:
+122:                 n_alive += 1; s_track += track; s_dphi += dphi; s_res2 += res2
+--------------------------------------------------
+124:             if terminated:
+125:                 break
+126:             if self._steps >= self.MAX_STEPS:
+127:                 truncated = True; break
+128:             self._u_nn = self._nn_u(self._obs10())
+129:         obs = self._make_obs()
+130:         info = dict(phi=phi, phi_d=float(phi_d), err=float(err), u_final=u.copy(), u_nn=self._u_nn.copy(),
+131:                     du_rl=du_rl.copy(), iw=self._iw, bucket=self._bucket, n_plant_steps=n_sub,
+132:                     n_alive=n_alive, err_sq_sum=float(err_sq), sum_track=s_track, sum_dphi=s_dphi,
+133:                     sum_res2=s_res2, fault=str(self._fault_cfg))
+--------------------------------------------------
+
+==========================================================================================
+FILE: motorcycle_env_residual_multi13.py
+
+1: """
+2: motorcycle_env_residual.py — Phase 5: Residual SAC روی Neural MPC فریزشده.
+3: 
+4:     u_final = clip( u_NN(x) + res_scale · a ,  -TAU_MAX, TAU_MAX ),   a ∈ [-1,1]^2
+5: 
+6: - Neural MPC (neural_mpc.pt) فقط inference می‌شود؛ هیچ MPC/solver در حلقه اجرا نمی‌شود.
+7: - از MotorcycleEnvMPC19 فقط برای reset/سناریو/مرجع/نویز/plant ارث می‌برد (مثل closed_loop_validation).
+8: - با residual=0 و (bucket, iw) یکسان، trajectory دقیقاً همان Neural MPC در closed_loop_validation است
+9:   (Gate: test_residual_env.py).
+10: - Fault: Iw_scale از iw_list (هر اپیزود)؛ plant معیوب، Neural MPC و مدل نامی دست‌نخورده.
+11: - Observation (12): [φ, φ̇, δf, δr, δ̇f, δ̇r, v, α, φd, err] + u_NN/U_REF (۲ عدد).
+12:   (خام؛ در آموزش از VecNormalize استفاده کن.)
+13: - Reward هر گام plant: clip(1 + track − dphi − rw_u‖u/τmax‖² − rw_du‖Δu/2τmax‖² − rw_res·mean(a²), 0, 2)؛
+14:   سقوط: −CRASH_PEN. جمع جمله‌ها در info برای کالیبره‌ی آفلاین.
+15: """
+16: import numpy as np
+17: import gymnasium as gym
+18: import torch
+19: 
+20: from motorcycle_env_mpc19 import MotorcycleEnvMPC19
+21: from motorcycle_dynamics import TAU_MAX, MotorcycleDynamics
+22: from train_multihorizon_neural_mpc_13 import load_neural_mpc
+23: 
+24: torch.set_num_threads(1)
+25: 
+26: 
+--------------------------------------------------
+30:     MPC_N = 20
+31:     PHI_MAX_IC = 0.60
+32:     IC_RANGE = {1: (0.20, 0.50), 2: (0.50, 1.20)}
+33: 
+34:     def __init__(self, ckpt="neural_mpc.pt", res_scale=5.0, decision_k=1, level=8,
+35:                  iw_list=(1.0,), iw_probs=None, bucket_probs=(0.4, 0.3, 0.3),
+36:                  rw_u=0.0, rw_du=0.0, rw_res=0.0, master_seed=0, **kw):
+37:         super().__init__(**kw)                      # (MPC solverها ساخته می‌شوند ولی استفاده نمی‌شوند)
+38:         self.nn = load_neural_mpc(ckpt, "cpu")
+39:         self.res_scale = float(res_scale)
+40:         self.decision_k = int(decision_k)
+41:         self.level = int(level)
+42:         self.iw_list = np.asarray(iw_list, float)
+43:         self.iw_probs = None if iw_probs is None else np.asarray(iw_probs, float) / np.sum(iw_probs)
+44:         self.bucket_probs = np.asarray(bucket_probs, float) / np.sum(bucket_probs)
+45:         self.rw_u, self.rw_du, self.rw_res = float(rw_u), float(rw_du), float(rw_res)
+46:         self._master = np.random.default_rng(master_seed)
+47:         self._dyn_cache = {}
+48:         self.action_space = gym.spaces.Box(-1.0, 1.0, shape=(3,), dtype=np.float32)
+49:         self.observation_space = gym.spaces.Box(-np.inf, np.inf, shape=(15,), dtype=np.float32)
+50:         self._u_nn = np.zeros(2); self._u_last = np.zeros(2)
+51:         self._iw, self._bucket = 1.0, 0
+52:         self._horizon = 20
+53:         assert len(self.nn.mu)==13, "Checkpoint must be 13-input multi-horizon Neural MPC"
+54: 
+--------------------------------------------------
+63:             self._plant_dyn = self._dyn_cache[iw]
+64:         self._fault_cfg = dict(eff=(1.0, 1.0), iw_scale=float(iw), rate_max=None)
+65:         self._iw = float(iw)
+66: 
+67:     def _obs10(self):
+68:         phi_d = self._desired_roll()
+69:         return np.array([*self.state[:6], self.v, self.alpha, phi_d, self.state[0] - phi_d], np.float32)
+70: 
+71:     def _nn_u(self, x):
+72:         assert len(x)==13
+73:         with torch.no_grad():
+74:             u = self.nn(torch.from_numpy(x)[None])[0].numpy().astype(np.float64)
+75:         return np.clip(u, -TAU_MAX, TAU_MAX)
+76: 
+77:     def _make_obs(self):
+78:         x = self._obs10()
+79:         xx = np.concatenate([x, self._u_last.astype(np.float32), [self._horizon]]).astype(np.float32)
+80:         self._u_nn = self._nn_u(xx)
+81:         return np.concatenate([x, (self._u_last / self.U_REF).astype(np.float32),
+82:                                (self._u_nn / self.U_REF).astype(np.float32),
+83:                                [2.0 * self.HORIZONS.index(self._horizon)/(len(self.HORIZONS)-1)-1.0]]).astype(np.float32)
+84: 
+85:     # ── gym API ─────────────────────────────────────────────────────────
+86:     def reset(self, seed=None, options=None):
+--------------------------------------------------
+104:         return obs, dict(iw=self._iw, bucket=self._bucket, seed=int(seed))
+105: 
+106:     def step(self, action):
+107:         a = np.clip(np.asarray(action, dtype=np.float64).reshape(3), -1.0, 1.0)
+108:         du_rl = self.res_scale * a[:2]
+109:         k = min(int((a[2]+1.0)*0.5*len(self.HORIZONS)), len(self.HORIZONS)-1)
+110:         self._horizon = self.HORIZONS[k]
+111:         self._u_nn = self._nn_u(np.concatenate([self._obs10(), self._u_last, [self._horizon]]).astype(np.float32))
+112:         total_r, terminated, truncated = 0.0, False, False
+113:         n_sub = n_alive = 0
+114:         s_track = s_dphi = s_res2 = 0.0
+115:         err_sq = 0.0
+116:         u = np.zeros(2)
+117:         for _ in range(self.decision_k):
+118:             self._steps += 1; n_sub += 1
+119:             u = np.clip(self._u_nn + du_rl, -TAU_MAX, TAU_MAX)
+120:             self.state = self._plant_dyn.step(self.state, self._fault_eff * u)
+121:             self.v = float(np.clip(self.v + self.np_random.normal(0.0, self.V_NOISE), 1.0, 8.0))
+122:             self.alpha = float(np.clip(self.alpha + self.np_random.normal(0.0, self.ALPHA_NOISE), -0.20, 0.20))
+123:             phi = float(self.state[0]); phi_d = self._desired_roll(); err = phi - phi_d
+124:             err_sq += err ** 2
+125:             du = u - self._u_last; self._u_last = u.copy()
+126:             track = float(np.exp(-20.0 * err ** 2)); dphi = 0.05 * abs(self.state[1])
+127:             res2 = float(np.mean(a[:2] ** 2))
+128:             raw = (1.0 + track - dphi - self.rw_u * float(np.sum((u / TAU_MAX) ** 2))
+129:                    - self.rw_du * float(np.sum((du / (2.0 * TAU_MAX)) ** 2)) - self.rw_res * res2)
+130:             r = float(np.clip(raw, 0.0, 2.0))
+131:             if abs(phi) > np.pi / 4:
+132:                 r = -self.CRASH_PEN; terminated = True
+133:             else:
+134:                 n_alive += 1; s_track += track; s_dphi += dphi; s_res2 += res2
+--------------------------------------------------
+136:             if terminated:
+137:                 break
+138:             if self._steps >= self.MAX_STEPS:
+139:                 truncated = True; break
+140:             self._u_nn = self._nn_u(np.concatenate([self._obs10(), self._u_last, [self._horizon]]).astype(np.float32))
+141:         obs = self._make_obs()
+142:         info = dict(phi=phi, phi_d=float(phi_d), err=float(err), u_final=u.copy(), u_nn=self._u_nn.copy(),
+143:                     du_rl=du_rl.copy(), horizon=int(self._horizon), iw=self._iw, bucket=self._bucket, n_plant_steps=n_sub,
+144:                     n_alive=n_alive, err_sq_sum=float(err_sq), sum_track=s_track, sum_dphi=s_dphi,
+145:                     sum_res2=s_res2, fault=str(self._fault_cfg))
+--------------------------------------------------
+
+==========================================================================================
+FILE: motorcycle_env_standalone.py
+
+4: import numpy as np
+5: import gymnasium as gym
+6: from motorcycle_env_mpc19 import MotorcycleEnvMPC19
+7: from motorcycle_env_residual import MotorcycleEnvResidual
+8: from motorcycle_dynamics import TAU_MAX
+9: 
+10: class MotorcycleEnvStandalone(MotorcycleEnvResidual):
+11:     def __init__(self, decision_k=1, level=8, iw_list=(1.0,), iw_probs=None,
+12:                  bucket_probs=(0.4, 0.3, 0.3), rw_u=0.0, rw_du=0.0,
+13:                  rw_res=0.0, master_seed=0, **kw):
+14:         # Deliberately bypass MotorcycleEnvResidual.__init__: it loads Neural MPC.
+15:         MotorcycleEnvMPC19.__init__(self, **kw)
+16:         self.nn = None
+17:         self.res_scale = float(TAU_MAX)
+18:         self.decision_k = int(decision_k)
+19:         self.level = int(level)
+20:         self.iw_list = np.asarray(iw_list, float)
+21:         self.iw_probs = None if iw_probs is None else np.asarray(iw_probs, float) / np.sum(iw_probs)
+22:         self.bucket_probs = np.asarray(bucket_probs, float) / np.sum(bucket_probs)
+23:         self.rw_u, self.rw_du, self.rw_res = float(rw_u), float(rw_du), float(rw_res)
+24:         self._master = np.random.default_rng(master_seed)
+25:         self._dyn_cache = {}
+26:         self.action_space = gym.spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
+27:         self.observation_space = gym.spaces.Box(-np.inf, np.inf, shape=(10,), dtype=np.float32)
+28:         self._u_nn = np.zeros(2, dtype=np.float64)
+29:         self._u_last = np.zeros(2, dtype=np.float64)
+30:         self._iw, self._bucket = 1.0, 0
+31: 
+32:     def _nn_u(self, x):
+33:         return np.zeros(2, dtype=np.float64)
+34: 
+35:     def _make_obs(self):
+36:         self._u_nn = np.zeros(2, dtype=np.float64)
+37:         return self._obs10().astype(np.float32)
+--------------------------------------------------
+
+==========================================================================================
+FILE: pilot_strict_osqp_ekf.py
+
+3: Place beside evaluate_online_mpc_ekf_ablation.py in the project's root.
+4: Do not modify source files on disk. Current=1e-4/4000 (checked at run time),
+5: Strict=1e-6/20000. Always run each (mode, repeat) in a fresh Python process.
+6: 
+7: Run: python pilot_strict_osqp_ekf.py --ckpt neural_mpc_multi13.pt --out strict_pilot_N20
+8: """
+9: from __future__ import annotations
+10: import argparse,csv,hashlib,json,subprocess,sys,time
+11: from collections import Counter
+12: from pathlib import Path
+--------------------------------------------------
+27: 
+28: def worker(a):
+29:     import numpy as np
+30:     import motorcycle_env_mpc17 as m
+31:     from compare_34faults_res_scale import ObservedFaultEnv
+32:     from compare_online_mpc_vs_neural_vs_residual import setup_online
+33:     from final_fault_benchmark import SCENARIOS as FAULT_SCENARIOS
+34:     from evaluate_online_mpc_ekf_ablation import rollout
+35:     orig=(float(m._MPC_EPS),int(m._MPC_MAX_ITER),dict(m._OSQP_EXTRA),str(m._MPC_FALLBACK))
+36:     if not (abs(orig[0]-1e-4)<1e-15 and orig[1]==4000 and orig[2]=={} and orig[3]=='zero'):
+37:         raise RuntimeError('Unexpected original MPC settings '+str(orig)+'; audit before comparing.')
+38:     if a.mode=='strict':
+39:         m._MPC_EPS=1e-6;m._MPC_MAX_ITER=20000
+40:     env=ObservedFaultEnv(ckpt=a.ckpt,decision_k=1,iw_list=(1.,),res_scale=5.)
+41:     weights,_,_=setup_online(env,a.horizon)
+42:     ekf=dict(process_std=[.002,.05,.005,.005,.10,.10],measure_std=[.01,.10,.005,.005,.05,.05],
+43:              initial_std=[.05,.5,.05,.05,.5,.5],gate=9.21,stale_phi_tol=1e-10,
+44:              stale_rate_tol=1e-10,stale_run=2,recovery_run=5,recovery_factor=4.,recovery_cap=1.)
+45:     chosen=[(sid,ft,fp) for sid,ft,fp in FAULT_SCENARIOS if sid in SCENARIOS]
+--------------------------------------------------
+138:     report['caveat']='Full-rollout results may differ numerically across independent runs; judge repeat parity before final benchmark.'
+139:     atomic_json(Path(a.out+'_report.json'),report)
+140:     print('DONE: ',a.out+'_report.json',a.out+'_paired.csv',flush=True)
+141: 
+142: def main():
+143:     p=argparse.ArgumentParser(description=__doc__)
+144:     p.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+145:     p.add_argument('--out',default='strict_osqp_pilot_N20')
+146:     p.add_argument('--horizon',type=int,default=20,choices=[10,20,30,40])
+147:     p.add_argument('--seed0',type=int,default=77000)
+148:     p.add_argument('--episodes',type=int,default=5)
+149:     p.add_argument('--buckets',type=int,nargs='+',default=[0,1,2])
+--------------------------------------------------
+
+==========================================================================================
+FILE: rebuild_404_vecnorm.py
+
+1: ﻿import numpy as np
+2: from gymnasium import spaces
+3: from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+4: from gymnasium import Env
+5: 
+6: stem = "sac_seed404_fromscratch_1m_best"
+7: data = np.load(stem + "_vecnorm_stats.npz", allow_pickle=False)
+8: 
+9: class DummyEnv(Env):
+10:     def __init__(self):
+11:         super().__init__()
+12:         self.observation_space = spaces.Box(
+13:             -np.inf, np.inf, shape=(15,), dtype=np.float32
+14:         )
+15:         self.action_space = spaces.Box(
+16:             -1.0, 1.0, shape=(3,), dtype=np.float32
+17:         )
+--------------------------------------------------
+24:         return np.zeros(15, dtype=np.float32), 0.0, False, False, {}
+25: 
+26: env = DummyVecEnv([lambda: DummyEnv()])
+27: 
+28: vn = VecNormalize(
+29:     env,
+30:     training=False,
+31:     norm_obs=bool(data["norm_obs"].item()),
+32:     norm_reward=bool(data["norm_reward"].item()),
+33:     clip_obs=float(data["clip_obs"].item()),
+--------------------------------------------------
+35:     gamma=float(data["gamma"].item()),
+36:     epsilon=float(data["epsilon"].item()),
+37: )
+38: 
+39: vn.obs_rms.mean = data["obs_mean"].copy()
+40: vn.obs_rms.var = data["obs_var"].copy()
+41: vn.obs_rms.count = float(data["obs_count"].item())
+42: 
+43: vn.ret_rms.mean = data["ret_mean"].copy()
+44: vn.ret_rms.var = data["ret_var"].copy()
+45: vn.ret_rms.count = float(data["ret_count"].item())
+46: 
+47: output = stem + "_vecnorm_numpy1.pkl"
+48: vn.save(output)
+49: 
+50: print("VECNORM SAVED:", output)
+51: print("Obs count:", vn.obs_rms.count)
+52: print("Obs shape:", vn.obs_rms.mean.shape)
+53: 
+54: vn.close()
+--------------------------------------------------
+
+==========================================================================================
+FILE: run_ekf_confirmatory.py
+
+85:         out.write('=== RETURN CODE '+str(code)+' ===\n')
+86:     if code:raise RuntimeError('Evaluation failed, exit code '+str(code))
+87: 
+88: 
+89: def main():
+90:     ap=argparse.ArgumentParser(description=__doc__)
+91:     ap.add_argument('--phase',choices=('smoke','full','all'),default='smoke')
+92:     ap.add_argument('--ckpt',default='neural_mpc_multi13.pt')
+93:     ap.add_argument('--out',default='ekf_confirm_78000')
+94:     ap.add_argument('--allow_smoke_failures',action='store_true',help='Allow nonoptimal solver statuses during smoke; not for paper.')
+95:     a=ap.parse_args()
+96:     if not Path(SOURCE).is_file() or not Path(a.ckpt).is_file():
+97:         ap.error('Run inside Three Models with evaluator and checkpoint available.')
+--------------------------------------------------
+
+==========================================================================================
+FILE: run_sac_3seeds_multi13.py
+
+1: """Three independent from-scratch Residual SAC training runs.
+2: 
+3: Place alongside train_residual_sac_multi13_resume.py, neural_mpc_multi13.pt,
+4: and motorcycle_env_residual_multi13.py. Run with Python 3.10+.
+5: 
+6: Each run uses a distinct SAC seed and fresh replay buffer and VecNormalize.
+7: The same development evaluation seeds are used for fair comparison.
+8: """
+9: import argparse
+10: import csv
+11: import json
+--------------------------------------------------
+15: import sys
+16: import time
+17: 
+18: 
+19: def main():
+20:     ap = argparse.ArgumentParser(description=__doc__)
+21:     ap.add_argument('--ckpt', default='neural_mpc_multi13.pt')
+22:     ap.add_argument('--trainer', default='train_residual_sac_multi13_resume.py')
+23:     ap.add_argument('--steps', type=int, default=300_000)
+24:     ap.add_argument('--seeds', type=int, nargs='+', default=[101, 202, 303])
+25:     ap.add_argument('--eval_seed0', type=int, default=190_000,
+26:                     help='Development evaluation seed; keep final test seeds separate')
+--------------------------------------------------
+43:     outdir.mkdir(parents=True, exist_ok=True)
+44:     config = {'trainer': str(trainer), 'ckpt': str(ckpt), 'steps': a.steps,
+45:               'seeds': a.seeds, 'eval_seed0': a.eval_seed0, 'eval_freq': a.eval_freq,
+46:               'eval_eps': a.eval_eps, 'iw': [1., .8, .7, .6, .5],
+47:               'eval_iw': [1., .8, .7, .6, .5], 'res_scale': 5.,
+48:               'resume': False, 'notes': 'Each SAC run starts from scratch. Fixed frozen Neural MPC.'}
+49:     config_path = outdir / 'experiment_config.json'
+50:     if config_path.exists() and not a.force:
+51:         old = json.loads(config_path.read_text(encoding='utf-8'))
+52:         if old != config:
+--------------------------------------------------
+73:                '--iw', '1.0', '0.8', '0.7', '0.6', '0.5',
+74:                '--eval_iw', '1.0', '0.8', '0.7', '0.6', '0.5',
+75:                '--eval_seed0', str(a.eval_seed0),
+76:                '--eval_freq', str(a.eval_freq), '--eval_eps', str(a.eval_eps),
+77:                '--res_scale', '5', '--out', str(prefix)]
+78:         print(f'\n[{idx}/{len(a.seeds)}] Training seed={seed} from scratch.\n'
+79:               f'Command: {subprocess.list2cmdline(cmd)}\nLog: {logpath}', flush=True)
+80:         t0 = time.monotonic()
+81:         with logpath.open('w', encoding='utf-8') as log:
+82:             with subprocess.Popen(cmd, cwd=str(trainer.parent), stdout=subprocess.PIPE,
+--------------------------------------------------
+
+==========================================================================================
+FILE: test_404_vecnorm.py
+
+16:     print("norm_obs:", vn.norm_obs)
+17:     print("norm_reward:", vn.norm_reward)
+18:     print("clip_obs:", vn.clip_obs)
+19:     print("epsilon:", vn.epsilon)
+20:     print("obs_rms mean shape:", np.shape(vn.obs_rms.mean))
+21:     print("obs_rms var shape:", np.shape(vn.obs_rms.var))
+22:     print("obs_rms count:", vn.obs_rms.count)
+23: 
+24: except Exception:
+25:     import traceback
+26:     traceback.print_exc()
+27:     sys.exit(1)
+--------------------------------------------------
+
+==========================================================================================
+FILE: test_residual_env.py
+
+1: """
+2: test_residual_env.py — Gate Phase 5.0: اول این PASS شود، بعد SAC.
+3: 
+4:     python test_residual_env.py --ckpt neural_mpc.pt --ref cl_final100_traj.npz --seed0 71000 --n 10
+5:     python test_residual_env.py --ckpt neural_mpc.pt --scan          (اسکن res_scale با action تصادفی)
+6: 
+7: T1 reproduction : residual=0 ⇒ φ(t) هر seed برابر ref (ستون nmpc در cl_final100_traj.npz)، tol=1e-5 rad
+8: T2 bounds       : حتی با res_scale=100 و a=±1 ⇒ |u_final| ≤ 50
+9: T3 determinism  : دو reset با یک seed و یک action ⇒ obs یکسان
+10: T4 fault        : iw=0.5 ⇒ trajectory با iw=1.0 فرق می‌کند، info['fault'] درست
+11: T5 reward/crash : φ=0.8 ⇒ terminated و r = −CRASH_PEN ؛ reward گام‌های سالم محدود به [0,2]
+12: T6 obs/timing   : shape، finite، میانگین زمان هر گام env
+13: """
+--------------------------------------------------
+22: ap.add_argument("--tol", type=float, default=1e-5)
+23: ap.add_argument("--scan", action="store_true")
+24: a = ap.parse_args()
+25: from motorcycle_env_residual import MotorcycleEnvResidual
+26: from motorcycle_dynamics import TAU_MAX
+27: 
+28: env = MotorcycleEnvResidual(ckpt=a.ckpt)
+29: Z = np.zeros(2, np.float32)
+30: BK = {"nominal": 0, "hard": 2}
+31: 
+32: 
+33: def rollout(seed, bucket, iw, act_fn):
+34:     obs, _ = env.reset(seed=seed, options=dict(bucket=bucket, iw=iw))
+35:     phi, U, R = [], [], []
+36:     while True:
+37:         obs, r, te, tr, info = env.step(act_fn(obs))
+38:         phi.append(info["phi"]); U.append(info["u_final"]); R.append(r)
+--------------------------------------------------
+47:     ok_all &= bool(ok); print(f"[{'PASS' if ok else 'FAIL'}] {name} {msg}", flush=True)
+48: 
+49: if a.scan:
+50:     rng = np.random.default_rng(0)
+51:     print("res_scale | survival | mean ep_len   (action یکنواخت تصادفی، nominal، iw=1.0)")
+52:     for sc in (0.5, 1.0, 2.0, 5.0):
+53:         env.res_scale = sc; s = []; L = []
+54:         for i in range(a.n):
+55:             phi_t, _, _, te = rollout(a.seed0 + i, 0, 1.0, lambda o: rng.uniform(-1, 1, 2).astype(np.float32))
+56:             s.append(not te)
+57:             L.append(len(phi_t))
+58:         print(f"{sc:9.1f} | {np.mean(s):8.2f} | {np.mean(L):.0f}", flush=True)
+--------------------------------------------------
+74: else:
+75:     report("T1 reproduction", False, f"فایل ref پیدا نشد: {a.ref}")
+76: 
+77: # T2
+78: env.res_scale = 100.0
+79: _, U, _, _ = rollout(a.seed0, 0, 1.0, lambda o: np.array([1.0, -1.0], np.float32))
+80: report("T2 bounds (res_scale=100)", np.abs(U).max() <= TAU_MAX + 1e-9, f"max|u|={np.abs(U).max():.2f}")
+81: env.res_scale = 5.0
+82: 
+83: # T3
+84: act = np.array([0.3, -0.2], np.float32)
+85: o1, _ = env.reset(seed=a.seed0 + 3, options=dict(bucket=1, iw=1.0)); s1 = env.step(act)[0]
+86: o2, _ = env.reset(seed=a.seed0 + 3, options=dict(bucket=1, iw=1.0)); s2 = env.step(act)[0]
+--------------------------------------------------
+
+==========================================================================================
+FILE: train_multihorizon_neural_mpc.py
+
+3: 
+4:     python train_neural_mpc.py --train mpc_train.npz --val mpc_val.npz --out neural_mpc.pt
+5: 
+6: - normalization ورودی فقط از train حساب و داخل checkpoint ذخیره می‌شود؛ روی val عیناً همان اعمال می‌شود.
+7: - مدل: 10→256→256→128→2 ،  u = TAU_MAX·tanh(z)  (یعنی ũ=u/50 ∈ [-1,1] یاد گرفته می‌شود).
+8: - loss: MSE روی (u_nn − u_mpc)/σ_u با وزن بیشتر برای |phi|>15°.
+9:   (σ_u≈0.72 Nm؛ اگر loss روی ũ=u/50 باشد مقدارش ~1e-4 می‌شود و نسبت به وزن‌دهی/ε بد‌شرط است.)
+10: - early stopping روی val RMSE، best checkpoint، گزارش کامل: RMSE/MAE/p95/p99 هر actuator،
+11:   و تفکیک |phi|≤15 / >15 / >25، و خطای تقارن τ_f+τ_r.
+12: - کلاس NeuralMPC و load_neural_mpc برای Phase 4 قابل import است.
+--------------------------------------------------
+14: import argparse, json, time
+15: import numpy as np
+16: import torch, torch.nn as nn
+17: 
+18: TAU_MAX = 50.0
+19: 
+20: 
+21: class NeuralMPC(nn.Module):
+22:     def __init__(self, mu, sd, act="relu"):
+23:         super().__init__()
+--------------------------------------------------
+27:         self.net = nn.Sequential(nn.Linear(len(mu), 256), A(), nn.Linear(256, 256), A(),
+28:                                  nn.Linear(256, 128), A(), nn.Linear(128, 2))
+29: 
+30:     def forward(self, x):                     # x: (B,10) خام (قبل از normalization)
+31:         return TAU_MAX * torch.tanh(self.net((x - self.mu) / self.sd))
+32: 
+33: 
+34: def load_neural_mpc(path, device="cpu"):
+35:     ck = torch.load(path, map_location=device, weights_only=False)
+36:     m = NeuralMPC(ck["mu"], ck["sd"], ck["args"].get("act", "relu")).to(device)
+37:     m.load_state_dict(ck["state"]); m.eval()
+38:     return m
+39: 
+40: 
+41: def load_npz(path, drop_inaccurate=False):
+42:     d = np.load(path, allow_pickle=True)
+--------------------------------------------------
+67:         rep[tag] = r
+68:     return rep
+69: 
+70: 
+71: def main():
+72:     ap = argparse.ArgumentParser()
+73:     ap.add_argument("--train", default="mpc_train.npz")
+74:     ap.add_argument("--val", default=None)
+75:     ap.add_argument("--epochs", type=int, default=100)
+76:     ap.add_argument("--patience", type=int, default=15)
+--------------------------------------------------
+131:         m25 = phi_va > 25
+132:         if rmse < best - 1e-5:
+133:             best, bad = rmse, 0
+134:             torch.save(dict(state=model.state_dict(), mu=mu, sd=sd, sig_u=sig_u,
+135:                             tau_max=TAU_MAX, args=vars(a), epoch=ep), a.out)
+136:         else:
+137:             bad += 1
+138:         if ep % 5 == 0 or bad == 0:
+139:             print(f"ep {ep:3d} loss={tot / nb:.4f} val_rmse={rmse:.4f}Nm rel={rmse / sig_u:.3f} "
+140:                   f">25°={np.sqrt((e[m25] ** 2).mean()) if m25.any() else float('nan'):.3f} "
+--------------------------------------------------
+
+==========================================================================================
+FILE: train_multihorizon_neural_mpc_13.py
+
+3: 
+4:     python train_neural_mpc.py --train mpc_train.npz --val mpc_val.npz --out neural_mpc.pt
+5: 
+6: - normalization ورودی فقط از train حساب و داخل checkpoint ذخیره می‌شود؛ روی val عیناً همان اعمال می‌شود.
+7: - مدل: 10→256→256→128→2 ،  u = TAU_MAX·tanh(z)  (یعنی ũ=u/50 ∈ [-1,1] یاد گرفته می‌شود).
+8: - loss: MSE روی (u_nn − u_mpc)/σ_u با وزن بیشتر برای |phi|>15°.
+9:   (σ_u≈0.72 Nm؛ اگر loss روی ũ=u/50 باشد مقدارش ~1e-4 می‌شود و نسبت به وزن‌دهی/ε بد‌شرط است.)
+10: - early stopping روی val RMSE، best checkpoint، گزارش کامل: RMSE/MAE/p95/p99 هر actuator،
+11:   و تفکیک |phi|≤15 / >15 / >25، و خطای تقارن τ_f+τ_r.
+12: - کلاس NeuralMPC و load_neural_mpc برای Phase 4 قابل import است.
+--------------------------------------------------
+14: import argparse, json, time
+15: import numpy as np
+16: import torch, torch.nn as nn
+17: 
+18: TAU_MAX = 50.0
+19: 
+20: 
+21: class NeuralMPC(nn.Module):
+22:     def __init__(self, mu, sd, act="relu"):
+23:         super().__init__()
+--------------------------------------------------
+27:         self.net = nn.Sequential(nn.Linear(len(mu), 256), A(), nn.Linear(256, 256), A(),
+28:                                  nn.Linear(256, 128), A(), nn.Linear(128, 2))
+29: 
+30:     def forward(self, x):                     # x: (B,10) خام (قبل از normalization)
+31:         return TAU_MAX * torch.tanh(self.net((x - self.mu) / self.sd))
+32: 
+33: 
+34: def load_neural_mpc(path, device="cpu"):
+35:     ck = torch.load(path, map_location=device, weights_only=False)
+36:     m = NeuralMPC(ck["mu"], ck["sd"], ck["args"].get("act", "relu")).to(device)
+37:     m.load_state_dict(ck["state"]); m.eval()
+38:     return m
+39: 
+40: 
+41: def load_npz(path, drop_inaccurate=False):
+42:     d = np.load(path, allow_pickle=True)
+--------------------------------------------------
+67:         rep[tag] = r
+68:     return rep
+69: 
+70: 
+71: def main():
+72:     ap = argparse.ArgumentParser()
+73:     ap.add_argument("--train", default="mpc_train.npz")
+74:     ap.add_argument("--val", default=None)
+75:     ap.add_argument("--epochs", type=int, default=100)
+76:     ap.add_argument("--patience", type=int, default=15)
+--------------------------------------------------
+133:         m25 = phi_va > 25
+134:         if rmse < best - 1e-5:
+135:             best, bad = rmse, 0
+136:             torch.save(dict(state=model.state_dict(), mu=mu, sd=sd, sig_u=sig_u,
+137:                             tau_max=TAU_MAX, args=vars(a), epoch=ep), a.out)
+138:         else:
+139:             bad += 1
+140:         if ep % 5 == 0 or bad == 0:
+141:             print(f"ep {ep:3d} loss={tot / nb:.4f} val_rmse={rmse:.4f}Nm rel={rmse / sig_u:.3f} "
+142:                   f">25°={np.sqrt((e[m25] ** 2).mean()) if m25.any() else float('nan'):.3f} "
+--------------------------------------------------
+
+==========================================================================================
+FILE: train_neural_mpc.py
+
+3: 
+4:     python train_neural_mpc.py --train mpc_train.npz --val mpc_val.npz --out neural_mpc.pt
+5: 
+6: - normalization ورودی فقط از train حساب و داخل checkpoint ذخیره می‌شود؛ روی val عیناً همان اعمال می‌شود.
+7: - مدل: 10→256→256→128→2 ،  u = TAU_MAX·tanh(z)  (یعنی ũ=u/50 ∈ [-1,1] یاد گرفته می‌شود).
+8: - loss: MSE روی (u_nn − u_mpc)/σ_u با وزن بیشتر برای |phi|>15°.
+9:   (σ_u≈0.72 Nm؛ اگر loss روی ũ=u/50 باشد مقدارش ~1e-4 می‌شود و نسبت به وزن‌دهی/ε بد‌شرط است.)
+10: - early stopping روی val RMSE، best checkpoint، گزارش کامل: RMSE/MAE/p95/p99 هر actuator،
+11:   و تفکیک |phi|≤15 / >15 / >25، و خطای تقارن τ_f+τ_r.
+12: - کلاس NeuralMPC و load_neural_mpc برای Phase 4 قابل import است.
+--------------------------------------------------
+14: import argparse, json, time
+15: import numpy as np
+16: import torch, torch.nn as nn
+17: 
+18: TAU_MAX = 50.0
+19: 
+20: 
+21: class NeuralMPC(nn.Module):
+22:     def __init__(self, mu, sd, act="relu"):
+23:         super().__init__()
+--------------------------------------------------
+27:         self.net = nn.Sequential(nn.Linear(10, 256), A(), nn.Linear(256, 256), A(),
+28:                                  nn.Linear(256, 128), A(), nn.Linear(128, 2))
+29: 
+30:     def forward(self, x):                     # x: (B,10) خام (قبل از normalization)
+31:         return TAU_MAX * torch.tanh(self.net((x - self.mu) / self.sd))
+32: 
+33: 
+34: def load_neural_mpc(path, device="cpu"):
+35:     ck = torch.load(path, map_location=device, weights_only=False)
+36:     m = NeuralMPC(ck["mu"], ck["sd"], ck["args"].get("act", "relu")).to(device)
+37:     m.load_state_dict(ck["state"]); m.eval()
+38:     return m
+39: 
+40: 
+41: def load_npz(path, drop_inaccurate=False):
+42:     d = np.load(path, allow_pickle=True)
+--------------------------------------------------
+66:         rep[tag] = r
+67:     return rep
+68: 
+69: 
+70: def main():
+71:     ap = argparse.ArgumentParser()
+72:     ap.add_argument("--train", default="mpc_train.npz")
+73:     ap.add_argument("--val", default=None)
+74:     ap.add_argument("--epochs", type=int, default=100)
+75:     ap.add_argument("--patience", type=int, default=15)
+--------------------------------------------------
+129:         m25 = phi_va > 25
+130:         if rmse < best - 1e-5:
+131:             best, bad = rmse, 0
+132:             torch.save(dict(state=model.state_dict(), mu=mu, sd=sd, sig_u=sig_u,
+133:                             tau_max=TAU_MAX, args=vars(a), epoch=ep), a.out)
+134:         else:
+135:             bad += 1
+136:         if ep % 5 == 0 or bad == 0:
+137:             print(f"ep {ep:3d} loss={tot / nb:.4f} val_rmse={rmse:.4f}Nm rel={rmse / sig_u:.3f} "
+138:                   f">25°={np.sqrt((e[m25] ** 2).mean()) if m25.any() else float('nan'):.3f} "
+--------------------------------------------------
+
+==========================================================================================
+FILE: train_residual_sac.py
+
+5:     python train_residual_sac.py --ckpt neural_mpc.pt --steps 100000 --out res_pilot
+6: اصلی:
+7:     python train_residual_sac.py --ckpt neural_mpc.pt --steps 1000000 --out res_main
+8: 
+9: - محیط: MotorcycleEnvResidual (iw_list هر اپیزود، bucket طبق --bucket_probs)، VecNormalize برای obs و reward.
+10: - هر --eval_freq گام: ارزیابی قطعی روی seedهای ثابت (74000..)، bucket=nominal، برای هر iw؛
+11:   baseline = residual صفر (Neural MPC تنها) در ابتدا روی همان seedها حساب و چاپ می‌شود.
+12: - best checkpoint بر اساس score = mean(surv) − 0.5·mean(rmse) روی iwهای ارزیابی.
+13: - خروجی: <out>_best.zip + <out>_best_vecnorm.pkl ، <out>_final.zip + <out>_final_vecnorm.pkl ، <out>_eval.csv
+14: """
+--------------------------------------------------
+17: 
+18: ap = argparse.ArgumentParser()
+19: ap.add_argument("--ckpt", default="neural_mpc.pt")
+20: ap.add_argument("--steps", type=int, default=100_000)
+21: ap.add_argument("--res_scale", type=float, default=5.0)
+22: ap.add_argument("--decision_k", type=int, default=1)
+23: ap.add_argument("--iw", nargs="*", type=float, default=[1.0, 0.7, 0.6, 0.5, 0.4])
+24: ap.add_argument("--iw_probs", nargs="*", type=float, default=None)
+25: ap.add_argument("--bucket_probs", nargs=3, type=float, default=[0.4, 0.3, 0.3])
+26: ap.add_argument("--rw_du", type=float, default=0.0)
+--------------------------------------------------
+41: import torch
+42: from stable_baselines3 import SAC
+43: from stable_baselines3.common.callbacks import BaseCallback
+44: from stable_baselines3.common.monitor import Monitor
+45: from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+46: from motorcycle_env_residual import MotorcycleEnvResidual
+47: 
+48: torch.manual_seed(a.seed); np.random.seed(a.seed)
+49: KW = dict(ckpt=a.ckpt, res_scale=a.res_scale, decision_k=a.decision_k, rw_du=a.rw_du, rw_res=a.rw_res)
+50: 
+51: venv = DummyVecEnv([lambda: Monitor(MotorcycleEnvResidual(
+52:     iw_list=a.iw, iw_probs=a.iw_probs, bucket_probs=a.bucket_probs, master_seed=a.seed, **KW))])
+53: venv = VecNormalize(venv, norm_obs=True, norm_reward=True, clip_obs=10.0, gamma=0.99)
+54: eval_env = MotorcycleEnvResidual(iw_list=(1.0,), **KW)
+55: 
+56: 
+57: def evaluate(policy):
+58:     """policy(obs_raw)->action. برگشت: {iw: dict} روی seedهای ثابت، bucket=nominal."""
+59:     out = {}
+60:     for iw in a.eval_iw:
+61:         surv, rm, steps, du = [], [], [], []
+62:         for i in range(a.eval_eps):
+63:             obs, _ = eval_env.reset(seed=a.eval_seed0 + i, options=dict(iw=iw, bucket=0))
+64:             e2 = n = 0; dsum = 0.0; k = 0
+65:             while True:
+66:                 obs, r, te, tr, info = eval_env.step(policy(obs))
+67:                 e2 += info["err_sq_sum"]; n += info["n_plant_steps"]
+68:                 dsum += float(np.abs(info["du_rl"]).mean()); k += 1
+69:                 if te or tr:
+70:                     break
+71:             surv.append(not te); rm.append(np.sqrt(e2 / max(n, 1))); steps.append(n); du.append(dsum / k)
+--------------------------------------------------
+
+==========================================================================================
+FILE: train_residual_sac_multi13.py
+
+5:     python train_residual_sac.py --ckpt neural_mpc.pt --steps 100000 --out res_pilot
+6: اصلی:
+7:     python train_residual_sac.py --ckpt neural_mpc.pt --steps 1000000 --out res_main
+8: 
+9: - محیط: MotorcycleEnvResidual (iw_list هر اپیزود، bucket طبق --bucket_probs)، VecNormalize برای obs و reward.
+10: - هر --eval_freq گام: ارزیابی قطعی روی seedهای ثابت (74000..)، bucket=nominal، برای هر iw؛
+11:   baseline = residual صفر (Neural MPC تنها) در ابتدا روی همان seedها حساب و چاپ می‌شود.
+12: - best checkpoint بر اساس score = mean(surv) − 0.5·mean(rmse) روی iwهای ارزیابی.
+13: - خروجی: <out>_best.zip + <out>_best_vecnorm.pkl ، <out>_final.zip + <out>_final_vecnorm.pkl ، <out>_eval.csv
+14: """
+--------------------------------------------------
+17: 
+18: ap = argparse.ArgumentParser()
+19: ap.add_argument("--ckpt", default="neural_mpc.pt")
+20: ap.add_argument("--steps", type=int, default=100_000)
+21: ap.add_argument("--res_scale", type=float, default=5.0)
+22: ap.add_argument("--decision_k", type=int, default=1)
+23: ap.add_argument("--iw", nargs="*", type=float, default=[1.0, 0.7, 0.6, 0.5, 0.4])
+24: ap.add_argument("--iw_probs", nargs="*", type=float, default=None)
+25: ap.add_argument("--bucket_probs", nargs=3, type=float, default=[0.4, 0.3, 0.3])
+26: ap.add_argument("--rw_du", type=float, default=0.0)
+--------------------------------------------------
+41: import torch
+42: from stable_baselines3 import SAC
+43: from stable_baselines3.common.callbacks import BaseCallback
+44: from stable_baselines3.common.monitor import Monitor
+45: from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+46: from motorcycle_env_residual_multi13 import MotorcycleEnvResidual
+47: 
+48: torch.manual_seed(a.seed); np.random.seed(a.seed)
+49: KW = dict(ckpt=a.ckpt, res_scale=a.res_scale, decision_k=a.decision_k, rw_du=a.rw_du, rw_res=a.rw_res)
+50: 
+51: venv = DummyVecEnv([lambda: Monitor(MotorcycleEnvResidual(
+52:     iw_list=a.iw, iw_probs=a.iw_probs, bucket_probs=a.bucket_probs, master_seed=a.seed, **KW))])
+53: venv = VecNormalize(venv, norm_obs=True, norm_reward=True, clip_obs=10.0, gamma=0.99)
+54: eval_env = MotorcycleEnvResidual(iw_list=(1.0,), **KW)
+55: 
+56: 
+57: def evaluate(policy):
+58:     """policy(obs_raw)->action. برگشت: {iw: dict} روی seedهای ثابت، bucket=nominal."""
+59:     out = {}
+60:     for iw in a.eval_iw:
+61:         surv, rm, steps, du = [], [], [], []
+62:         for i in range(a.eval_eps):
+63:             obs, _ = eval_env.reset(seed=a.eval_seed0 + i, options=dict(iw=iw, bucket=0))
+64:             e2 = n = 0; dsum = 0.0; k = 0
+65:             while True:
+66:                 obs, r, te, tr, info = eval_env.step(policy(obs))
+67:                 e2 += info["err_sq_sum"]; n += info["n_plant_steps"]
+68:                 dsum += float(np.abs(info["du_rl"]).mean()); k += 1
+69:                 if te or tr:
+70:                     break
+71:             surv.append(not te); rm.append(np.sqrt(e2 / max(n, 1))); steps.append(n); du.append(dsum / k)
+--------------------------------------------------
+
+==========================================================================================
+FILE: train_residual_sac_multi13_resume.py
+
+5:     python train_residual_sac.py --ckpt neural_mpc.pt --steps 100000 --out res_pilot
+6: اصلی:
+7:     python train_residual_sac.py --ckpt neural_mpc.pt --steps 1000000 --out res_main
+8: 
+9: - محیط: MotorcycleEnvResidual (iw_list هر اپیزود، bucket طبق --bucket_probs)، VecNormalize برای obs و reward.
+10: - هر --eval_freq گام: ارزیابی قطعی روی seedهای ثابت (74000..)، bucket=nominal، برای هر iw؛
+11:   baseline = residual صفر (Neural MPC تنها) در ابتدا روی همان seedها حساب و چاپ می‌شود.
+12: - best checkpoint بر اساس score = mean(surv) − 0.5·mean(rmse) روی iwهای ارزیابی.
+13: - خروجی: <out>_best.zip + <out>_best_vecnorm.pkl ، <out>_final.zip + <out>_final_vecnorm.pkl ، <out>_eval.csv
+14: """
+--------------------------------------------------
+17: 
+18: ap = argparse.ArgumentParser()
+19: ap.add_argument("--ckpt", default="neural_mpc.pt")
+20: ap.add_argument("--steps", type=int, default=100_000)
+21: ap.add_argument("--res_scale", type=float, default=5.0)
+22: ap.add_argument("--decision_k", type=int, default=1)
+23: ap.add_argument("--iw", nargs="*", type=float, default=[1.0, 0.7, 0.6, 0.5, 0.4])
+24: ap.add_argument("--iw_probs", nargs="*", type=float, default=None)
+25: ap.add_argument("--bucket_probs", nargs=3, type=float, default=[0.4, 0.3, 0.3])
+26: ap.add_argument("--rw_du", type=float, default=0.0)
+--------------------------------------------------
+36: ap.add_argument("--no_zero_init", action="store_true")
+37: ap.add_argument("--seed", type=int, default=0)
+38: ap.add_argument("--out", default="res_pilot")
+39: ap.add_argument("--resume_model", default=None, help="Existing SAC .zip checkpoint")
+40: ap.add_argument("--resume_vecnorm", default=None, help="Matching VecNormalize .pkl")
+41: ap.add_argument("--resume_replay", default=None, help="Optional replay buffer .pkl")
+42: a = ap.parse_args()
+43: 
+44: import torch
+45: from stable_baselines3 import SAC
+46: from stable_baselines3.common.callbacks import BaseCallback
+47: from stable_baselines3.common.monitor import Monitor
+48: from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+49: from motorcycle_env_residual_multi13 import MotorcycleEnvResidual
+50: 
+51: torch.manual_seed(a.seed); np.random.seed(a.seed)
+52: KW = dict(ckpt=a.ckpt, res_scale=a.res_scale, decision_k=a.decision_k, rw_du=a.rw_du, rw_res=a.rw_res)
+53: 
+54: venv = DummyVecEnv([lambda: Monitor(MotorcycleEnvResidual(
+55:     iw_list=a.iw, iw_probs=a.iw_probs, bucket_probs=a.bucket_probs, master_seed=a.seed, **KW))])
+56: if bool(a.resume_model) != bool(a.resume_vecnorm):
+57:     ap.error("--resume_model and --resume_vecnorm must be provided together")
+58: if a.resume_model:
+59:     venv = VecNormalize.load(a.resume_vecnorm, venv)
+60:     venv.training = True
+61:     venv.norm_reward = True
+62: else:
+63:     venv = VecNormalize(venv, norm_obs=True, norm_reward=True, clip_obs=10.0, gamma=0.99)
+64: eval_env = MotorcycleEnvResidual(iw_list=(1.0,), **KW)
+65: 
+66: 
+67: def evaluate(policy):
+68:     """policy(obs_raw)->action. برگشت: {iw: dict} روی seedهای ثابت، bucket=nominal."""
+69:     out = {}
+70:     for iw in a.eval_iw:
+71:         surv, rm, steps, du = [], [], [], []
+72:         for i in range(a.eval_eps):
+73:             obs, _ = eval_env.reset(seed=a.eval_seed0 + i, options=dict(iw=iw, bucket=0))
+74:             e2 = n = 0; dsum = 0.0; k = 0
+75:             while True:
+76:                 obs, r, te, tr, info = eval_env.step(policy(obs))
+77:                 e2 += info["err_sq_sum"]; n += info["n_plant_steps"]
+78:                 dsum += float(np.abs(info["du_rl"]).mean()); k += 1
+79:                 if te or tr:
+80:                     break
+81:             surv.append(not te); rm.append(np.sqrt(e2 / max(n, 1))); steps.append(n); du.append(dsum / k)
+--------------------------------------------------
+
+==========================================================================================
+FILE: train_sac_baselines.py
+
+6: HOCBFSafetyFilter مستقیماً از آن فایل import می‌شوند؛ آن فایل تغییر نمی‌کند).
+7: 
+8: تفاوت با train() داخل baseline4 (فقط زیرساخت، نه الگوریتم):
+9:   - هر seed پوشهٔ مستقل: {out_dir}/{tag}_seed{seed}/
+10:   - checkpoint هر --ckpt_freq گام همراه با «آمار VecNormalize همان لحظه»
+11:     (norm_obs=True است؛ بدون آمار همان لحظه checkpointهای میانی قابل ارزیابی نیستند)
+12:   - EvalCallback روی سطح ۸ (قبلاً سطح ۴)، ۱۰ اپیزود، هر ۵۰۰ هزار گام (قبلاً هر ۱۰ هزار گام)
+13:   - progress.json (برای run_seeds.py)، episodes.csv، training_summary.json
+14:   - آموزش همیشه از صفر
+15: 
+--------------------------------------------------
+35: from stable_baselines3.common.callbacks import BaseCallback, EvalCallback   # noqa: E402
+36: from stable_baselines3.common.env_util import make_vec_env              # noqa: E402
+37: from stable_baselines3.common.monitor import Monitor                    # noqa: E402
+38: from stable_baselines3.common.vec_env import (                          # noqa: E402
+39:     DummyVecEnv, SubprocVecEnv, VecNormalize)
+40: 
+41: MAX_LEVEL = len(CURRICULUM_LEVELS) - 1
+42: 
+43: 
+44: class EpisodeLogCallback(BaseCallback):
+--------------------------------------------------
+79:             self._f.close()
+80: 
+81: 
+82: class CkptWithVecNormCallback(BaseCallback):
+83:     """هر save_freq گام: مدل + آمار VecNormalize همان لحظه (نام‌گذاری یکسان)."""
+84: 
+85:     def __init__(self, save_freq, ckpt_dir, run_tag):
+86:         super().__init__(0)
+87:         self.save_freq, self.ckpt_dir, self.run_tag = save_freq, ckpt_dir, run_tag
+88:         os.makedirs(ckpt_dir, exist_ok=True)
+--------------------------------------------------
+138:     def _on_training_end(self):
+139:         self._write(done=True)
+140: 
+141: 
+142: def main():
+143:     ap = argparse.ArgumentParser()
+144:     ap.add_argument("--method", choices=["plain", "hocbf"], required=True)
+145:     ap.add_argument("--seed", type=int, default=0)
+146:     ap.add_argument("--steps", type=int, default=3_000_000)
+147:     ap.add_argument("--envs", type=int, default=8)
+--------------------------------------------------
+187:         return _init
+188: 
+189:     vec_cls = SubprocVecEnv if args.envs > 1 else DummyVecEnv
+190:     raw_env = make_vec_env(_make_env(0), n_envs=args.envs, seed=args.seed, vec_env_cls=vec_cls)
+191:     env = VecNormalize(raw_env, norm_obs=True, norm_reward=False,
+192:                        clip_obs=10.0, clip_reward=10.0, gamma=0.99)
+193: 
+194:     def _make_eval():
+195:         e = MotorcycleSACEnv(**env_kw)
+196:         e.set_curriculum_level(MAX_LEVEL)
+197:         return Monitor(e)
+198: 
+199:     eval_env = VecNormalize(DummyVecEnv([_make_eval]), norm_obs=True, norm_reward=False,
+200:                             clip_obs=10.0, clip_reward=10.0, gamma=0.99, training=False)
+201: 
+202:     # هایپرپارامترها: دقیقاً همان baseline4_sac_cbf_train.py
+203:     model = SAC(
+204:         policy="MlpPolicy", env=env, learning_rate=3e-4, buffer_size=500_000,
+--------------------------------------------------
+
+==========================================================================================
+FILE: train_standalone_sac.py
+
+8: import torch
+9: from stable_baselines3 import SAC
+10: from stable_baselines3.common.callbacks import BaseCallback
+11: from stable_baselines3.common.monitor import Monitor
+12: from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+13: from motorcycle_env_standalone import MotorcycleEnvStandalone
+14: 
+15: p = argparse.ArgumentParser()
+16: p.add_argument('--seed', type=int, default=11)
+17: p.add_argument('--steps', type=int, default=1_000_000)
+--------------------------------------------------
+39: kw = dict(decision_k=1, rw_u=a.rw_u, rw_du=a.rw_du, rw_res=a.rw_res)
+40: train = DummyVecEnv([lambda: Monitor(MotorcycleEnvStandalone(
+41:     iw_list=a.iw, iw_probs=a.iw_probs, bucket_probs=a.bucket_probs,
+42:     master_seed=a.seed, **kw))])
+43: train = VecNormalize(train, norm_obs=True, norm_reward=True, clip_obs=10., gamma=.99)
+44: eval_env = MotorcycleEnvStandalone(iw_list=(1.,), **kw)
+45: 
+46: def evaluate(model):
+47:     results = {}
+48:     for iw in a.eval_iw:
+--------------------------------------------------

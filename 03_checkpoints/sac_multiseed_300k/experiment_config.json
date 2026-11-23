@@ -1,0 +1,30 @@
+{
+  "trainer": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\train_residual_sac_multi13_resume.py",
+  "ckpt": "C:\\Users\\Moein\\Desktop\\Paper\\RL-MPC\\Three Models\\neural_mpc_multi13.pt",
+  "steps": 300000,
+  "seeds": [
+    101,
+    202,
+    303
+  ],
+  "eval_seed0": 190000,
+  "eval_freq": 10000,
+  "eval_eps": 30,
+  "iw": [
+    1.0,
+    0.8,
+    0.7,
+    0.6,
+    0.5
+  ],
+  "eval_iw": [
+    1.0,
+    0.8,
+    0.7,
+    0.6,
+    0.5
+  ],
+  "res_scale": 5.0,
+  "resume": false,
+  "notes": "Each SAC run starts from scratch. Fixed frozen Neural MPC."
+}

@@ -1,0 +1,7 @@
+
+Name                                 NumberOfCores NumberOfLogicalProcessors
+----                                 ------------- -------------------------
+12th Gen Intel(R) Core(TM) i5-12450H             8                        12
+
+
+
